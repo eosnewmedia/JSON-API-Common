@@ -1,4 +1,4 @@
-ENM / JSON API / Common (PHP Library)
+ENM / JSON API Common (PHP Library)
 =====================================
 This library contains php classes and interfaces shared between `enm/json-api-server` and `enm/json-api-client`.
 
