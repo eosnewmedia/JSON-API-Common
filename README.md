@@ -17,7 +17,7 @@ This library contains php classes and interfaces shared between `enm/json-api-se
 
 ## Installation
 
-    composer require enm/json-api
+    composer require enm/json-api-common
 
 *****
 
