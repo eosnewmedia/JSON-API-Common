@@ -1,0 +1,174 @@
+<?php
+declare(strict_types=1);
+
+namespace Enm\JsonApi\Tests\Model\Common;
+
+use Enm\JsonApi\Model\Common\KeyValueCollection;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * @author Philipp Marien <marien@eosnewmedia.de>
+ */
+class KeyValueCollectionTest extends TestCase
+{
+    public function testAll()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertArrayHasKey('test', $collection->all());
+    }
+
+    public function testCount()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertEquals(1, $collection->count());
+    }
+
+    public function testIsEmpty()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertFalse($collection->isEmpty());
+    }
+
+    public function testHas()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertTrue($collection->has('test'));
+    }
+
+    public function testGetRequired()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertEquals('test', $collection->getRequired('test'));
+    }
+
+    public function testGetOptional()
+    {
+        $collection = new KeyValueCollection();
+        self::assertEquals('test', $collection->getOptional('test', 'test'));
+    }
+
+    public function testCreateSubCollection()
+    {
+        $collection = new KeyValueCollection(['test' => ['abc' => 'abc']]);
+
+        self::assertEquals('abc', $collection->createSubCollection('test')->getRequired('abc'));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateSubCollectionInvalid()
+    {
+        $collection = new KeyValueCollection(['test' => 'abc']);
+
+        $collection->createSubCollection('test');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateSubCollectionRequired()
+    {
+        $collection = new KeyValueCollection();
+        $collection->createSubCollection('test');
+    }
+
+    public function testCreateSubCollectionOptional()
+    {
+        $collection = new KeyValueCollection();
+
+        self::assertCount(0, $collection->createSubCollection('test', false)->all());
+    }
+
+    public function testMergeCollection()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+
+        self::assertEquals('test', $collection->getRequired('test'));
+
+        $collection->mergeCollection(new KeyValueCollection(['test' => 'abc', 'test2' => 'def']));
+
+        self::assertEquals('abc', $collection->getRequired('test'));
+        self::assertEquals('def', $collection->getRequired('test2'));
+    }
+
+    public function testMergeCollectionNoOverwrite()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+
+        self::assertEquals('test', $collection->getRequired('test'));
+
+        $collection->mergeCollection(new KeyValueCollection(['test' => 'abc', 'test2' => 'def']), false);
+
+        self::assertEquals('test', $collection->getRequired('test'));
+        self::assertEquals('def', $collection->getRequired('test2'));
+    }
+
+    public function testMerge()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+
+        self::assertEquals('test', $collection->getRequired('test'));
+
+        $collection->merge(['test' => 'abc', 'test2' => 'def']);
+
+        self::assertEquals('abc', $collection->getRequired('test'));
+        self::assertEquals('def', $collection->getRequired('test2'));
+    }
+
+
+    public function testMergeNoOverwrite()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+
+        self::assertEquals('test', $collection->getRequired('test'));
+
+        $collection->merge(['test' => 'abc', 'test2' => 'def'], false);
+
+        self::assertEquals('test', $collection->getRequired('test'));
+        self::assertEquals('def', $collection->getRequired('test2'));
+    }
+
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testGetInvalid()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        $collection->getRequired('abc');
+    }
+
+    public function testSet()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertFalse($collection->has('abc'));
+        $collection->set('abc', 'abc');
+        self::assertTrue($collection->has('abc'));
+    }
+
+    public function testSetCollection()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertFalse($collection->has('abc'));
+        $collection->set('abc', new KeyValueCollection(['test' => 'test']));
+        self::assertTrue($collection->has('abc'));
+        self::assertArrayHasKey('test', $collection->getRequired('abc'));
+    }
+
+    public function testRemove()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        self::assertTrue($collection->has('test'));
+        $collection->remove('test');
+        self::assertFalse($collection->has('test'));
+    }
+
+    public function testRemoveInvalid()
+    {
+        $collection = new KeyValueCollection(['test' => 'test']);
+        $collection->remove('abc');
+
+        self::assertTrue($collection->has('test'));
+    }
+}

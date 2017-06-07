@@ -1,0 +1,29 @@
+{
+  "name": "enm/json-api-common",
+  "description": "Basic php implementation (shared structures for client and server) of the json api specification (jsonapi.org)",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Philipp Marien",
+      "email": "marien@eosnewmedia.de"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Enm\\JsonApi\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Enm\\JsonApi\\Tests\\": "tests"
+    }
+  }
+}
