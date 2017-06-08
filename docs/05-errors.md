@@ -5,7 +5,9 @@ Exceptions should turned into instances of `Enm\JsonApi\Model\Error\ErrorInterfa
 The simplest way is to use the default implementation `Enm\JsonApi\Model\Error\Error`, which offers a static method to create an 
 error object from an exception.
 
-    Enm\JsonApi\Model\Error\Error::createFromException(new \Exception());
+```php
+Enm\JsonApi\Model\Error\Error::createFromException(new \Exception());
+```
 
 The following Exception are available to be handled including the correct http status code:
 

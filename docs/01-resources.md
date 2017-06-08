@@ -4,7 +4,9 @@ A json api resource is represented through a php object of type `Enm\JsonApi\Mod
 
 You can use this interface with your custom classes or may use the default implementation `Enm\JsonApi\Model\Resource\JsonResource`, which will be good choice for most use cases.
 
-    $resource = new Enm\JsonApi\Model\Resource\JsonResource($resourceType, $resourceId);
+```php
+$resource = new Enm\JsonApi\Model\Resource\JsonResource($resourceType, $resourceId);
+```
     
 
 `Enm\JsonApi\Model\Resource\ResourceInterface`:
