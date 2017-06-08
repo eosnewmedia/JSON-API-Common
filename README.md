@@ -8,7 +8,9 @@ This library contains php classes and interfaces shared between
 
 ## Installation
 
-    composer require enm/json-api-common
+```sh
+composer require enm/json-api-common
+```
 
 *****
 
