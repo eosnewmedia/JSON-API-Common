@@ -14,6 +14,8 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
  */
 class Serializer implements DocumentSerializerInterface
 {
+    const VERSION = '1.0';
+
     /**
      * @param DocumentInterface $document
      *
@@ -55,6 +57,10 @@ class Serializer implements DocumentSerializerInterface
                 $result['errors'][] = $this->serializeError($error);
             }
         }
+
+        $result['jsonapi'] = [
+            'version' => self::VERSION
+        ];
 
         return $result;
     }

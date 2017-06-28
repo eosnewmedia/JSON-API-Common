@@ -47,6 +47,7 @@ class SerializerTest extends TestCase
         self::assertArrayNotHasKey('links', $serialized);
         self::assertArrayNotHasKey('included', $serialized);
         self::assertArrayNotHasKey('meta', $serialized);
+        self::assertEquals(Serializer::VERSION, $serialized['jsonapi']['version']);
     }
 
     public function testSerializeResourceDocument()
