@@ -83,8 +83,6 @@ class Deserializer implements DocumentDeserializerInterface
             $document->metaInformations()->merge((array)$documentData['meta']);
         }
 
-//        $jsonApi = array_key_exists('jsonapi', $documentData) ? $documentData['jsonapi'] : [];
-
         $links = array_key_exists('links', $documentData) ? (array)$documentData['links'] : [];
         foreach ($links as $name => $link) {
             $document->links()->set($this->buildLink($name, is_array($link) ? $link : ['href' => $link]));
