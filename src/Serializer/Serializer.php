@@ -212,31 +212,31 @@ class Serializer implements DocumentSerializerInterface
     {
         switch ($document->getType()) {
             case DocumentInterface::TYPE_RESOURCE_COLLECTION:
-                $data = [];
-                foreach ($document->data()->all() as $resource) {
-                    $data[] = $this->serializeResource($resource, false);
-                }
-
-                return $data;
+                return $this->createCollectionData($document, false);
             case DocumentInterface::TYPE_RELATIONSHIP_COLLECTION:
-                $data = [];
-                foreach ($document->data()->all() as $resource) {
-                    $data[] = $this->serializeResource($resource);
-                }
-
-                return $data;
+                return $this->createCollectionData($document);
             case DocumentInterface::TYPE_RESOURCE:
-                $data = $document->data()->all();
-                $resource = array_shift($data);
-
-                return $this->serializeResource($resource, false);
+                return $this->serializeResource($document->data()->first(), false);
             case DocumentInterface::TYPE_RELATIONSHIP:
-                $data = $document->data()->all();
-                $resource = array_shift($data);
-
-                return $this->serializeResource($resource);
+                return $this->serializeResource($document->data()->first());
             default:
                 throw new \InvalidArgumentException('Invalid document type');
         }
+    }
+
+    /**
+     * @param DocumentInterface $document
+     * @param $identifierOnly
+     * @return array
+     * @throws \Exception
+     */
+    protected function createCollectionData(DocumentInterface $document, bool $identifierOnly = true): array
+    {
+        $data = [];
+        foreach ($document->data()->all() as $resource) {
+            $data[] = $this->serializeResource($resource, $identifierOnly);
+        }
+
+        return $data;
     }
 }

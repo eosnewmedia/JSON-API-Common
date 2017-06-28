@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Enm\JsonApi\Model\Document;
 
@@ -18,36 +18,50 @@ use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 abstract class AbstractDocument implements DocumentInterface
 {
     /**
+     * @var ResourceCollectionInterface
+     */
+    private $data;
+
+    /**
      * @var LinkCollection
      */
     private $links;
-    
+
     /**
      * @var ResourceCollection
      */
     private $included;
-    
+
     /**
      * @var KeyValueCollection
      */
     private $metaInformations;
-    
+
     /**
      * @var ErrorCollection
      */
     private $errors;
-    
+
     /**
-     * Constructor
+     * @param ResourceCollectionInterface $resourceCollection
      */
-    public function __construct()
+    public function __construct(ResourceCollectionInterface $resourceCollection)
     {
-        $this->links            = new LinkCollection();
-        $this->included         = new ResourceCollection();
+        $this->data = $resourceCollection;
+        $this->links = new LinkCollection();
+        $this->included = new ResourceCollection();
         $this->metaInformations = new KeyValueCollection();
-        $this->errors           = new ErrorCollection();
+        $this->errors = new ErrorCollection();
     }
-    
+
+    /**
+     * @return ResourceCollectionInterface
+     */
+    public function data(): ResourceCollectionInterface
+    {
+        return $this->data;
+    }
+
     /**
      * @return LinkCollectionInterface
      */
@@ -55,7 +69,7 @@ abstract class AbstractDocument implements DocumentInterface
     {
         return $this->links;
     }
-    
+
     /**
      * @return ResourceCollectionInterface
      */
@@ -63,7 +77,7 @@ abstract class AbstractDocument implements DocumentInterface
     {
         return $this->included;
     }
-    
+
     /**
      * @return KeyValueCollectionInterface
      */
@@ -71,7 +85,7 @@ abstract class AbstractDocument implements DocumentInterface
     {
         return $this->metaInformations;
     }
-    
+
     /**
      * @return ErrorCollectionInterface
      */

@@ -61,9 +61,7 @@ class SerializerTest extends TestCase
                     $this->createConfiguredMock(
                         ResourceCollectionInterface::class,
                         [
-                            'all' => [
-                                $this->createResource('test', 'test-1'),
-                            ],
+                            'first' => $this->createResource('test', 'test-1'),
                         ]
                     ),
                 'links' => $this->createConfiguredMock(
@@ -163,20 +161,18 @@ class SerializerTest extends TestCase
                 'data' => $this->createConfiguredMock(
                     ResourceCollectionInterface::class,
                     [
-                        'all' => [
-                            $this->createConfiguredMock(
-                                ResourceInterface::class, [
-                                    'getType' => 'test',
-                                    'getId' => 'test-1',
-                                    'attributes' => $this->createConfiguredMock(
-                                        KeyValueCollectionInterface::class,
-                                        [
-                                            'all' => ['test' => 'test'],
-                                        ]
-                                    ),
-                                ]
-                            ),
-                        ],
+                        'first' => $this->createConfiguredMock(
+                            ResourceInterface::class, [
+                                'getType' => 'test',
+                                'getId' => 'test-1',
+                                'attributes' => $this->createConfiguredMock(
+                                    KeyValueCollectionInterface::class,
+                                    [
+                                        'all' => ['test' => 'test'],
+                                    ]
+                                ),
+                            ]
+                        ),
                     ]
                 ),
             ]
@@ -311,28 +307,26 @@ class SerializerTest extends TestCase
                     ResourceCollectionInterface::class,
                     [
                         'isEmpty' => false,
-                        'all' => [
-                            $this->createConfiguredMock(
-                                ResourceInterface::class,
-                                [
-                                    'getType' => 'test',
-                                    'getId' => 'test-1',
-                                    'relationships' => $this->createConfiguredMock(
-                                        RelationshipCollectionInterface::class,
-                                        [
-                                            'all' => [
-                                                $this->createConfiguredMock(
-                                                    RelationshipInterface::class,
-                                                    [
-                                                        'getType' => 'invalid',
-                                                    ]
-                                                ),
-                                            ],
-                                        ]
-                                    ),
-                                ]
-                            ),
-                        ],
+                        'first' => $this->createConfiguredMock(
+                            ResourceInterface::class,
+                            [
+                                'getType' => 'test',
+                                'getId' => 'test-1',
+                                'relationships' => $this->createConfiguredMock(
+                                    RelationshipCollectionInterface::class,
+                                    [
+                                        'all' => [
+                                            $this->createConfiguredMock(
+                                                RelationshipInterface::class,
+                                                [
+                                                    'getType' => 'invalid',
+                                                ]
+                                            ),
+                                        ],
+                                    ]
+                                ),
+                            ]
+                        ),
                     ]
                 ),
             ]);

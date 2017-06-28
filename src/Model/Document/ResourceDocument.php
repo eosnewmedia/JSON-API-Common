@@ -1,10 +1,9 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Enm\JsonApi\Model\Document;
 
 use Enm\JsonApi\Model\Resource\ImmutableResourceCollection;
-use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 
 /**
@@ -13,38 +12,24 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
 class ResourceDocument extends AbstractDocument
 {
     /**
-     * @var ImmutableResourceCollection
-     */
-    private $data;
-    
-    /**
      * @param ResourceInterface|null $data
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(ResourceInterface $data = null)
     {
-        parent::__construct();
         if ($data instanceof ResourceInterface) {
-            $this->data = new ImmutableResourceCollection([$data]);
+            parent::__construct(new ImmutableResourceCollection([$data]));
         } else {
-            $this->data = new ImmutableResourceCollection();
+            parent::__construct(new ImmutableResourceCollection());
         }
     }
-    
+
     /**
      * @return string
      */
     public function getType(): string
     {
         return self::TYPE_RESOURCE;
-    }
-    
-    /**
-     * @return ResourceCollectionInterface
-     */
-    public function data(): ResourceCollectionInterface
-    {
-        return $this->data;
     }
 }
