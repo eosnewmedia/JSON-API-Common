@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Tests\Factory;
 
-use Enm\JsonApi\Factory\ResourceFactory;
+use Enm\JsonApi\Model\Factory\ResourceFactory;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ class ResourceFactoryTest extends TestCase
         $factory = new ResourceFactory();
         $resource = $factory->create('test', 'test-1');
         self::assertInstanceOf(ResourceInterface::class, $resource);
-        self::assertEquals('test', $resource->getType());
-        self::assertEquals('test-1', $resource->getId());
+        self::assertEquals('test', $resource->type());
+        self::assertEquals('test-1', $resource->id());
     }
 }

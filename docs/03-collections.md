@@ -1,9 +1,9 @@
 [back to README](../README.md)
 # Attributes and Meta-Informations
-Resources and documents allowing access to attributes and meta informations via `attributes()` and `metaInformations()`,
+Resources and documents allowing access to attributes and meta information via `attributes()` and `metaInformation()`,
 which will both return an instance of `Enm\JsonApi\Model\Common\KeyValueCollectionInterface`.
 
-The collections will allow you to add, remove or get values by key, getting all key-values-pairs or check for the existence of a value by key.
+These collections will allow you to add, remove or get values by key, getting all key-values-pairs or check for the existence of a value by key.
 
 `Enm\JsonApi\Model\Common\KeyValueCollectionInterface`:
 
@@ -23,4 +23,4 @@ The collections will allow you to add, remove or get values by key, getting all 
 
 *****
 
-[prev: Resources](../docs/01-resources.md) | [back to README](../README.md) | [next: Links](../docs/03-links.md)
+[prev: Resources](../docs/02-resources.md) | [back to README](../README.md) | [next: Links](../docs/04-links.md)

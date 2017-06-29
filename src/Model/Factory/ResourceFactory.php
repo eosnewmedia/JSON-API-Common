@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Enm\JsonApi\Factory;
+namespace Enm\JsonApi\Model\Factory;
 
 use Enm\JsonApi\Model\Resource\JsonResource;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
@@ -19,6 +19,9 @@ class ResourceFactory implements ResourceFactoryInterface
      */
     public function create(string $type, string $id): ResourceInterface
     {
-        return new JsonResource($type, $id);
+        $resource = new JsonResource($type, $id);
+        $resource->relationships()->setResourceFactory($this);
+
+        return $resource;
     }
 }

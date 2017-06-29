@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Tests\Serializer;
 
-use Enm\JsonApi\Factory\DocumentFactory;
-use Enm\JsonApi\Factory\ResourceFactory;
-use Enm\JsonApi\Model\Document\DocumentInterface;
-use Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface;
+use Enm\JsonApi\Model\Factory\DocumentFactory;
+use Enm\JsonApi\Model\Factory\ResourceFactory;
 use Enm\JsonApi\Serializer\Deserializer;
 use PHPUnit\Framework\TestCase;
 
@@ -17,8 +15,7 @@ class DeserializerTest extends TestCase
 {
     public function testDeserializeResourceDocument()
     {
-        $document = $this->createDeserializer()->deserialize(
-            DocumentInterface::TYPE_RESOURCE,
+        $document = $this->createDeserializer()->deserializeDocument(
             [
                 'data' => [
                     'type' => 'test',
@@ -61,17 +58,11 @@ class DeserializerTest extends TestCase
             ]
         );
 
-        self::assertEquals('test', $document->data()->first()->getType());
-        self::assertEquals(
-            RelationshipInterface::TYPE_ONE,
-            $document->data()->first()->relationships()->get('parent')->getType()
-        );
+        self::assertEquals('test', $document->data()->first()->type());
+        self::assertFalse($document->data()->first()->relationships()->get('parent')->shouldBeHandledAsCollection());
         self::assertTrue($document->data()->first()->relationships()->get('parent')->links()->has('self'));
-        self::assertTrue($document->data()->first()->relationships()->get('empty')->metaInformations()->has('empty'));
-        self::assertEquals(
-            RelationshipInterface::TYPE_MANY,
-            $document->data()->first()->relationships()->get('children')->getType()
-        );
+        self::assertTrue($document->data()->first()->relationships()->get('empty')->metaInformation()->has('empty'));
+        self::assertTrue($document->data()->first()->relationships()->get('children')->shouldBeHandledAsCollection());
     }
 
     /**
@@ -79,8 +70,7 @@ class DeserializerTest extends TestCase
      */
     public function testInvalidLink()
     {
-        $this->createDeserializer()->deserialize(
-            DocumentInterface::TYPE_RESOURCE,
+        $this->createDeserializer()->deserializeDocument(
             [
                 'data' => [
                     'type' => 'test',
@@ -98,8 +88,7 @@ class DeserializerTest extends TestCase
      */
     public function testInvalidResource()
     {
-        $this->createDeserializer()->deserialize(
-            DocumentInterface::TYPE_RESOURCE,
+        $this->createDeserializer()->deserializeDocument(
             [
                 'data' => [
                     'type' => 'test',
@@ -110,8 +99,7 @@ class DeserializerTest extends TestCase
 
     public function testErrorDocument()
     {
-        $document = $this->createDeserializer()->deserialize(
-            DocumentInterface::TYPE_ERROR,
+        $document = $this->createDeserializer()->deserializeDocument(
             [
                 'errors' => [
                     [
@@ -125,14 +113,13 @@ class DeserializerTest extends TestCase
         );
 
         self::assertFalse($document->errors()->isEmpty());
-        self::assertEquals('Test', $document->errors()->all()[0]->getTitle());
-        self::assertEquals('value', $document->errors()->all()[0]->metaInformations()->getRequired('key'));
+        self::assertEquals('Test', $document->errors()->all()[0]->title());
+        self::assertEquals('value', $document->errors()->all()[0]->metaInformation()->getRequired('key'));
     }
 
     public function testResourceCollectionDocument()
     {
-        $document = $this->createDeserializer()->deserialize(
-            DocumentInterface::TYPE_RESOURCE_COLLECTION,
+        $document = $this->createDeserializer()->deserializeDocument(
             [
                 'data' => [
                     [
@@ -157,7 +144,7 @@ class DeserializerTest extends TestCase
 
         self::assertEquals(1, $document->data()->count());
         self::assertEquals(1, $document->links()->count());
-        self::assertEquals(1, $document->metaInformations()->count());
+        self::assertEquals(1, $document->metaInformation()->count());
         self::assertEquals(1, $document->included()->count());
     }
 

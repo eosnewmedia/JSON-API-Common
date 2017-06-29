@@ -6,7 +6,7 @@ namespace Enm\JsonApi\Exception;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class InvalidRequestException extends Exception
+class InvalidRequestJsonApiException extends JsonApiException
 {
     /**
      * @param string $message

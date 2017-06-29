@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Model\Resource\Relationship;
 
 use Enm\JsonApi\Model\Common\CollectionInterface;
+use Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface RelationshipCollectionInterface extends CollectionInterface
+interface RelationshipCollectionInterface extends CollectionInterface, ResourceFactoryAwareInterface
 {
     /**
      * @return RelationshipInterface[]

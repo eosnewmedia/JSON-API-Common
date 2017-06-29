@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Tests\Model\Document;
 
-use Enm\JsonApi\Model\Document\ErrorDocument;
-use Enm\JsonApi\Model\Document\RelationshipCollectionDocument;
-use Enm\JsonApi\Model\Document\RelationshipDocument;
-use Enm\JsonApi\Model\Document\ResourceCollectionDocument;
-use Enm\JsonApi\Model\Document\ResourceDocument;
+use Enm\JsonApi\Model\Document\Document;
+use Enm\JsonApi\Model\Document\DocumentInterface;
+use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -18,67 +16,53 @@ class DocumentTest extends TestCase
 {
     public function testResourceDocument()
     {
-        $document = new ResourceDocument($this->createMock(ResourceInterface::class));
+        $document = new Document($this->createMock(ResourceInterface::class));
         self::assertEquals(1, $document->data()->count());
-        self::assertEquals('resource', $document->getType());
+        self::assertFalse($document->shouldBeHandledAsCollection());
     }
 
     public function testEmptyResourceDocument()
     {
-        $document = new ResourceDocument();
+        $document = new Document();
         self::assertEquals(0, $document->data()->count());
+        self::assertFalse($document->shouldBeHandledAsCollection());
+    }
+
+    public function testCollectionDocument()
+    {
+        $document = new Document([$this->createMock(ResourceInterface::class)]);
+        self::assertEquals(1, $document->data()->count());
+        self::assertTrue($document->shouldBeHandledAsCollection());
+    }
+
+    public function testEmptyCollectionDocument()
+    {
+        $document = new Document([]);
+        self::assertEquals(0, $document->data()->count());
+        self::assertTrue($document->shouldBeHandledAsCollection());
     }
 
     public function testResourceCollectionDocument()
     {
-        $document = new ResourceCollectionDocument([$this->createMock(ResourceInterface::class)]);
-        self::assertEquals(1, $document->data()->count());
-        self::assertEquals('resource_collection', $document->getType());
-    }
-
-    public function testEmptyResourceCollectionDocument()
-    {
-        $document = new ResourceCollectionDocument();
+        $document = new Document($this->createMock(ResourceCollectionInterface::class));
         self::assertEquals(0, $document->data()->count());
-    }
-
-    public function testRelationshipDocument()
-    {
-        $document = new RelationshipDocument($this->createMock(ResourceInterface::class));
-        self::assertEquals(1, $document->data()->count());
-        self::assertEquals('relationship', $document->getType());
-    }
-
-    public function testEmptyRelationshipDocument()
-    {
-        $document = new RelationshipDocument();
-        self::assertEquals(0, $document->data()->count());
-    }
-
-    public function testRelationshipCollectionDocument()
-    {
-        $document = new RelationshipCollectionDocument([$this->createMock(ResourceInterface::class)]);
-        self::assertEquals(1, $document->data()->count());
-        self::assertEquals('relationship_collection', $document->getType());
-    }
-
-    public function testEmptyRelationshipCollectionDocument()
-    {
-        $document = new RelationshipCollectionDocument();
-        self::assertEquals(0, $document->data()->count());
-    }
-
-    public function testErrorDocument()
-    {
-        $document = new ErrorDocument();
-        self::assertEquals(0, $document->errors()->count());
-        self::assertEquals(0, $document->data()->count());
-        self::assertEquals('error', $document->getType());
+        self::assertTrue($document->shouldBeHandledAsCollection());
     }
 
     public function testEmptyErrorDocument()
     {
-        $document = new ErrorDocument();
+        $document = new Document();
         self::assertEquals(0, $document->errors()->count());
+        self::assertFalse($document->shouldBeHandledAsCollection());
+    }
+
+    public function testHttpStatus()
+    {
+        $document = new Document();
+
+        self::assertEquals(DocumentInterface::HTTP_OK, $document->httpStatus());
+
+        $document->withHttpStatus(500);
+        self::assertEquals(500, $document->httpStatus());
     }
 }

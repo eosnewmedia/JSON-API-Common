@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Serializer;
 
-use Enm\JsonApi\Factory\DocumentFactoryInterface;
-use Enm\JsonApi\Factory\ResourceFactoryInterface;
+use Enm\JsonApi\Model\Factory\DocumentFactoryInterface;
+use Enm\JsonApi\Model\Factory\ResourceFactoryInterface;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\Error;
 use Enm\JsonApi\Model\Error\ErrorInterface;
-use Enm\JsonApi\Model\Resource\Link\Link;
-use Enm\JsonApi\Model\Resource\Link\LinkInterface;
+use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 
 /**
@@ -54,24 +53,24 @@ class Deserializer implements DocumentDeserializerInterface
     }
 
     /**
-     * @param string $type
      * @param array $documentData
      * @return DocumentInterface
      * @throws \InvalidArgumentException
      */
-    public function deserialize(string $type, array $documentData): DocumentInterface
+    public function deserializeDocument(array $documentData): DocumentInterface
     {
         $data = $documentData['data'] ?? null;
 
-        if (!is_array($data) || (!is_array($data) && $type === DocumentInterface::TYPE_ERROR)) {
-            $document = $this->documentFactory()->create($type);
+        if (!is_array($data)) {
+            $document = $this->documentFactory()->create();
         } elseif (count($data) > 0 && array_keys($data) !== range(0, count($data) - 1)) {
-            $document = $this->documentFactory()->create($type, $this->buildResource($data));
+            $document = $this->documentFactory()->create($this->buildResource($data));
         } else {
-            $document = $this->documentFactory()->create($type);
+            $resources = [];
             foreach ($data as $resource) {
-                $document->data()->set($this->buildResource($resource));
+                $resources[] = $this->buildResource($resource);
             }
+            $document = $this->documentFactory()->create($resources);
         }
 
         $errors = array_key_exists('errors', $documentData) ? (array)$documentData['errors'] : [];
@@ -80,12 +79,12 @@ class Deserializer implements DocumentDeserializerInterface
         }
 
         if (array_key_exists('meta', $documentData)) {
-            $document->metaInformations()->merge((array)$documentData['meta']);
+            $document->metaInformation()->merge((array)$documentData['meta']);
         }
 
         $links = array_key_exists('links', $documentData) ? (array)$documentData['links'] : [];
         foreach ($links as $name => $link) {
-            $document->links()->set($this->buildLink($name, is_array($link) ? $link : ['href' => $link]));
+            $this->buildLink($document->links(), $name, is_array($link) ? $link : ['href' => $link]);
         }
 
         $included = array_key_exists('included', $documentData) ? (array)$documentData['included'] : [];
@@ -117,11 +116,11 @@ class Deserializer implements DocumentDeserializerInterface
 
         $links = array_key_exists('links', $resourceData) ? (array)$resourceData['links'] : [];
         foreach ($links as $name => $link) {
-            $resource->links()->set($this->buildLink($name, is_array($link) ? $link : ['href' => $link]));
+            $this->buildLink($resource->links(), $name, is_array($link) ? $link : ['href' => $link]);
         }
 
         if (array_key_exists('meta', $resourceData)) {
-            $resource->metaInformations()->merge((array)$resourceData['meta']);
+            $resource->metaInformation()->merge((array)$resourceData['meta']);
         }
 
         return $resource;
@@ -141,30 +140,29 @@ class Deserializer implements DocumentDeserializerInterface
         );
 
         if (array_key_exists('meta', $data)) {
-            $error->metaInformations()->merge((array)$data['meta']);
+            $error->metaInformation()->merge((array)$data['meta']);
         }
 
         return $error;
     }
 
     /**
+     * @param LinkCollectionInterface $collection
      * @param string $name
      * @param array $data
-     * @return LinkInterface
+     * @return void
      * @throws \InvalidArgumentException
      */
-    protected function buildLink(string $name, array $data): LinkInterface
+    protected function buildLink(LinkCollectionInterface $collection, string $name, array $data)
     {
         if (!array_key_exists('href', $data)) {
             throw new \InvalidArgumentException('Invalid link given!');
         }
 
-        $link = new Link($name, (string)$data['href']);
+        $collection->createLink($name, (string)$data['href']);
         if (array_key_exists('meta', $data)) {
-            $link->metaInformations()->merge((array)$data['meta']);
+            $collection->get($name)->metaInformation()->merge((array)$data['meta']);
         }
-
-        return $link;
     }
 
     /**
@@ -195,13 +193,15 @@ class Deserializer implements DocumentDeserializerInterface
 
             $links = array_key_exists('links', $relationship) ? (array)$relationship['links'] : [];
             foreach ($links as $linkName => $link) {
-                $resource->relationships()->get($name)->links()->set(
-                    $this->buildLink($linkName, is_array($link) ? $link : ['href' => $link])
+                $this->buildLink(
+                    $resource->relationships()->get($name)->links(),
+                    $linkName,
+                    is_array($link) ? $link : ['href' => $link]
                 );
             }
 
             if (array_key_exists('meta', $relationship)) {
-                $resource->relationships()->get($name)->metaInformations()->merge((array)$relationship['meta']);
+                $resource->relationships()->get($name)->metaInformation()->merge((array)$relationship['meta']);
             }
         }
     }

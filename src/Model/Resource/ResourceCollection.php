@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Model\Resource;
 
-use Enm\JsonApi\Exception\ResourceNotFoundException;
+use Enm\JsonApi\Exception\ResourceNotFoundJsonApiException;
 use Enm\JsonApi\Model\Common\AbstractCollection;
+use Enm\JsonApi\Model\Factory\ResourceFactoryAwareTrait;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
 class ResourceCollection extends AbstractCollection implements ResourceCollectionInterface
 {
+    use ResourceFactoryAwareTrait;
+
     /**
      * @param ResourceInterface[] $data
      */
@@ -46,12 +49,12 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      * @param string $id
      *
      * @return ResourceInterface
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundJsonApiException
      */
     public function get(string $type, string $id): ResourceInterface
     {
         if (!$this->has($type, $id)) {
-            throw new ResourceNotFoundException($type, $id);
+            throw new ResourceNotFoundJsonApiException($type, $id);
         }
 
         return $this->collection[$this->buildArrayKey($type, $id)];
@@ -69,7 +72,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
         }
 
         foreach ($this->all() as $resource) {
-            if ($type === null || $resource->getType() === $type) {
+            if ($type === null || $resource->type() === $type) {
                 return $resource;
             }
         }
@@ -84,7 +87,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      */
     public function set(ResourceInterface $resource): ResourceCollectionInterface
     {
-        $this->collection[$this->buildArrayKey($resource->getType(), $resource->getId())] = $resource;
+        $this->collection[$this->buildArrayKey($resource->type(), $resource->id())] = $resource;
 
         return $this;
     }
@@ -110,7 +113,19 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      */
     public function removeElement(ResourceInterface $resource): ResourceCollectionInterface
     {
-        $this->remove($resource->getType(), $resource->getId());
+        $this->remove($resource->type(), $resource->id());
+
+        return $this;
+    }
+
+    /**
+     * @param string $type
+     * @param string $id
+     * @return ResourceCollectionInterface
+     */
+    public function createResource(string $type, string $id): ResourceCollectionInterface
+    {
+        $this->set($this->resourceFactory()->create($type, $id));
 
         return $this;
     }

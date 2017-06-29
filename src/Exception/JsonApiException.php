@@ -9,7 +9,7 @@ use Enm\JsonApi\Model\Error\ErrorInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class Exception extends \Exception
+class JsonApiException extends \Exception
 {
     /**
      * @return int

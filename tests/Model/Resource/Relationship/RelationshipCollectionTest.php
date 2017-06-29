@@ -45,7 +45,7 @@ class RelationshipCollectionTest extends TestCase
         /** @var RelationshipInterface $relationship */
         $relationship = $this->createConfiguredMock(
             RelationshipInterface::class,
-            ['getType' => RelationshipInterface::TYPE_ONE, 'getName' => 'test']
+            ['name' => 'test']
         );
         $collection->set(
             $relationship
@@ -60,7 +60,8 @@ class RelationshipCollectionTest extends TestCase
 
         $collection->createToOne('test');
 
-        self::assertEquals(RelationshipInterface::TYPE_ONE, $collection->get('test')->getType());
+        self::assertEquals('test', $collection->get('test')->name());
+        self::assertFalse($collection->get('test')->shouldBeHandledAsCollection());
     }
 
     public function testSetToMany()
@@ -69,7 +70,8 @@ class RelationshipCollectionTest extends TestCase
 
         $collection->createToMany('test');
 
-        self::assertEquals(RelationshipInterface::TYPE_MANY, $collection->get('test')->getType());
+        self::assertEquals('test', $collection->get('test')->name());
+        self::assertTrue($collection->get('test')->shouldBeHandledAsCollection());
     }
 
     public function testRemove()
@@ -90,7 +92,7 @@ class RelationshipCollectionTest extends TestCase
         /** @var RelationshipInterface $relationship */
         $relationship = $this->createConfiguredMock(
             RelationshipInterface::class,
-            ['getType' => RelationshipInterface::TYPE_ONE, 'getName' => 'a']
+            ['name' => 'a']
         );
         $collection->removeElement($relationship);
 
@@ -105,11 +107,11 @@ class RelationshipCollectionTest extends TestCase
         return [
             $this->createConfiguredMock(
                 RelationshipInterface::class,
-                ['getType' => RelationshipInterface::TYPE_ONE, 'getName' => 'a']
+                ['name' => 'a']
             ),
             $this->createConfiguredMock(
                 RelationshipInterface::class,
-                ['getType' => RelationshipInterface::TYPE_MANY, 'getName' => 'b']
+                ['name' => 'b']
             ),
         ];
     }

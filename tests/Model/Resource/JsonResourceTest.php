@@ -16,11 +16,11 @@ class JsonResourceTest extends TestCase
     {
         $resource = new JsonResource('test', '1', ['attr' => 'test']);
         self::assertEquals('test', $resource->attributes()->getRequired('attr'));
-        self::assertEquals('test', $resource->getType());
-        self::assertEquals('1', $resource->getId());
+        self::assertEquals('test', $resource->type());
+        self::assertEquals('1', $resource->id());
         self::assertEquals(0, $resource->relationships()->count());
         self::assertEquals(0, $resource->links()->count());
-        self::assertEquals(0, $resource->metaInformations()->count());
+        self::assertEquals(0, $resource->metaInformation()->count());
     }
 
     public function testDuplicateJsonResource()
@@ -34,7 +34,7 @@ class JsonResourceTest extends TestCase
 
         self::assertNotSame($resource, $duplicate);
         self::assertNotSame($resource->attributes(), $duplicate->attributes());
-        self::assertNotSame($resource->metaInformations(), $duplicate->metaInformations());
+        self::assertNotSame($resource->metaInformation(), $duplicate->metaInformation());
         self::assertNotSame($resource->links(), $duplicate->links());
         self::assertNotSame($resource->links()->get('test'), $duplicate->links()->get('test'));
         self::assertNotSame($resource->relationships(), $duplicate->relationships());

@@ -6,7 +6,7 @@ namespace Enm\JsonApi\Exception;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class UnsupportedMediaTypeException extends Exception
+class UnsupportedMediaTypeJsonApiException extends JsonApiException
 {
     /**
      * @return int

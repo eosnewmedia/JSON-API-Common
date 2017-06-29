@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Enm\JsonApi\Factory;
+namespace Enm\JsonApi\Model\Factory;
 
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 

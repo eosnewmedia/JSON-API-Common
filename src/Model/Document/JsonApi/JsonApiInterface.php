@@ -1,34 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace Enm\JsonApi\Model\Error;
+namespace Enm\JsonApi\Model\Document\JsonApi;
 
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface ErrorInterface
+interface JsonApiInterface
 {
-    /**
-     * @return int
-     */
-    public function status(): int;
+    const CURRENT_VERSION = '1.0';
 
     /**
      * @return string
      */
-    public function code(): string;
-
-    /**
-     * @return string
-     */
-    public function title(): string;
-
-    /**
-     * @return string
-     */
-    public function detail(): string;
+    public function getVersion(): string;
 
     /**
      * @return KeyValueCollectionInterface

@@ -2,45 +2,38 @@
 # Resources
 A json api resource is represented through a php object of type `Enm\JsonApi\Model\Resource\ResourceInterface` and requires at least "type" and "id".
 
-You can use this interface with your custom classes or may use the default implementation `Enm\JsonApi\Model\Resource\JsonResource`, which will be good choice for most use cases.
-
-```php
-$resource = new Enm\JsonApi\Model\Resource\JsonResource($resourceType, $resourceId);
-```
-    
-
 `Enm\JsonApi\Model\Resource\ResourceInterface`:
 
 | Method             | Return Type                     | Description                                       |
 |--------------------|---------------------------------|---------------------------------------------------|
-| getType()          | string                          | Resource Type Identifier ("type")                 |
-| getId()            | string                          | Resource Identifier ("id")                        |
+| type()             | string                          | Resource Type Identifier ("type")                 |
+| id()               | string                          | Resource Identifier ("id")                        |
 | attributes         | SimpleCollectionInterface       | Attributes of the resource ("attributes")         |
 | relationships      | RelationshipCollectionInterface | The relationships of a resource ("relationships") |
 | links()            | LinkCollectionInterface         | The links for a resource ("links")                |
-| metaInformations() | SimpleCollectionInterface       | Meta Informations for a resource ("meta")         |
+| metaInformation()  | SimpleCollectionInterface       | Meta Informations for a resource ("meta")         |
 
 ## Relationships
 A Relationship is represented through a php object of type `Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface`:
 
 | Method                         | Return Type                 | Description                                                               |
 |--------------------------------|-----------------------------|---------------------------------------------------------------------------|
-| getType()                      | string                      | Type of the relationship ("one" or "many").                               |
-| getName()                      | string                      | The relationship name                                                     |
+| type()                         | string                      | Type of the relationship ("one" or "many").                               |
+| name()                         | string                      | The relationship name                                                     |
 | related()                      | ResourceCollectionInterface | Collection of related resources for this relationship.                    |
 | links()                        | LinkCollectionInterface     | Collection of link objects for this relationship.                         |
-| metaInformations()             | SimpleCollectionInterface   | Collection of meta informations for this relationship.                    |
+| metaInformation()              | SimpleCollectionInterface   | Collection of meta informations for this relationship.                    |
 | duplicate(string $name = null) | $this                       | Helper method to duplicate this relationship, optional with another name. |
 
-A relationship contains, depending on type, one or many related resources or can be empty.
+A relationship contains, depending on the type, one or many related resources or can be empty.
 
-There are two types of relationships, `one` and `many`, with usable default implementations:
+There are two types of relationships:
 
-* `Enm\JsonApi\Model\Resource\Relationship\ToOneRelationship` (can contain zero or exactly one related resource)
-* `Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface` (can contain zero or many related resources)
+* `one` can contain zero or exactly one related resource
+* `many` can contain zero or many related resources
 
-A relationship needs a unique (in the context of one resource type) name offers access to all related resources via `RelationshipInterface::related()`.
-A relationship can contain links and meta informations like a resource.
+A relationship needs a unique name (in context of one resource) and offers access to all related resources via `RelationshipInterface::related()`.
+Relationships can contain links and meta information like resources.
 
 The relationships of a resource are accessible via `ResourceInterface::relationships()`, which is an instance of `Enm\JsonApi\Model\Resource\Relationship\RelationshipCollectionInterface`:
 
@@ -59,4 +52,4 @@ The relationships of a resource are accessible via `ResourceInterface::relations
 
 *****
 
-[back to README](../README.md) | [next: Attributes and Meta](../docs/02-collections.md)
+[back to Entry Point](../docs/01-entry.md) | [next: Attributes and Meta](../docs/03-collections.md)

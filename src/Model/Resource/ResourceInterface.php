@@ -15,12 +15,12 @@ interface ResourceInterface
     /**
      * @return string
      */
-    public function getType(): string;
+    public function type(): string;
 
     /**
      * @return string
      */
-    public function getId(): string;
+    public function id(): string;
 
     /**
      * @return KeyValueCollectionInterface
@@ -40,7 +40,7 @@ interface ResourceInterface
     /**
      * @return KeyValueCollectionInterface
      */
-    public function metaInformations(): KeyValueCollectionInterface;
+    public function metaInformation(): KeyValueCollectionInterface;
 
     /**
      * Creates a new resource containing all data from the current one.

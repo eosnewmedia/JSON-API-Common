@@ -61,7 +61,7 @@ class LinkCollection extends AbstractCollection implements LinkCollectionInterfa
      */
     public function set(LinkInterface $link): LinkCollectionInterface
     {
-        $this->collection[$link->getName()] = $link;
+        $this->collection[$link->name()] = $link;
 
         return $this;
     }
@@ -86,7 +86,20 @@ class LinkCollection extends AbstractCollection implements LinkCollectionInterfa
      */
     public function removeElement(LinkInterface $link): LinkCollectionInterface
     {
-        $this->remove($link->getName());
+        $this->remove($link->name());
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param string $href
+     * @return LinkCollectionInterface
+     * @throws \InvalidArgumentException
+     */
+    public function createLink(string $name, string $href): LinkCollectionInterface
+    {
+        $this->set(new Link($name, $href));
 
         return $this;
     }

@@ -13,7 +13,7 @@ class Link implements LinkInterface
 {
     private $name;
     private $href;
-    private $metaInformations;
+    private $metaInformation;
 
     /**
      * @param string $name
@@ -32,14 +32,14 @@ class Link implements LinkInterface
 
         $this->name = $name;
         $this->href = $href;
-        $this->metaInformations = new KeyValueCollection();
+        $this->metaInformation = new KeyValueCollection();
     }
 
 
     /**
      * @return string
      */
-    public function getName(): string
+    public function name(): string
     {
         return $this->name;
     }
@@ -47,7 +47,7 @@ class Link implements LinkInterface
     /**
      * @return string
      */
-    public function getHref(): string
+    public function href(): string
     {
         return $this->href;
     }
@@ -55,9 +55,9 @@ class Link implements LinkInterface
     /**
      * @return KeyValueCollectionInterface
      */
-    public function metaInformations(): KeyValueCollectionInterface
+    public function metaInformation(): KeyValueCollectionInterface
     {
-        return $this->metaInformations;
+        return $this->metaInformation;
     }
 
     /**
@@ -70,8 +70,8 @@ class Link implements LinkInterface
      */
     public function duplicate(string $name = null): LinkInterface
     {
-        $link = new self($name ?? $this->getName(), $this->getHref());
-        $link->metaInformations()->mergeCollection($this->metaInformations());
+        $link = new self($name ?? $this->name(), $this->href());
+        $link->metaInformation()->mergeCollection($this->metaInformation());
 
         return $link;
     }

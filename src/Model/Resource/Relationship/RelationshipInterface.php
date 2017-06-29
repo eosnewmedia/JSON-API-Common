@@ -4,26 +4,20 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Model\Resource\Relationship;
 
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
+use Enm\JsonApi\Model\Common\OneOrManyInterface;
+use Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface RelationshipInterface
+interface RelationshipInterface extends ResourceFactoryAwareInterface, OneOrManyInterface
 {
-    const TYPE_ONE = 'one';
-    const TYPE_MANY = 'many';
-
     /**
      * @return string
      */
-    public function getType(): string;
-
-    /**
-     * @return string
-     */
-    public function getName(): string;
+    public function name(): string;
 
     /**
      * @return ResourceCollectionInterface
@@ -38,7 +32,7 @@ interface RelationshipInterface
     /**
      * @return KeyValueCollectionInterface
      */
-    public function metaInformations(): KeyValueCollectionInterface;
+    public function metaInformation(): KeyValueCollectionInterface;
 
     /**
      * Creates a new relationship containing all data from the current one.
