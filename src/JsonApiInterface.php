@@ -13,6 +13,8 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
  */
 interface JsonApiInterface
 {
+    const CONTENT_TYPE = 'application/vnd.api+json';
+
     /**
      * @param string $type
      * @param string $id
