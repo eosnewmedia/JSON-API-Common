@@ -6,14 +6,14 @@ namespace Enm\JsonApi\Exception;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class UnsupportedTypeJsonApiException extends JsonApiException
+class UnsupportedMediaTypeException extends JsonApiException
 {
     /**
-     * @param string $type
+     * @param string $contentType
      */
-    public function __construct(string $type)
+    public function __construct(string $contentType = '')
     {
-        parent::__construct('Resource type "' . $type . '" not found');
+        parent::__construct('Invalid content type: ' . $contentType);
     }
 
     /**
@@ -21,6 +21,6 @@ class UnsupportedTypeJsonApiException extends JsonApiException
      */
     public function getHttpStatus(): int
     {
-        return 404;
+        return 415;
     }
 }

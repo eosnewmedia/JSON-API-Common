@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Tests\Exception;
 
 use Enm\JsonApi\Exception\JsonApiException;
-use Enm\JsonApi\Exception\HttpJsonApiException;
-use Enm\JsonApi\Exception\InvalidRequestJsonApiException;
-use Enm\JsonApi\Exception\NotAllowedJsonApiException;
-use Enm\JsonApi\Exception\ResourceNotFoundJsonApiException;
-use Enm\JsonApi\Exception\UnsupportedMediaTypeJsonApiException;
-use Enm\JsonApi\Exception\UnsupportedTypeJsonApiException;
+use Enm\JsonApi\Exception\HttpException;
+use Enm\JsonApi\Exception\BadRequestException;
+use Enm\JsonApi\Exception\NotAllowedException;
+use Enm\JsonApi\Exception\ResourceNotFoundException;
+use Enm\JsonApi\Exception\UnsupportedMediaTypeException;
+use Enm\JsonApi\Exception\UnsupportedTypeException;
 use Enm\JsonApi\Model\Error\ErrorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ class ExceptionTest extends TestCase
 {
     public function testInvalidRequestException()
     {
-        $exception = new InvalidRequestJsonApiException();
+        $exception = new BadRequestException();
         self::assertInstanceOf(\Exception::class, $exception);
         self::assertInstanceOf(JsonApiException::class, $exception);
         self::assertEquals(400, $exception->getHttpStatus());
@@ -33,7 +33,7 @@ class ExceptionTest extends TestCase
 
     public function testResourceNotFoundException()
     {
-        $exception = new ResourceNotFoundJsonApiException('test', 'id');
+        $exception = new ResourceNotFoundException('test', 'id');
         self::assertInstanceOf(\Exception::class, $exception);
         self::assertInstanceOf(JsonApiException::class, $exception);
         self::assertEquals(404, $exception->getHttpStatus());
@@ -49,11 +49,11 @@ class ExceptionTest extends TestCase
 
     public function testUnsupportedMediaTypeException()
     {
-        $exception = new UnsupportedMediaTypeJsonApiException();
+        $exception = new UnsupportedMediaTypeException('text/html');
         self::assertInstanceOf(\Exception::class, $exception);
         self::assertInstanceOf(JsonApiException::class, $exception);
         self::assertEquals(415, $exception->getHttpStatus());
-        self::assertEquals('', $exception->getMessage());
+        self::assertEquals('Invalid content type: text/html', $exception->getMessage());
         self::assertInstanceOf(
             ErrorInterface::class,
             $exception->createError()
@@ -77,7 +77,7 @@ class ExceptionTest extends TestCase
 
     public function testUnsupportedTypeException()
     {
-        $exception = new UnsupportedTypeJsonApiException('Test');
+        $exception = new UnsupportedTypeException('Test');
         self::assertInstanceOf(\Exception::class, $exception);
         self::assertEquals(404, $exception->getHttpStatus());
 
@@ -92,7 +92,7 @@ class ExceptionTest extends TestCase
 
     public function testNotAllowedException()
     {
-        $exception = new NotAllowedJsonApiException('Test');
+        $exception = new NotAllowedException('Test');
         self::assertInstanceOf(\Exception::class, $exception);
         self::assertEquals(403, $exception->getHttpStatus());
 
@@ -107,7 +107,7 @@ class ExceptionTest extends TestCase
 
     public function testHttpException()
     {
-        $exception = new HttpJsonApiException(503, 'Test');
+        $exception = new HttpException(503, 'Test');
         self::assertInstanceOf(\Exception::class, $exception);
         self::assertEquals(503, $exception->getHttpStatus());
 

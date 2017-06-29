@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Model\Resource;
 
-use Enm\JsonApi\Exception\ResourceNotFoundJsonApiException;
+use Enm\JsonApi\Exception\ResourceNotFoundException;
 use Enm\JsonApi\Model\Common\AbstractCollection;
 use Enm\JsonApi\Model\Factory\ResourceFactoryAwareTrait;
 
@@ -49,12 +49,12 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      * @param string $id
      *
      * @return ResourceInterface
-     * @throws ResourceNotFoundJsonApiException
+     * @throws ResourceNotFoundException
      */
     public function get(string $type, string $id): ResourceInterface
     {
         if (!$this->has($type, $id)) {
-            throw new ResourceNotFoundJsonApiException($type, $id);
+            throw new ResourceNotFoundException($type, $id);
         }
 
         return $this->collection[$this->buildArrayKey($type, $id)];

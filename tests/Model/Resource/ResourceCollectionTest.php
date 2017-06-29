@@ -63,7 +63,7 @@ class ResourceCollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \Enm\JsonApi\Exception\ResourceNotFoundJsonApiException
+     * @expectedException \Enm\JsonApi\Exception\ResourceNotFoundException
      */
     public function testGetInvalid()
     {

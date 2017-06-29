@@ -7,7 +7,7 @@ namespace Enm\JsonApi\Exception;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class HttpJsonApiException extends JsonApiException
+class HttpException extends JsonApiException
 {
     /**
      * @var int
