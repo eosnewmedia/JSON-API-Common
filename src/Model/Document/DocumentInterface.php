@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Model\Document;
 
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
-use Enm\JsonApi\Model\Common\OneOrManyInterface;
 use Enm\JsonApi\Model\Document\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Error\ErrorCollectionInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
@@ -13,13 +12,20 @@ use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface DocumentInterface extends OneOrManyInterface
+interface DocumentInterface
 {
     const HTTP_OK = 200;
 
     const HTTP_ACCEPTED = 202;
 
     const HTTP_NO_CONTENT = 204;
+
+    /**
+     * Indicates if the contained data should be handled as object collection or single object
+     *
+     * @return bool
+     */
+    public function shouldBeHandledAsCollection(): bool;
 
     /**
      * @return LinkCollectionInterface

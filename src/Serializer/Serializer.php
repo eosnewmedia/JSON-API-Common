@@ -15,8 +15,6 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
  */
 class Serializer implements DocumentSerializerInterface
 {
-    const VERSION = '1.0';
-
     /**
      * @param DocumentInterface $document
      * @param bool $identifiersOnly

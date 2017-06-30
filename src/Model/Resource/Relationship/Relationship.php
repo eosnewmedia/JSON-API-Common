@@ -110,8 +110,6 @@ class Relationship implements RelationshipInterface
      */
     public function related(): ResourceCollectionInterface
     {
-        $this->related->setResourceFactory($this->resourceFactory());
-
         return $this->related;
     }
 

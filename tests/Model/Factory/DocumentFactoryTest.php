@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Enm\JsonApi\Tests\Factory;
+namespace Enm\JsonApi\Tests\Model\Factory;
 
 use Enm\JsonApi\Model\Factory\DocumentFactory;
 use PHPUnit\Framework\TestCase;

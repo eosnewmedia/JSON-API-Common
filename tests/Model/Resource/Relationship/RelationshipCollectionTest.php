@@ -54,26 +54,6 @@ class RelationshipCollectionTest extends TestCase
         self::assertTrue($collection->has('test'));
     }
 
-    public function testSetToOne()
-    {
-        $collection = new RelationshipCollection();
-
-        $collection->createToOne('test');
-
-        self::assertEquals('test', $collection->get('test')->name());
-        self::assertFalse($collection->get('test')->shouldBeHandledAsCollection());
-    }
-
-    public function testSetToMany()
-    {
-        $collection = new RelationshipCollection();
-
-        $collection->createToMany('test');
-
-        self::assertEquals('test', $collection->get('test')->name());
-        self::assertTrue($collection->get('test')->shouldBeHandledAsCollection());
-    }
-
     public function testRemove()
     {
         $collection = new RelationshipCollection($this->getResources());

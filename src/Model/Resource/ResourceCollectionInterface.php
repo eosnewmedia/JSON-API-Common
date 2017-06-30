@@ -4,12 +4,11 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Model\Resource;
 
 use Enm\JsonApi\Model\Common\CollectionInterface;
-use Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface ResourceCollectionInterface extends CollectionInterface, ResourceFactoryAwareInterface
+interface ResourceCollectionInterface extends CollectionInterface
 {
     /**
      * @return ResourceInterface[]
@@ -58,11 +57,4 @@ interface ResourceCollectionInterface extends CollectionInterface, ResourceFacto
      * @return ResourceCollectionInterface
      */
     public function removeElement(ResourceInterface $resource): ResourceCollectionInterface;
-
-    /**
-     * @param string $type
-     * @param string $id
-     * @return ResourceCollectionInterface
-     */
-    public function createResource(string $type, string $id): ResourceCollectionInterface;
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Tests\Serializer;
 
 use Enm\JsonApi\Model\Factory\DocumentFactory;
-use Enm\JsonApi\Model\Factory\ResourceFactory;
 use Enm\JsonApi\Serializer\Deserializer;
 use PHPUnit\Framework\TestCase;
 
@@ -15,8 +14,15 @@ class DeserializerTest extends TestCase
 {
     public function testDeserializeResourceDocument()
     {
-        $document = $this->createDeserializer()->deserializeDocument(
+        $documentDeserializer = $this->createDeserializer();
+        $documentDeserializer->setDocumentFactory(new DocumentFactory());
+
+        $document = $documentDeserializer->deserializeDocument(
             [
+                'jsonapi' => [
+                    'version' => '1.0',
+                    'meta' => ['test' => 'test']
+                ],
                 'data' => [
                     'type' => 'test',
                     'id' => 'test-2',
@@ -153,6 +159,6 @@ class DeserializerTest extends TestCase
      */
     protected function createDeserializer(): Deserializer
     {
-        return new Deserializer(new DocumentFactory(), new ResourceFactory());
+        return new Deserializer();
     }
 }

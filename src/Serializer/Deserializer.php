@@ -3,54 +3,28 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Serializer;
 
-use Enm\JsonApi\Model\Factory\DocumentFactoryInterface;
-use Enm\JsonApi\Model\Factory\ResourceFactoryInterface;
+use Enm\JsonApi\JsonApiInterface;
+use Enm\JsonApi\Model\Factory\DocumentFactoryAwareInterface;
+use Enm\JsonApi\Model\Factory\DocumentFactoryAwareTrait;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\Error;
 use Enm\JsonApi\Model\Error\ErrorInterface;
+use Enm\JsonApi\Model\Factory\RelationshipFactoryAwareInterface;
+use Enm\JsonApi\Model\Factory\RelationshipFactoryAwareTrait;
+use Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface;
+use Enm\JsonApi\Model\Factory\ResourceFactoryAwareTrait;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
+use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class Deserializer implements DocumentDeserializerInterface
+class Deserializer implements DocumentDeserializerInterface, DocumentFactoryAwareInterface, ResourceFactoryAwareInterface, RelationshipFactoryAwareInterface
 {
-    /**
-     * @var DocumentFactoryInterface
-     */
-    private $documentFactory;
-
-    /**
-     * @var ResourceFactoryInterface
-     */
-    private $resourceFactory;
-
-    /**
-     * @param DocumentFactoryInterface $documentFactory
-     * @param ResourceFactoryInterface $resourceFactory
-     */
-    public function __construct(DocumentFactoryInterface $documentFactory, ResourceFactoryInterface $resourceFactory)
-    {
-        $this->documentFactory = $documentFactory;
-        $this->resourceFactory = $resourceFactory;
-    }
-
-    /**
-     * @return DocumentFactoryInterface
-     */
-    protected function documentFactory(): DocumentFactoryInterface
-    {
-        return $this->documentFactory;
-    }
-
-    /**
-     * @return ResourceFactoryInterface
-     */
-    protected function resourceFactory(): ResourceFactoryInterface
-    {
-        return $this->resourceFactory;
-    }
+    use DocumentFactoryAwareTrait;
+    use ResourceFactoryAwareTrait;
+    use RelationshipFactoryAwareTrait;
 
     /**
      * @param array $documentData
@@ -61,16 +35,29 @@ class Deserializer implements DocumentDeserializerInterface
     {
         $data = $documentData['data'] ?? null;
 
-        if (!is_array($data)) {
-            $document = $this->documentFactory()->create();
-        } elseif (count($data) > 0 && array_keys($data) !== range(0, count($data) - 1)) {
-            $document = $this->documentFactory()->create($this->buildResource($data));
+        $hasJsonApi = array_key_exists('jsonapi', $documentData);
+
+        $version = $hasJsonApi && array_key_exists('version', $documentData['jsonapi']) ?
+            (string)$documentData['jsonapi']['version'] : JsonApiInterface::CURRENT_VERSION;
+
+        if (!is_array($data) || $this->isSingleResource($data)) {
+            $document = $this->documentFactory()->create(null, $version);
         } else {
-            $resources = [];
-            foreach ($data as $resource) {
-                $resources[] = $this->buildResource($resource);
+            $document = $this->documentFactory()->create([], $version);
+        }
+
+        if (is_array($data)) {
+            if ($this->isSingleResource($data)) {
+                $this->buildResource($document->data(), $data);
+            } else {
+                foreach ($data as $resource) {
+                    $this->buildResource($document->data(), $resource);
+                }
             }
-            $document = $this->documentFactory()->create($resources);
+        }
+
+        if ($hasJsonApi && array_key_exists('meta', $documentData['jsonapi'])) {
+            $document->jsonApi()->metaInformation()->merge((array)$documentData['jsonapi']);
         }
 
         $errors = array_key_exists('errors', $documentData) ? (array)$documentData['errors'] : [];
@@ -89,24 +76,29 @@ class Deserializer implements DocumentDeserializerInterface
 
         $included = array_key_exists('included', $documentData) ? (array)$documentData['included'] : [];
         foreach ($included as $related) {
-            $document->included()->set($this->buildResource($related));
+            $this->buildResource($document->included(), $related);
         }
 
         return $document;
     }
 
     /**
+     * @param ResourceCollectionInterface $collection
      * @param array $resourceData
      * @return ResourceInterface
      * @throws \InvalidArgumentException
      */
-    protected function buildResource(array $resourceData): ResourceInterface
+    protected function buildResource(ResourceCollectionInterface $collection, array $resourceData): ResourceInterface
     {
         if (!array_key_exists('type', $resourceData) || !array_key_exists('id', $resourceData)) {
             throw new \InvalidArgumentException('Invalid resource given!');
         }
 
-        $resource = $this->resourceFactory()->create((string)$resourceData['type'], (string)$resourceData['id']);
+        $type = (string)$resourceData['type'];
+        $id = (string)$resourceData['id'];
+        $resource = $this->resourceFactory()->create($type, $id);
+        $collection->set($resource);
+
         if (array_key_exists('attributes', $resourceData)) {
             $resource->attributes()->merge((array)$resourceData['attributes']);
         }
@@ -178,31 +170,45 @@ class Deserializer implements DocumentDeserializerInterface
 
             if (!is_array($related)) {
                 // empty to one relationship
-                $resource->relationships()->createToOne($name);
+                $relationshipObject = $this->relationshipFactory()->create($name);
             } elseif (count($related) > 0 && array_keys($related) !== range(0, count($related) - 1)) {
                 // to one relationship
-                $resource->relationships()->createToOne($name, $this->buildResource($related));
+                $relationshipObject = $this->relationshipFactory()->create($name);
+                $this->buildResource($relationshipObject->related(), $related);
             } else {
                 // to many relationship
-                $relatedResources = [];
+                $relationshipObject = $this->relationshipFactory()->create($name, []);
                 foreach ($related as $relatedResource) {
-                    $relatedResources[] = $this->buildResource($relatedResource);
+                    $relatedResources[] = $this->buildResource(
+                        $relationshipObject->related(),
+                        $relatedResource
+                    );
                 }
-                $resource->relationships()->createToMany($name, $relatedResources);
             }
 
             $links = array_key_exists('links', $relationship) ? (array)$relationship['links'] : [];
             foreach ($links as $linkName => $link) {
                 $this->buildLink(
-                    $resource->relationships()->get($name)->links(),
+                    $relationshipObject->links(),
                     $linkName,
                     is_array($link) ? $link : ['href' => $link]
                 );
             }
 
             if (array_key_exists('meta', $relationship)) {
-                $resource->relationships()->get($name)->metaInformation()->merge((array)$relationship['meta']);
+                $relationshipObject->metaInformation()->merge((array)$relationship['meta']);
             }
+
+            $resource->relationships()->set($relationshipObject);
         }
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    protected function isSingleResource(array $data): bool
+    {
+        return count($data) > 0 && array_keys($data) !== range(0, count($data) - 1);
     }
 }

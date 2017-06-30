@@ -25,11 +25,11 @@ composer require enm/json-api-common
     1. [Document Serializer](docs/05-documents.md#document-serializer)
 1. [Exceptions and Errors](docs/06-errors.md)
 1. [Factories](docs/07-factories.md)
-1. [Requests](docs/08-request.md)
 
 *****
 
 ## Changelog
+
 ### Version 2.0.0
 #### Model changes:
 1. renamed all occurrences of method "metaInformations" to "metaInformation"
@@ -44,9 +44,6 @@ composer require enm/json-api-common
 1. renamed method ```ErrorInterface::getTitle()``` to ```LinkInterface::title()```
 1. renamed method ```ErrorInterface::getDetail()``` to ```LinkInterface::detail()```
 1. added method "createLink" to ```LinkCollectionInterface```
-1. added interface ```DocumentFactoryInterface``` and class ```DocumentFactory```
-1. added interface ```ResourceFactoryInterface``` and class ```ResourceFactory```
-1. added interface ```FetchInterface``` and class ```AbstractFetchRequest```
 1. removed method "getType", which was only relevant for serializer, from ```DocumentInterface```
 1. added method "httpStatus" to ```DocumentInterface```
 1. added method "withHttpStatus" to ```DocumentInterface```, to modify the status of a document
@@ -69,4 +66,8 @@ composer require enm/json-api-common
 1. added class ```Deserializer``` as default implementation of ```DocumentDeserializerInterface```
 
 #### new in 2.0.0
-1. 1. added ```JsonApiInterface``` and ```AbstractJsonApi```
+1. added ```JsonApiInterface``` and ```JsonApiTrait```
+1. added interface ```DocumentFactoryInterface``` and class ```DocumentFactory```
+1. added interface ```DocumentFactoryAwareInterface``` and class ```DocumentFactoryAwareTrait```
+1. added interface ```ResourceFactoryInterface``` and class ```ResourceFactory```
+1. added interface ```ResourceFactoryAwareInterface``` and class ```ResourceFactoryAwareTrait```

@@ -4,16 +4,21 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Model\Resource\Relationship;
 
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
-use Enm\JsonApi\Model\Common\OneOrManyInterface;
-use Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface RelationshipInterface extends ResourceFactoryAwareInterface, OneOrManyInterface
+interface RelationshipInterface
 {
+    /**
+     * Indicates if the contained data should be handled as object collection or single object
+     *
+     * @return bool
+     */
+    public function shouldBeHandledAsCollection(): bool;
+
     /**
      * @return string
      */

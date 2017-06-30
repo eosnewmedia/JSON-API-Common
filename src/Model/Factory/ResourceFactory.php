@@ -19,9 +19,6 @@ class ResourceFactory implements ResourceFactoryInterface
      */
     public function create(string $type, string $id): ResourceInterface
     {
-        $resource = new JsonResource($type, $id);
-        $resource->relationships()->setResourceFactory($this);
-
-        return $resource;
+        return new JsonResource($type, $id);
     }
 }

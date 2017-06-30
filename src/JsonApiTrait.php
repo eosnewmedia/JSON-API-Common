@@ -5,10 +5,12 @@ namespace Enm\JsonApi;
 
 use Enm\JsonApi\Model\Factory\DocumentFactory;
 use Enm\JsonApi\Model\Factory\DocumentFactoryInterface;
+use Enm\JsonApi\Model\Factory\RelationshipFactory;
+use Enm\JsonApi\Model\Factory\RelationshipFactoryInterface;
 use Enm\JsonApi\Model\Factory\ResourceFactory;
-use Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface;
 use Enm\JsonApi\Model\Factory\ResourceFactoryInterface;
 use Enm\JsonApi\Model\Document\DocumentInterface;
+use Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use Enm\JsonApi\Serializer\Deserializer;
 use Enm\JsonApi\Serializer\DocumentDeserializerInterface;
@@ -18,7 +20,7 @@ use Enm\JsonApi\Serializer\Serializer;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApiInterface
+trait JsonApiTrait
 {
     /**
      * @var DocumentFactoryInterface
@@ -29,6 +31,11 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
      * @var ResourceFactoryInterface
      */
     private $resourceFactory;
+
+    /**
+     * @var RelationshipFactoryInterface
+     */
+    private $relationshipFactory;
 
     /**
      * @var DocumentSerializerInterface
@@ -87,9 +94,27 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
     }
 
     /**
+     * @param string $name
+     * @param ResourceInterface|null $related
+     * @return RelationshipInterface
+     */
+    public function toOneRelationship(string $name, ResourceInterface $related = null): RelationshipInterface
+    {
+        return $this->relationshipFactory()->create($name, $related);
+    }
+
+    /**
+     * @param string $name
+     * @param array|ResourceInterface[] $related
+     * @return RelationshipInterface
+     */
+    public function toManyRelationship(string $name, array $related = []): RelationshipInterface
+    {
+        return $this->relationshipFactory()->create($name, $related);
+    }
+
+    /**
      * @param DocumentFactoryInterface $documentFactory
-     *
-     * @return void
      */
     public function setDocumentFactory(DocumentFactoryInterface $documentFactory)
     {
@@ -98,8 +123,6 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
 
     /**
      * @param ResourceFactoryInterface $resourceFactory
-     *
-     * @return void
      */
     public function setResourceFactory(ResourceFactoryInterface $resourceFactory)
     {
@@ -107,9 +130,15 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
     }
 
     /**
+     * @param RelationshipFactoryInterface $relationshipFactory
+     */
+    public function setRelationshipFactory(RelationshipFactoryInterface $relationshipFactory)
+    {
+        $this->relationshipFactory = $relationshipFactory;
+    }
+
+    /**
      * @param DocumentSerializerInterface $documentSerializer
-     *
-     * @return void
      */
     public function setDocumentSerializer(DocumentSerializerInterface $documentSerializer)
     {
@@ -118,8 +147,6 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
 
     /**
      * @param DocumentDeserializerInterface $documentDeserializer
-     *
-     * @return void
      */
     public function setDocumentDeserializer(DocumentDeserializerInterface $documentDeserializer)
     {
@@ -134,7 +161,6 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
         if (!$this->documentFactory instanceof DocumentFactoryInterface) {
             $this->documentFactory = new DocumentFactory();
         }
-        $this->documentFactory()->setResourceFactory($this->resourceFactory());
 
         return $this->documentFactory;
     }
@@ -151,6 +177,17 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
         return $this->resourceFactory;
     }
 
+    /**
+     * @return RelationshipFactoryInterface
+     */
+    private function relationshipFactory(): RelationshipFactoryInterface
+    {
+        if (!$this->relationshipFactory instanceof RelationshipFactoryInterface) {
+            $this->relationshipFactory = new RelationshipFactory();
+        }
+
+        return $this->relationshipFactory;
+    }
 
     /**
      * @return DocumentSerializerInterface
@@ -170,7 +207,7 @@ abstract class AbstractJsonApi implements ResourceFactoryAwareInterface, JsonApi
     private function documentDeserializer(): DocumentDeserializerInterface
     {
         if (!$this->documentDeserializer instanceof DocumentDeserializerInterface) {
-            $this->documentDeserializer = new Deserializer($this->documentFactory(), $this->resourceFactory());
+            $this->documentDeserializer = new Deserializer();
         }
 
         return $this->documentDeserializer;

@@ -128,11 +128,4 @@ class ResourceCollectionTest extends TestCase
             ),
         ];
     }
-
-    public function testCreateResource()
-    {
-        $collection = new ResourceCollection();
-        $collection->createResource('test', 'test-1');
-        self::assertInstanceOf(ResourceInterface::class, $collection->get('test', 'test-1'));
-    }
 }

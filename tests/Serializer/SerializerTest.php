@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Server\Tests\Serializer;
 
+use Enm\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Document\DocumentInterface;
@@ -47,7 +48,7 @@ class SerializerTest extends TestCase
         self::assertArrayNotHasKey('links', $serialized);
         self::assertArrayNotHasKey('included', $serialized);
         self::assertArrayNotHasKey('meta', $serialized);
-        self::assertEquals(Serializer::VERSION, $serialized['jsonapi']['version']);
+        self::assertEquals(JsonApiInterface::CURRENT_VERSION, $serialized['jsonapi']['version']);
     }
 
     public function testSerializeResourceDocument()

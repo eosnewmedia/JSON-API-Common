@@ -5,6 +5,7 @@ namespace Enm\JsonApi\Tests\Model\Resource;
 
 use Enm\JsonApi\Model\Resource\JsonResource;
 use Enm\JsonApi\Model\Resource\Link\Link;
+use Enm\JsonApi\Model\Resource\Relationship\Relationship;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +28,7 @@ class JsonResourceTest extends TestCase
     {
         $resource = new JsonResource('test', '1', ['attr' => 'test']);
         $resource->links()->set(new Link('test', 'http://test.de'));
-        $resource->relationships()->createToMany('test');
+        $resource->relationships()->set(new Relationship('test'));
 
         $duplicate = $resource->duplicate();
 

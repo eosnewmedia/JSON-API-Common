@@ -10,8 +10,6 @@ use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
  */
 interface JsonApiInterface
 {
-    const CURRENT_VERSION = '1.0';
-
     /**
      * @return string
      */

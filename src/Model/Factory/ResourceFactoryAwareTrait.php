@@ -21,7 +21,6 @@ trait ResourceFactoryAwareTrait
     public function setResourceFactory(ResourceFactoryInterface $resourceFactory)
     {
         $this->resourceFactory = $resourceFactory;
-
     }
 
     /**

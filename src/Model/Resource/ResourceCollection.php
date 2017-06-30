@@ -5,15 +5,12 @@ namespace Enm\JsonApi\Model\Resource;
 
 use Enm\JsonApi\Exception\ResourceNotFoundException;
 use Enm\JsonApi\Model\Common\AbstractCollection;
-use Enm\JsonApi\Model\Factory\ResourceFactoryAwareTrait;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
 class ResourceCollection extends AbstractCollection implements ResourceCollectionInterface
 {
-    use ResourceFactoryAwareTrait;
-
     /**
      * @param ResourceInterface[] $data
      */
@@ -114,18 +111,6 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
     public function removeElement(ResourceInterface $resource): ResourceCollectionInterface
     {
         $this->remove($resource->type(), $resource->id());
-
-        return $this;
-    }
-
-    /**
-     * @param string $type
-     * @param string $id
-     * @return ResourceCollectionInterface
-     */
-    public function createResource(string $type, string $id): ResourceCollectionInterface
-    {
-        $this->set($this->resourceFactory()->create($type, $id));
 
         return $this;
     }

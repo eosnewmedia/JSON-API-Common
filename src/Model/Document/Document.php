@@ -66,7 +66,7 @@ class Document implements DocumentInterface
      * @param string $version
      * @throws \InvalidArgumentException
      */
-    public function __construct($data = null, string $version = JsonApiInterface::CURRENT_VERSION)
+    public function __construct($data = null, string $version = \Enm\JsonApi\JsonApiInterface::CURRENT_VERSION)
     {
         if (null === $data || $data instanceof ResourceInterface) {
             $this->data = new SingleResourceCollection($data !== null ? [$data] : []);
