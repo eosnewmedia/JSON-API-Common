@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Tests;
 
 use Enm\JsonApi\Model\Factory\DocumentFactory;
+use Enm\JsonApi\Model\Factory\RelationshipFactory;
 use Enm\JsonApi\Model\Factory\ResourceFactory;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use Enm\JsonApi\Serializer\Deserializer;
@@ -140,5 +141,18 @@ class JsonApiTest extends TestCase
             $documentDeserializer,
             $method->invoke($api)
         );
+    }
+
+    public function testToOneRelationship()
+    {
+        $api = new DummyJsonApi();
+        $api->setRelationshipFactory(new RelationshipFactory());
+        self::assertFalse($api->toOneRelationship('test')->shouldBeHandledAsCollection());
+    }
+
+    public function testToManyRelationship()
+    {
+        $api = new DummyJsonApi();
+        self::assertTrue($api->toManyRelationship('test')->shouldBeHandledAsCollection());
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Tests\Serializer;
 
 use Enm\JsonApi\Model\Factory\DocumentFactory;
+use Enm\JsonApi\Model\Factory\RelationshipFactory;
+use Enm\JsonApi\Model\Factory\ResourceFactory;
 use Enm\JsonApi\Serializer\Deserializer;
 use PHPUnit\Framework\TestCase;
 
@@ -16,6 +18,8 @@ class DeserializerTest extends TestCase
     {
         $documentDeserializer = $this->createDeserializer();
         $documentDeserializer->setDocumentFactory(new DocumentFactory());
+        $documentDeserializer->setResourceFactory(new ResourceFactory());
+        $documentDeserializer->setRelationshipFactory(new RelationshipFactory());
 
         $document = $documentDeserializer->deserializeDocument(
             [
@@ -142,7 +146,15 @@ class DeserializerTest extends TestCase
                 'included' => [
                     [
                         'type' => 'test',
-                        'id' => 'test-2'
+                        'id' => 'test-2',
+                        'relationships' => [
+                            'related' => [
+                                'data' => [
+                                    'type' => 'example',
+                                    'id' => 'example-1'
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ]
