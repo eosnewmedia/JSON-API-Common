@@ -155,4 +155,18 @@ class JsonApiTest extends TestCase
         $api = new DummyJsonApi();
         self::assertTrue($api->toManyRelationship('test')->shouldBeHandledAsCollection());
     }
+
+    public function testUuid()
+    {
+        $api = new DummyJsonApi();
+
+        $reflection = new \ReflectionObject($api);
+        $method = $reflection->getMethod('uuid');
+        $method->setAccessible(true);
+
+        self::assertStringMatchesFormat(
+            '%x%x%x%x%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x%x%x%x%x%x%x%x%x',
+            $method->invoke($api)
+        );
+    }
 }
