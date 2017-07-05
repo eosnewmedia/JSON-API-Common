@@ -6,10 +6,6 @@ namespace Enm\JsonApi\Tests;
 use Enm\JsonApi\Model\Factory\DocumentFactory;
 use Enm\JsonApi\Model\Factory\RelationshipFactory;
 use Enm\JsonApi\Model\Factory\ResourceFactory;
-use Enm\JsonApi\Model\Request\FetchRequestInterface;
-use Enm\JsonApi\Model\Request\JsonApiRequestInterface;
-use Enm\JsonApi\Model\Request\SaveRequestInterface;
-use Enm\JsonApi\Model\Resource\JsonResource;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use Enm\JsonApi\Serializer\Deserializer;
 use Enm\JsonApi\Serializer\Serializer;
@@ -166,27 +162,6 @@ class JsonApiTest extends TestCase
         self::assertStringMatchesFormat(
             '%x%x%x%x%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x%x%x%x%x%x%x%x%x',
             $api->uuid()
-        );
-    }
-
-    public function testJsonApiRequest()
-    {
-        $api = new DummyJsonApi();
-        self::assertInstanceOf(JsonApiRequestInterface::class, $api->jsonApiRequest('test'));
-    }
-
-    public function testFetchRequest()
-    {
-        $api = new DummyJsonApi();
-        self::assertInstanceOf(FetchRequestInterface::class, $api->fetchRequest('test'));
-    }
-
-    public function testSaveRequest()
-    {
-        $api = new DummyJsonApi();
-        self::assertInstanceOf(
-            SaveRequestInterface::class,
-            $api->saveRequest(new JsonResource('test', 'test'), 'test')
         );
     }
 }
