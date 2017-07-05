@@ -15,10 +15,26 @@ class SaveRequestTest extends TestCase
 {
     public function testSaveRequest()
     {
+        // create
         $document = new Document(new JsonResource('test', 'test-1'));
         $request = new SaveRequest($document);
 
         self::assertSame($document, $request->document());
+
+        // patch
+        $document = new Document(new JsonResource('test', 'test-1'));
+        $request = new SaveRequest($document, 'test-1');
+
+        self::assertSame($document, $request->document());
+    }
+
+    /**
+     * @expectedException \Enm\JsonApi\Exception\BadRequestException
+     */
+    public function testSaveRequestInvalidId()
+    {
+        $document = new Document(new JsonResource('test', 'test-1'));
+        new SaveRequest($document, 'test-2');
     }
 
     /**

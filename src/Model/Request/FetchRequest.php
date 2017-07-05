@@ -10,7 +10,7 @@ use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class ResourceRequest extends JsonApiRequest implements ResourceRequestInterface
+class FetchRequest extends JsonApiRequest implements FetchRequestInterface
 {
     /**
      * @var array
@@ -65,9 +65,9 @@ class ResourceRequest extends JsonApiRequest implements ResourceRequestInterface
      * Includes a relationship on this request
      *
      * @param string $relationship
-     * @return ResourceRequestInterface
+     * @return FetchRequestInterface
      */
-    public function include (string $relationship): ResourceRequestInterface
+    public function include (string $relationship): FetchRequestInterface
     {
         $this->includes[] = $relationship;
 
@@ -88,9 +88,9 @@ class ResourceRequest extends JsonApiRequest implements ResourceRequestInterface
     /**
      * @param string $type
      * @param string $name
-     * @return ResourceRequestInterface
+     * @return FetchRequestInterface
      */
-    public function field(string $type, string $name): ResourceRequestInterface
+    public function field(string $type, string $name): FetchRequestInterface
     {
         $this->fields[$type][] = $name;
 

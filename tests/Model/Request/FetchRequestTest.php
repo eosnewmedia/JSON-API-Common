@@ -5,17 +5,17 @@ namespace Enm\JsonApi\Tests\Model\Request;
 
 
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
-use Enm\JsonApi\Model\Request\ResourceRequest;
+use Enm\JsonApi\Model\Request\FetchRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class ResourceRequestTest extends TestCase
+class FetchRequestTest extends TestCase
 {
     public function testResourceRequest()
     {
-        $request = new ResourceRequest('test');
+        $request = new FetchRequest('test');
         $request->field('test', 'example');
         $request->include('test_b');
         $request->include('test_b.abc');

@@ -8,7 +8,7 @@ use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface ResourceRequestInterface extends JsonApiRequestInterface
+interface FetchRequestInterface extends JsonApiRequestInterface
 {
     const ORDER_ASC = 'asc';
     const ORDER_DESC = 'desc';
@@ -24,9 +24,9 @@ interface ResourceRequestInterface extends JsonApiRequestInterface
      * Includes a relationship on this request
      *
      * @param string $relationship
-     * @return ResourceRequestInterface
+     * @return FetchRequestInterface
      */
-    public function include (string $relationship): ResourceRequestInterface;
+    public function include (string $relationship): FetchRequestInterface;
 
     /**
      * Contains the "fields" parameter.
@@ -39,9 +39,9 @@ interface ResourceRequestInterface extends JsonApiRequestInterface
     /**
      * @param string $type
      * @param string $name
-     * @return ResourceRequestInterface
+     * @return FetchRequestInterface
      */
-    public function field(string $type, string $name): ResourceRequestInterface;
+    public function field(string $type, string $name): FetchRequestInterface;
 
     /**
      * Contains the "sort" parameter.
