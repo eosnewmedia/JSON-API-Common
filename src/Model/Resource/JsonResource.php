@@ -52,10 +52,10 @@ class JsonResource implements ResourceInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $type, string $id, array $attributes = [])
+    public function __construct(string $type, string $id = '', array $attributes = [])
     {
-        if ($type === '' || $id === '') {
-            throw new \InvalidArgumentException('Invalid resource identifier');
+        if ($type === '') {
+            throw new \InvalidArgumentException('Invalid resource type!');
         }
         $this->type = $type;
         $this->id = $id;

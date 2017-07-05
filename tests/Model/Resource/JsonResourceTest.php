@@ -49,12 +49,4 @@ class JsonResourceTest extends TestCase
     {
         new JsonResource('', '1');
     }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testJsonResourceEmptyId()
-    {
-        new JsonResource('test', '');
-    }
 }
