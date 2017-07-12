@@ -176,10 +176,7 @@ class Deserializer implements DocumentDeserializerInterface
                 // to many relationship
                 $relationshipObject = $this->relationshipFactory()->create($name, []);
                 foreach ($related as $relatedResource) {
-                    $relatedResources[] = $this->buildResource(
-                        $relationshipObject->related(),
-                        $relatedResource
-                    );
+                    $this->buildResource($relationshipObject->related(), $relatedResource);
                 }
             }
 
