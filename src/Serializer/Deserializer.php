@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Serializer;
 
 use Enm\JsonApi\JsonApiInterface;
-use Enm\JsonApi\Model\Factory\DocumentFactoryAwareInterface;
 use Enm\JsonApi\Model\Factory\DocumentFactoryAwareTrait;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\Error;
 use Enm\JsonApi\Model\Error\ErrorInterface;
-use Enm\JsonApi\Model\Factory\RelationshipFactoryAwareInterface;
 use Enm\JsonApi\Model\Factory\RelationshipFactoryAwareTrait;
-use Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface;
 use Enm\JsonApi\Model\Factory\ResourceFactoryAwareTrait;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
@@ -20,7 +17,7 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class Deserializer implements DocumentDeserializerInterface, DocumentFactoryAwareInterface, ResourceFactoryAwareInterface, RelationshipFactoryAwareInterface
+class Deserializer implements DocumentDeserializerInterface
 {
     use DocumentFactoryAwareTrait;
     use ResourceFactoryAwareTrait;

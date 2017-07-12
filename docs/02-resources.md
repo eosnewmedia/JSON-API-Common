@@ -16,21 +16,16 @@ A json api resource is represented through a php object of type `Enm\JsonApi\Mod
 ## Relationships
 A Relationship is represented through a php object of type `Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface`:
 
-| Method                         | Return Type                 | Description                                                               |
-|--------------------------------|-----------------------------|---------------------------------------------------------------------------|
-| type()                         | string                      | Type of the relationship ("one" or "many").                               |
-| name()                         | string                      | The relationship name                                                     |
-| related()                      | ResourceCollectionInterface | Collection of related resources for this relationship.                    |
-| links()                        | LinkCollectionInterface     | Collection of link objects for this relationship.                         |
-| metaInformation()              | SimpleCollectionInterface   | Collection of meta informations for this relationship.                    |
-| duplicate(string $name = null) | $this                       | Helper method to duplicate this relationship, optional with another name. |
+| Method                         | Return Type                 | Description                                                                              |
+|--------------------------------|-----------------------------|------------------------------------------------------------------------------------------|
+| shouldBeHandledAsCollection()  | boolean                     | Indicates if the contained data should be handled as object collection or single object. |
+| name()                         | string                      | The relationship name                                                                    |
+| related()                      | ResourceCollectionInterface | Collection of related resources for this relationship.                                   |
+| links()                        | LinkCollectionInterface     | Collection of link objects for this relationship.                                        |
+| metaInformation()              | SimpleCollectionInterface   | Collection of meta informations for this relationship.                                   |
+| duplicate(string $name = null) | $this                       | Helper method to duplicate this relationship, optional with another name.                |
 
-A relationship contains, depending on the type, one or many related resources or can be empty.
-
-There are two types of relationships:
-
-* `one` can contain zero or exactly one related resource
-* `many` can contain zero or many related resources
+A relationship contains, depending on return value of "shouldBeHandledAsCollection", one or many related resources or can be empty.
 
 A relationship needs a unique name (in context of one resource) and offers access to all related resources via `RelationshipInterface::related()`.
 Relationships can contain links and meta information like resources.
@@ -47,8 +42,6 @@ The relationships of a resource are accessible via `ResourceInterface::relations
 | set(RelationshipInterface $relationship)                     | $this                 | Set a relationship object into the collection.                                                         |
 | remove(string $name)                                         | $this                 | Remove a relationship by name from the collection.                                                     |
 | removeElement(RelationshipInterface $relationship)           | $this                 | Remove a relationship object from the collection.                                                      |
-| createToOne(string $name, ResourceInterface $related = null) | $this                 | Create a new to-one-relationship with name and (optional) resource and set it into the collection.     |
-| createToMany(string $name, array $related = [])              | $this                 | Create a new to-many-relationship with name an related resources and set it into the collection.       |
 
 *****
 

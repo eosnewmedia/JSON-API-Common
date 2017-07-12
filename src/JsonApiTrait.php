@@ -60,7 +60,7 @@ trait JsonApiTrait
     /**
      * @return string A valid uuid
      */
-    public function uuid(): string
+    public function generateUuid(): string
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 

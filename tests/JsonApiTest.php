@@ -161,7 +161,7 @@ class JsonApiTest extends TestCase
         $api = new DummyJsonApi();
         self::assertStringMatchesFormat(
             '%x%x%x%x%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x%x%x%x%x%x%x%x%x',
-            $api->uuid()
+            $api->generateUuid()
         );
     }
 }
