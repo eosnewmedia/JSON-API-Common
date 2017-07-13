@@ -41,3 +41,4 @@
 1. added interface ```ResourceFactoryInterface``` and class ```ResourceFactory```
 1. added class ```ResourceFactoryRegistry```
 1. added interface ```RelationshipFactoryInterface``` and class ```RelationshipFactory```
+1. added interface ```JsonApiAwareInterface``` and trait ```JsonApiAwareTrait```

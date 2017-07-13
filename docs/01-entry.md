@@ -20,6 +20,7 @@ to configure the way of creating resources, documents and collection by setting 
 |------------------------------------------------------------------------------|-------------|-----------------------------------------|
 | setDocumentFactory(DocumentFactoryInterface $documentFactory)                | void        | Set a non default document factory      |
 | setResourceFactory(ResourceFactoryInterface $resourceFactory)                | void        | Set a non default resource factory      |
+| setRelationshipFactory(RelationshipFactoryInterface $relationshipFactory)    | void        | Set a non default relationship factory  |
 | setDocumentSerializer(DocumentSerializerInterface $documentSerializer)       | void        | Set a non default document serializer   |
 | setDocumentDeserializer(DocumentDeserializerInterface $documentDeserializer) | void        | Set a non default document deserializer |
 

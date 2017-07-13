@@ -14,6 +14,9 @@ The document deserializer (a class implementing `Enm\JsonApi\Serializer\Document
 for turning php arrays into document objects (and their resources).
 The default deserializer should be a good choice but it's also possible to use a custom deserializer.
 
+If your deserializer implements `Enm\JsonApi\JsonApiAwareInterface`, which can simply be implemented by using `Enm\JsonApi\JsonApiAwareTrait`,
+it has access to your json api entry point and the creation of resources, relationships and documents through your configured factories.
+
 *****
 
 [prev: Links](../docs/04-links.md) | [back to README](../README.md) | [next: Errors](../docs/06-errors.md)
