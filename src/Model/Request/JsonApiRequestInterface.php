@@ -25,7 +25,7 @@ interface JsonApiRequestInterface
     public function containsId(): bool;
 
     /**
-     * Contains the requested id or a created uuid if no id was requested
+     * Contains the requested id if available
      *
      * @return string
      */

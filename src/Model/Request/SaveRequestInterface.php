@@ -11,7 +11,7 @@ use Enm\JsonApi\Model\Document\DocumentInterface;
 interface SaveRequestInterface extends JsonApiRequestInterface
 {
     /**
-     * Contains the document which contains the resource to save
+     * Contains the request document which contains the resource to save
      *
      * @return DocumentInterface
      */

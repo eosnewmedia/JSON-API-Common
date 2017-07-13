@@ -8,7 +8,7 @@ If your JSON API entry point implements `Enm\JsonApi\JsonApiInterface` you have 
 | resource(string $type, string $id)                                 | [ResourceInterface](../src/Model/Resource/ResourceInterface.php)                         | Create a new JSON resource                             |
 | singleResourceDocument(ResourceInterface $resource = null)         | [DocumentInterface](../src/Model/Document/DocumentInterface.php)                         | Create a document which can contain one resource       |
 | multiResourceDocument(array $resource = [])                        | [DocumentInterface](../src/Model/Document/DocumentInterface.php)                         | Create a document which can contain multiple resources |
-| serializeDocument(DocumentInterface $document)                     | array                 | Create the array representation of a document                    |
+| serializeDocument(DocumentInterface $document)                     | array                                                                                    | Create the array representation of a document          |
 | deserializeDocument(array $document)                               | [DocumentInterface](../src/Model/Document/DocumentInterface.php)                         | Create a document object from a given array            |
 | toOneRelationship(string $name, ResourceInterface $related = null) | [RelationshipInterface](../src/Model/Resource/Relationship/RelationshipInterface.php)    | Create a new to one relationship object                |
 | toManyRelationship(string $name, array $related = [])              | [RelationshipInterface](../src/Model/Resource/Relationship/RelationshipInterface.php)    | Create a new to many relationship object               |

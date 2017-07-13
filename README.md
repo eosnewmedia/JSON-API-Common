@@ -25,6 +25,7 @@ composer require enm/json-api-common
     1. [Document Serializer](docs/05-documents.md#document-serializer)
 1. [Exceptions and Errors](docs/06-errors.md)
 1. [Factories](docs/07-factories.md)
+1. [Requests](docs/08-requests.md)
 
 *****
 

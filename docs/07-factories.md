@@ -95,4 +95,4 @@ $registry->create('normalType', 'id'); // will return a default resource object
 
 *****
 
-[prev: Errors](../docs/06-errors.md) | [back to README](../README.md)
+[prev: Errors](../docs/06-errors.md) | [back to README](../README.md) | [next: Requests](../docs/08-requests.md)
