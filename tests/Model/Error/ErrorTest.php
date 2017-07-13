@@ -45,7 +45,7 @@ class ErrorTest extends TestCase
 
     public function testErrorFromException()
     {
-        $error = Error::createFromException(new \Exception('Test', 13));
+        $error = Error::createFrom(new \Exception('Test', 13));
 
         self::assertEquals('13', $error->code());
         self::assertEquals('Test', $error->title());
@@ -54,7 +54,7 @@ class ErrorTest extends TestCase
 
     public function testErrorFromExceptionWithDebug()
     {
-        $error = Error::createFromException(new \Exception('Test'), true);
+        $error = Error::createFrom(new \Exception('Test'), true);
 
         self::assertEquals('', $error->code());
         self::assertEquals('Test', $error->title());

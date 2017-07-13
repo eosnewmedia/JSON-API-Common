@@ -54,33 +54,32 @@ class Error implements ErrorInterface
     }
 
     /**
-     * @param \Exception $exception
+     * @param \Exception|\Throwable $throwable
      * @param bool $debug
-     *
      * @return ErrorInterface
      */
-    public static function createFromException(\Exception $exception, $debug = false): ErrorInterface
+    public static function createFrom(\Throwable $throwable, $debug = false): ErrorInterface
     {
         $status = 500;
-        if ($exception instanceof JsonApiException) {
-            $status = $exception->getHttpStatus();
+        if ($throwable instanceof JsonApiException) {
+            $status = $throwable->getHttpStatus();
         }
 
         $code = '';
-        if ($exception->getCode() !== 0) {
-            $code = (string)$exception->getCode();
+        if ($throwable->getCode() !== 0) {
+            $code = (string)$throwable->getCode();
         }
 
         $error = new self(
             $status,
-            $exception->getMessage(),
-            ($debug ? $exception->getTraceAsString() : ''),
+            $throwable->getMessage(),
+            ($debug ? $throwable->getTraceAsString() : ''),
             $code
         );
 
         if ($debug) {
-            $error->metaInformation()->set('file', $exception->getFile());
-            $error->metaInformation()->set('line', $exception->getLine());
+            $error->metaInformation()->set('file', $throwable->getFile());
+            $error->metaInformation()->set('line', $throwable->getLine());
         }
 
         return $error;

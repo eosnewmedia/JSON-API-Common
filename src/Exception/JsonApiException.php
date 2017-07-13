@@ -24,6 +24,6 @@ class JsonApiException extends \Exception
      */
     public function createError(): ErrorInterface
     {
-        return Error::createFromException($this);
+        return Error::createFrom($this);
     }
 }

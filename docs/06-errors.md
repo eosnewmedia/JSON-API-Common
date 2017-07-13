@@ -6,7 +6,7 @@ The simplest way is to use the default implementation `Enm\JsonApi\Model\Error\E
 error object from an exception.
 
 ```php
-Enm\JsonApi\Model\Error\Error::createFromException(new \Exception());
+Enm\JsonApi\Model\Error\Error::createFrom(new \Exception('Test'));
 ```
 
 The following Exception are available to be handled including the correct http status code:
