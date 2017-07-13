@@ -32,15 +32,23 @@ interface JsonApiInterface
 
     /**
      * @param ResourceInterface|null $resource
+     * @param string $version
      * @return DocumentInterface
      */
-    public function singleResourceDocument(ResourceInterface $resource = null): DocumentInterface;
+    public function singleResourceDocument(
+        ResourceInterface $resource = null,
+        string $version = self::CURRENT_VERSION
+    ): DocumentInterface;
 
     /**
-     * @param array $resource
+     * @param ResourceInterface[] $resource
+     * @param string $version
      * @return DocumentInterface
      */
-    public function multiResourceDocument(array $resource = []): DocumentInterface;
+    public function multiResourceDocument(
+        array $resource = [],
+        string $version = self::CURRENT_VERSION
+    ): DocumentInterface;
 
     /**
      * @param DocumentInterface $document

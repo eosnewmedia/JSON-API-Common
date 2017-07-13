@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Tests\Serializer;
 
-use Enm\JsonApi\Model\Factory\DocumentFactory;
-use Enm\JsonApi\Model\Factory\RelationshipFactory;
-use Enm\JsonApi\Model\Factory\ResourceFactory;
 use Enm\JsonApi\Serializer\Deserializer;
+use Enm\JsonApi\Tests\DummyJsonApi;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,9 +15,6 @@ class DeserializerTest extends TestCase
     public function testDeserializeResourceDocument()
     {
         $documentDeserializer = $this->createDeserializer();
-        $documentDeserializer->setDocumentFactory(new DocumentFactory());
-        $documentDeserializer->setResourceFactory(new ResourceFactory());
-        $documentDeserializer->setRelationshipFactory(new RelationshipFactory());
 
         $document = $documentDeserializer->deserializeDocument(
             [
@@ -167,10 +162,32 @@ class DeserializerTest extends TestCase
     }
 
     /**
+     * @expectedException \RuntimeException
+     */
+    public function testMissingJsonApi()
+    {
+        $documentDeserializer = new Deserializer();
+        $documentDeserializer->deserializeDocument(
+            [
+                'data' => [
+                    'type' => 'test',
+                    'id' => 'test-2',
+                    'attributes' => [
+                        'key' => 'value'
+                    ],
+                ]
+            ]
+        );
+    }
+
+    /**
      * @return Deserializer
      */
     protected function createDeserializer(): Deserializer
     {
-        return new Deserializer();
+        $documentDeserializer = new Deserializer();
+        $documentDeserializer->setJsonApi(new DummyJsonApi());
+
+        return $documentDeserializer;
     }
 }

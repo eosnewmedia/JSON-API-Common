@@ -86,20 +86,26 @@ trait JsonApiTrait
 
     /**
      * @param ResourceInterface|null $resource
+     * @param string $version
      * @return DocumentInterface
      */
-    public function singleResourceDocument(ResourceInterface $resource = null): DocumentInterface
-    {
-        return $this->documentFactory()->create($resource);
+    public function singleResourceDocument(
+        ResourceInterface $resource = null,
+        string $version = self::CURRENT_VERSION
+    ): DocumentInterface {
+        return $this->documentFactory()->create($resource, $version);
     }
 
     /**
-     * @param array $resource
+     * @param ResourceInterface[] $resource
+     * @param string $version
      * @return DocumentInterface
      */
-    public function multiResourceDocument(array $resource = []): DocumentInterface
-    {
-        return $this->documentFactory()->create($resource);
+    public function multiResourceDocument(
+        array $resource = [],
+        string $version = self::CURRENT_VERSION
+    ): DocumentInterface {
+        return $this->documentFactory()->create($resource, $version);
     }
 
     /**
@@ -235,6 +241,10 @@ trait JsonApiTrait
     {
         if (!$this->documentDeserializer instanceof DocumentDeserializerInterface) {
             $this->documentDeserializer = new Deserializer();
+        }
+
+        if ($this instanceof JsonApiInterface && $this->documentDeserializer instanceof JsonApiAwareInterface) {
+            $this->documentDeserializer->setJsonApi($this);
         }
 
         return $this->documentDeserializer;

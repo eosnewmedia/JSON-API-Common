@@ -38,9 +38,6 @@
 ### new in 2.0.0
 1. added ```JsonApiInterface``` and ```JsonApiTrait```
 1. added interface ```DocumentFactoryInterface``` and class ```DocumentFactory```
-1. added trait ```DocumentFactoryAwareTrait```
 1. added interface ```ResourceFactoryInterface``` and class ```ResourceFactory```
-1. added trait ```ResourceFactoryAwareTrait```
 1. added class ```ResourceFactoryRegistry```
 1. added interface ```RelationshipFactoryInterface``` and class ```RelationshipFactory```
-1. added trait ```RelationshipFactoryAwareTrait```

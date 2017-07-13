@@ -5,7 +5,6 @@ namespace Enm\JsonApi\Model\Resource\Relationship;
 
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
-use Enm\JsonApi\Model\Factory\ResourceFactoryAwareTrait;
 use Enm\JsonApi\Model\Resource\Link\LinkCollection;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceCollection;
@@ -18,8 +17,6 @@ use Enm\JsonApi\Model\Resource\SingleResourceCollection;
  */
 class Relationship implements RelationshipInterface
 {
-    use ResourceFactoryAwareTrait;
-
     /**
      * @var string
      */

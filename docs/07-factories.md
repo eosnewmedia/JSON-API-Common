@@ -77,11 +77,6 @@ class RelationshipFactory implements RelationshipFactoryInterface
 }
 ```
 
-## Factory Aware Traits
-
-There are factory aware traits for all available factories which offers setters for you custom factories and getters
-(protected) which provide fallback to the default factories.
-
 ## Resource Factory Registry
 
 If you need to create custom resource objects for different resource types you can use

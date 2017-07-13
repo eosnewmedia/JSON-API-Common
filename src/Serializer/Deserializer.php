@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Serializer;
 
+use Enm\JsonApi\JsonApiAwareInterface;
+use Enm\JsonApi\JsonApiAwareTrait;
 use Enm\JsonApi\JsonApiInterface;
-use Enm\JsonApi\Model\Factory\DocumentFactoryAwareTrait;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\Error;
 use Enm\JsonApi\Model\Error\ErrorInterface;
-use Enm\JsonApi\Model\Factory\RelationshipFactoryAwareTrait;
-use Enm\JsonApi\Model\Factory\ResourceFactoryAwareTrait;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
@@ -17,16 +16,14 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class Deserializer implements DocumentDeserializerInterface
+class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterface
 {
-    use DocumentFactoryAwareTrait;
-    use ResourceFactoryAwareTrait;
-    use RelationshipFactoryAwareTrait;
+    use JsonApiAwareTrait;
 
     /**
      * @param array $documentData
      * @return DocumentInterface
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException|\RuntimeException
      */
     public function deserializeDocument(array $documentData): DocumentInterface
     {
@@ -38,9 +35,9 @@ class Deserializer implements DocumentDeserializerInterface
             (string)$documentData['jsonapi']['version'] : JsonApiInterface::CURRENT_VERSION;
 
         if (!is_array($data) || $this->isSingleResource($data)) {
-            $document = $this->documentFactory()->create(null, $version);
+            $document = $this->jsonApi()->singleResourceDocument(null, $version);
         } else {
-            $document = $this->documentFactory()->create([], $version);
+            $document = $this->jsonApi()->multiResourceDocument([], $version);
         }
 
         if (is_array($data)) {
@@ -83,7 +80,7 @@ class Deserializer implements DocumentDeserializerInterface
      * @param ResourceCollectionInterface $collection
      * @param array $resourceData
      * @return ResourceInterface
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException|\RuntimeException
      */
     protected function buildResource(ResourceCollectionInterface $collection, array $resourceData): ResourceInterface
     {
@@ -93,7 +90,7 @@ class Deserializer implements DocumentDeserializerInterface
 
         $type = (string)$resourceData['type'];
         $id = (string)$resourceData['id'];
-        $resource = $this->resourceFactory()->create($type, $id);
+        $resource = $this->jsonApi()->resource($type, $id);
         $collection->set($resource);
 
         if (array_key_exists('attributes', $resourceData)) {
@@ -158,7 +155,7 @@ class Deserializer implements DocumentDeserializerInterface
      * @param array $relationships
      * @param ResourceInterface $resource
      * @return void
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException|\RuntimeException
      */
     protected function buildResourceRelationships(array $relationships, ResourceInterface $resource)
     {
@@ -167,14 +164,14 @@ class Deserializer implements DocumentDeserializerInterface
 
             if (!is_array($related)) {
                 // empty to one relationship
-                $relationshipObject = $this->relationshipFactory()->create($name);
+                $relationshipObject = $this->jsonApi()->toOneRelationship($name);
             } elseif (count($related) > 0 && array_keys($related) !== range(0, count($related) - 1)) {
                 // to one relationship
-                $relationshipObject = $this->relationshipFactory()->create($name);
+                $relationshipObject = $this->jsonApi()->toOneRelationship($name);
                 $this->buildResource($relationshipObject->related(), $related);
             } else {
                 // to many relationship
-                $relationshipObject = $this->relationshipFactory()->create($name, []);
+                $relationshipObject = $this->jsonApi()->toManyRelationship($name);
                 foreach ($related as $relatedResource) {
                     $this->buildResource($relationshipObject->related(), $relatedResource);
                 }
