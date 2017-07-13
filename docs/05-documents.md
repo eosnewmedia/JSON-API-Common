@@ -6,7 +6,7 @@ A document contains "data" (the resources) and can contain meta information, err
 
 ## Document Serializer
 The document serializer (a class implementing `Enm\JsonApi\Serializer\DocumentSerializerInterface`) is responsible for turning
-document objects (and their resources) into a php array in json api structure which can be json encoded and returned as response. 
+document objects (and their resources) into a php array in JSON API structure which can be JSON encoded and returned as response. 
 The default serializer should be a good choice but it's also possible to use a custom serializer.
 
 ## Document Deserializer

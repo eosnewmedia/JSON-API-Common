@@ -5,9 +5,9 @@ The library offers default implementations for all factories and there is no nee
 
 `Enm\JsonApi\Model\Factory\DocumentFactoryInterface` (extends `Enm\JsonApi\Model\Factory\ResourceFactoryAwareInterface`):
 
-| Method                                                        | Return Type       | Description                                                                                                                                                                                                 |
-|---------------------------------------------------------------|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| create($data, string $version)                                | DocumentInterface | Create a document object. "data" can be null or a resource object for a "single resource document" OR an empty array, a ResourceCollection or an array of resource objects for a "multi resource document". |
+| Method                                                        | Return type                                                      | Description                                                                                                                                                                                                 |
+|---------------------------------------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| create($data, string $version)                                | [DocumentInterface](../src/Model/Document/DocumentInterface.php) | Create a document object. "data" can be `null` or a resource object for a "single resource document" OR an empty array, a ResourceCollection or an array of resource objects for a "multi resource document". |
 
 
 A document factory should look like:
@@ -31,9 +31,9 @@ class DocumentFactory implements DocumentFactoryInterface
 
 `Enm\JsonApi\Model\Factory\ResourceFactoryInterface`:
 
-| Method                           | Return Type       | Description                   |
-|----------------------------------|-------------------|-------------------------------|
-| create(string $type, string $id) | ResourceInterface | Create a new resource object. |
+| Method                           | Return type                                                      | Description                   |
+|----------------------------------|------------------------------------------------------------------|-------------------------------|
+| create(string $type, string $id) | [ResourceInterface](../src/Model/Resource/ResourceInterface.php) | Create a new resource object. |
 
 
 A resource factory should look like:
@@ -55,9 +55,9 @@ class ResourceFactory implements ResourceFactoryInterface
 
 `Enm\JsonApi\Model\Factory\RelationshipFactoryInterface`:
 
-| Method                           | Return Type           | Description                       |
-|----------------------------------|-----------------------|-----------------------------------|
-| create(string $name, $related)   | RelationshipInterface | Create a new relationship object. |
+| Method                           | Return type                                                                           | Description                       |
+|----------------------------------|---------------------------------------------------------------------------------------|-----------------------------------|
+| create(string $name, $related)   | [RelationshipInterface](../src/Model/Resource/Relationship/RelationshipInterface.php) | Create a new relationship object. |
 
 
 A relationship factory should look like:

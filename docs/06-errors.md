@@ -11,13 +11,15 @@ Enm\JsonApi\Model\Error\Error::createFromException(new \Exception());
 
 The following Exception are available to be handled including the correct http status code:
 
-* `Enm\JsonApi\Exception\Exception`: For general server errors
-* `Enm\JsonApi\Exception\InvalidRequestException`: For client (request) errors
-* `Enm\JsonApi\Exception\ResourceNotFoundException`: For 404 errors on a concrete resource
-* `Enm\JsonApi\Exception\UnsupportedMediaTypeException`: For invalid content type header
-* `Enm\JsonApi\Exception\UnsupportedTypeException`: For 404 errors on a resource list
-* `Enm\JsonApi\Exception\NotAllowedException`: For 403 errors
-* `Enm\JsonApi\Exception\HttpException`: For custom http status codes
+|  Exception                                            | Description                           |
+|-------------------------------------------------------|---------------------------------------|
+| `Enm\JsonApi\Exception\Exception`                     | For general server errors             |
+| `Enm\JsonApi\Exception\InvalidRequestException`       | For client (request) errors           |
+| `Enm\JsonApi\Exception\ResourceNotFoundException`     | For 404 errors on a concrete resource |
+| `Enm\JsonApi\Exception\UnsupportedMediaTypeException` | For invalid content type header       |
+| `Enm\JsonApi\Exception\UnsupportedTypeException`      | For 404 errors on a resource list     |
+| `Enm\JsonApi\Exception\NotAllowedException`           | For 403 errors                        |
+| `Enm\JsonApi\Exception\HttpException`                 | For custom http status codes          |
 
 # Document errors
 Document errors are grouped within their document by an object of type `Enm\JsonApi\Model\Error\ErrorCollectionInterface`.
