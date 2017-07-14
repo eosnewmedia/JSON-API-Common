@@ -6,7 +6,7 @@ namespace Enm\JsonApi\Exception;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class NotAllowedException extends Exception
+class NotAllowedException extends JsonApiException
 {
     /**
      * @return int

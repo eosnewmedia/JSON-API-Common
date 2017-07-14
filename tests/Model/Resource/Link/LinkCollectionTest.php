@@ -39,7 +39,7 @@ class LinkCollectionTest extends TestCase
         self::assertFalse($collection->has('c'));
         /** @var LinkInterface $link */
         $link = $this->createConfiguredMock(
-            LinkInterface::class, ['getName' => 'c']
+            LinkInterface::class, ['name' => 'c']
         );
         $collection->set(
             $link
@@ -61,10 +61,18 @@ class LinkCollectionTest extends TestCase
         self::assertTrue($collection->has('a'));
         /** @var LinkInterface $link */
         $link = $this->createConfiguredMock(
-            LinkInterface::class, ['getName' => 'a']
+            LinkInterface::class, ['name' => 'a']
         );
         $collection->removeElement($link);
         self::assertFalse($collection->has('a'));
+    }
+
+    public function testCreateLink()
+    {
+        $collection = new LinkCollection();
+        $collection->createLink('test', 'http://example.com');
+
+        self::assertEquals('http://example.com', $collection->get('test')->href());
     }
 
     /**
@@ -73,8 +81,8 @@ class LinkCollectionTest extends TestCase
     private function getLinks(): array
     {
         return [
-            $this->createConfiguredMock(LinkInterface::class, ['getName' => 'a']),
-            $this->createConfiguredMock(LinkInterface::class, ['getName' => 'b']),
+            $this->createConfiguredMock(LinkInterface::class, ['name' => 'a']),
+            $this->createConfiguredMock(LinkInterface::class, ['name' => 'b']),
         ];
     }
 }

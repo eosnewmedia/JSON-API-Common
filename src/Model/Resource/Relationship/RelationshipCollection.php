@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Model\Resource\Relationship;
 
 use Enm\JsonApi\Model\Common\AbstractCollection;
-use Enm\JsonApi\Model\Resource\ResourceInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
@@ -63,7 +62,7 @@ class RelationshipCollection extends AbstractCollection implements RelationshipC
      */
     public function set(RelationshipInterface $relationship): RelationshipCollectionInterface
     {
-        $this->collection[$relationship->getName()] = $relationship;
+        $this->collection[$relationship->name()] = $relationship;
 
         return $this;
     }
@@ -88,30 +87,8 @@ class RelationshipCollection extends AbstractCollection implements RelationshipC
      */
     public function removeElement(RelationshipInterface $relationship): RelationshipCollectionInterface
     {
-        $this->remove($relationship->getName());
+        $this->remove($relationship->name());
 
         return $this;
-    }
-
-    /**
-     * @param string $name
-     * @param ResourceInterface|null $related
-     * @return RelationshipCollectionInterface
-     * @throws \InvalidArgumentException
-     */
-    public function createToOne(string $name, ResourceInterface $related = null): RelationshipCollectionInterface
-    {
-        return $this->set(new ToOneRelationship($name, $related));
-    }
-
-    /**
-     * @param string $name
-     * @param array $related
-     * @return RelationshipCollectionInterface
-     * @throws \InvalidArgumentException
-     */
-    public function createToMany(string $name, array $related = []): RelationshipCollectionInterface
-    {
-        return $this->set(new ToManyRelationship($name, $related));
     }
 }

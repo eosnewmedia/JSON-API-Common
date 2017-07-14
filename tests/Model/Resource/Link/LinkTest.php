@@ -14,22 +14,22 @@ class LinkTest extends TestCase
     public function testLink()
     {
         $link = new Link('about', 'http://jsonapi.org');
-        $link->metaInformations()->set('test', 'test');
+        $link->metaInformation()->set('test', 'test');
 
-        self::assertEquals('about', $link->getName());
-        self::assertEquals('http://jsonapi.org', $link->getHref());
-        self::assertArrayHasKey('test', $link->metaInformations()->all());
+        self::assertEquals('about', $link->name());
+        self::assertEquals('http://jsonapi.org', $link->href());
+        self::assertArrayHasKey('test', $link->metaInformation()->all());
     }
 
     public function testDuplicateLink()
     {
         $link = new Link('about', 'http://jsonapi.org');
-        $link->metaInformations()->set('test', 'test');
+        $link->metaInformation()->set('test', 'test');
 
         self::assertNotSame($link, $link->duplicate());
-        self::assertNotSame($link->metaInformations(), $link->duplicate()->metaInformations());
+        self::assertNotSame($link->metaInformation(), $link->duplicate()->metaInformation());
         self::assertNotSame($link->duplicate(), $link->duplicate());
-        self::assertEquals('test', $link->duplicate('test')->getName());
+        self::assertEquals('test', $link->duplicate('test')->name());
     }
 
     /**

@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Server\Tests\Serializer;
 
+use Enm\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
+use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Document\DocumentInterface;
-use Enm\JsonApi\Model\Document\ErrorDocument;
+use Enm\JsonApi\Model\Error\ErrorCollectionInterface;
 use Enm\JsonApi\Model\Error\ErrorInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkInterface;
@@ -24,20 +26,19 @@ class SerializerTest extends TestCase
     public function testSerializeErrorDocument()
     {
         $serializer = new Serializer();
-        $serialized = $serializer->serializeDocument(
-            new ErrorDocument(
+        $document = new Document();
+        $document->errors()->add(
+            $this->createConfiguredMock(
+                ErrorInterface::class,
                 [
-                    $this->createConfiguredMock(
-                        ErrorInterface::class,
-                        [
-                            'getCode' => '1',
-                            'getTitle' => 'Test',
-                            'getDetail' => 'Test details',
-                        ]
-                    ),
+                    'code' => '1',
+                    'title' => 'Test',
+                    'detail' => 'Test details',
                 ]
             )
         );
+
+        $serialized = $serializer->serializeDocument($document);
 
         self::assertArrayHasKey('errors', $serialized);
         self::assertEquals('1', $serialized['errors'][0]['code']);
@@ -47,6 +48,7 @@ class SerializerTest extends TestCase
         self::assertArrayNotHasKey('links', $serialized);
         self::assertArrayNotHasKey('included', $serialized);
         self::assertArrayNotHasKey('meta', $serialized);
+        self::assertEquals(JsonApiInterface::CURRENT_VERSION, $serialized['jsonapi']['version']);
     }
 
     public function testSerializeResourceDocument()
@@ -56,14 +58,13 @@ class SerializerTest extends TestCase
         $document = $this->createConfiguredMock(
             DocumentInterface::class,
             [
-                'getType' => DocumentInterface::TYPE_RESOURCE,
+                'shouldBeHandledAsCollection' => false,
                 'data' =>
                     $this->createConfiguredMock(
                         ResourceCollectionInterface::class,
                         [
-                            'all' => [
-                                $this->createResource('test', 'test-1'),
-                            ],
+                            'isEmpty' => false,
+                            'first' => $this->createResource('test', 'test-1'),
                         ]
                     ),
                 'links' => $this->createConfiguredMock(
@@ -82,7 +83,7 @@ class SerializerTest extends TestCase
                         ],
                     ]
                 ),
-                'metaInformations' => $this->createMetaCollection(),
+                'metaInformation' => $this->createMetaCollection(),
             ]
         );
         $serialized = $serializer->serializeDocument($document);
@@ -110,11 +111,12 @@ class SerializerTest extends TestCase
         $document = $this->createConfiguredMock(
             DocumentInterface::class,
             [
-                'getType' => DocumentInterface::TYPE_RESOURCE_COLLECTION,
+                'shouldBeHandledAsCollection' => true,
                 'data' =>
                     $this->createConfiguredMock(
                         ResourceCollectionInterface::class,
                         [
+                            'isEmpty' => false,
                             'all' => [
                                 $this->createResource('test', 'test-1'),
                                 $this->createResource('test', 'test-2'),
@@ -128,9 +130,9 @@ class SerializerTest extends TestCase
                             $this->createConfiguredMock(
                                 LinkInterface::class,
                                 [
-                                    'getName' => 'test',
-                                    'getHref' => 'http://example.com',
-                                    'metaInformations' => $this->createConfiguredMock(
+                                    'name' => 'test',
+                                    'href' => 'http://example.com',
+                                    'metaInformation' => $this->createConfiguredMock(
                                         KeyValueCollectionInterface::class,
                                         [
                                             'isEmpty' => true,
@@ -153,92 +155,33 @@ class SerializerTest extends TestCase
         self::assertEquals('test-2', $serialized['data'][1]['id']);
     }
 
-    public function testSerializeRelationshipDocument()
-    {
-        $serializer = new Serializer();
-        /** @var DocumentInterface $document */
-        $document = $this->createConfiguredMock(
-            DocumentInterface::class, [
-                'getType' => DocumentInterface::TYPE_RELATIONSHIP,
-                'data' => $this->createConfiguredMock(
-                    ResourceCollectionInterface::class,
-                    [
-                        'all' => [
-                            $this->createConfiguredMock(
-                                ResourceInterface::class, [
-                                    'getType' => 'test',
-                                    'getId' => 'test-1',
-                                    'attributes' => $this->createConfiguredMock(
-                                        KeyValueCollectionInterface::class,
-                                        [
-                                            'all' => ['test' => 'test'],
-                                        ]
-                                    ),
-                                ]
-                            ),
-                        ],
-                    ]
-                ),
-            ]
-        );
-        $serialized = $serializer->serializeDocument($document);
-
-        self::assertArrayHasKey('data', $serialized);
-        self::assertArrayNotHasKey('attributes', $serialized['data']);
-        self::assertEquals('test', $serialized['data']['type']);
-        self::assertEquals('test-1', $serialized['data']['id']);
-    }
-
-    public function testSerializeRelationshipCollectionDocument()
-    {
-        $serializer = new Serializer();
-        /** @var DocumentInterface $document */
-        $document = $this->createConfiguredMock(
-            DocumentInterface::class, [
-                'getType' => DocumentInterface::TYPE_RELATIONSHIP_COLLECTION,
-                'data' => $this->createConfiguredMock(
-                    ResourceCollectionInterface::class,
-                    [
-                        'all' => [
-                            $this->createConfiguredMock(
-                                ResourceInterface::class, [
-                                    'getType' => 'test',
-                                    'getId' => 'test-1',
-                                    'attributes' => $this->createConfiguredMock(
-                                        KeyValueCollectionInterface::class,
-                                        [
-                                            'all' => ['test' => 'test'],
-                                        ]
-                                    ),
-                                ]
-                            ),
-                        ],
-                    ]
-                ),
-            ]
-        );
-        $serialized = $serializer->serializeDocument($document);
-
-        self::assertArrayHasKey('data', $serialized);
-        self::assertArrayNotHasKey('attributes', $serialized['data'][0]);
-        self::assertEquals('test', $serialized['data'][0]['type']);
-        self::assertEquals('test-1', $serialized['data'][0]['id']);
-    }
-
     public function testEmptyResourceDocument()
     {
         $serializer = new Serializer();
         /** @var DocumentInterface $document */
         $document = $this->createConfiguredMock(DocumentInterface::class,
             [
-                'getType' => DocumentInterface::TYPE_RESOURCE,
+                'shouldBeHandledAsCollection' => false,
                 'data' => $this->createConfiguredMock(
                     ResourceCollectionInterface::class,
                     [
                         'isEmpty' => true,
                     ]
                 ),
-            ]);
+                'errors' => $this->createConfiguredMock(
+                    ErrorCollectionInterface::class,
+                    [
+                        'isEmpty' => true
+                    ]
+                ),
+                'metaInformation' => $this->createConfiguredMock(
+                    KeyValueCollectionInterface::class,
+                    [
+                        'isEmpty' => true
+                    ]
+                )
+            ]
+        );
         $serialized = $serializer->serializeDocument($document);
 
         self::assertNull($serialized['data']);
@@ -250,93 +193,29 @@ class SerializerTest extends TestCase
         /** @var DocumentInterface $document */
         $document = $this->createConfiguredMock(DocumentInterface::class,
             [
-                'getType' => DocumentInterface::TYPE_RESOURCE_COLLECTION,
+                'shouldBeHandledAsCollection' => true,
                 'data' => $this->createConfiguredMock(
                     ResourceCollectionInterface::class,
                     [
                         'isEmpty' => true,
                     ]
                 ),
+                'errors' => $this->createConfiguredMock(
+                    ErrorCollectionInterface::class,
+                    [
+                        'isEmpty' => true
+                    ]
+                ),
+                'metaInformation' => $this->createConfiguredMock(
+                    KeyValueCollectionInterface::class,
+                    [
+                        'isEmpty' => true
+                    ]
+                )
             ]);
         $serialized = $serializer->serializeDocument($document);
 
         self::assertCount(0, $serialized['data']);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidDocumentEmptyData()
-    {
-        $serializer = new Serializer();
-        /** @var DocumentInterface $document */
-        $document = $this->createConfiguredMock(DocumentInterface::class,
-            [
-                'getType' => 'invalid',
-                'data' => $this->createConfiguredMock(
-                    ResourceCollectionInterface::class,
-                    [
-                        'isEmpty' => true,
-                    ]
-                ),
-            ]);
-        $serializer->serializeDocument($document);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidDocument()
-    {
-        $serializer = new Serializer();
-        /** @var DocumentInterface $document */
-        $document = $this->createConfiguredMock(
-            DocumentInterface::class,
-            ['getType' => 'invalid']
-        );
-        $serializer->serializeDocument($document);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidRelationship()
-    {
-        $serializer = new Serializer();
-        /** @var DocumentInterface $document */
-        $document = $this->createConfiguredMock(DocumentInterface::class,
-            [
-                'getType' => DocumentInterface::TYPE_RESOURCE,
-                'data' => $this->createConfiguredMock(
-                    ResourceCollectionInterface::class,
-                    [
-                        'isEmpty' => false,
-                        'all' => [
-                            $this->createConfiguredMock(
-                                ResourceInterface::class,
-                                [
-                                    'getType' => 'test',
-                                    'getId' => 'test-1',
-                                    'relationships' => $this->createConfiguredMock(
-                                        RelationshipCollectionInterface::class,
-                                        [
-                                            'all' => [
-                                                $this->createConfiguredMock(
-                                                    RelationshipInterface::class,
-                                                    [
-                                                        'getType' => 'invalid',
-                                                    ]
-                                                ),
-                                            ],
-                                        ]
-                                    ),
-                                ]
-                            ),
-                        ],
-                    ]
-                ),
-            ]);
-        $serializer->serializeDocument($document);
     }
 
     /**
@@ -349,8 +228,8 @@ class SerializerTest extends TestCase
     {
         return $this->createConfiguredMock(
             ResourceInterface::class, [
-                'getType' => $type,
-                'getId' => $id,
+                'type' => $type,
+                'id' => $id,
                 'attributes' => $this->createConfiguredMock(
                     KeyValueCollectionInterface::class,
                     [
@@ -374,7 +253,7 @@ class SerializerTest extends TestCase
                         ],
                     ]
                 ),
-                'metaInformations' => $this->createMetaCollection(),
+                'metaInformation' => $this->createMetaCollection(),
             ]
         );
     }
@@ -402,9 +281,9 @@ class SerializerTest extends TestCase
         return $this->createConfiguredMock(
             LinkInterface::class,
             [
-                'getName' => $name,
-                'getHref' => 'http://example.com',
-                'metaInformations' => $this->createMetaCollection(),
+                'name' => $name,
+                'href' => 'http://example.com',
+                'metaInformation' => $this->createMetaCollection(),
             ]
         );
     }
@@ -419,8 +298,8 @@ class SerializerTest extends TestCase
         return $this->createConfiguredMock(
             RelationshipInterface::class,
             [
-                'getType' => RelationshipInterface::TYPE_ONE,
-                'getName' => $name,
+                'shouldBeHandledAsCollection' => false,
+                'name' => $name,
                 'links' => $this->createConfiguredMock(
                     LinkCollectionInterface::class,
                     ['all' => [$this->createLink('relationship-link')]]
@@ -432,12 +311,12 @@ class SerializerTest extends TestCase
                         'all' => [
                             $this->createConfiguredMock(
                                 ResourceInterface::class,
-                                ['getType' => 'abc', 'getId' => '1']
+                                ['type' => 'abc', 'id' => '1']
                             ),
                         ],
                     ]
                 ),
-                'metaInformations' => $this->createMetaCollection(),
+                'metaInformation' => $this->createMetaCollection(),
             ]
         );
     }
@@ -452,8 +331,8 @@ class SerializerTest extends TestCase
         return $this->createConfiguredMock(
             RelationshipInterface::class,
             [
-                'getType' => RelationshipInterface::TYPE_MANY,
-                'getName' => $name,
+                'shouldBeHandledAsCollection' => true,
+                'name' => $name,
                 'links' => $this->createConfiguredMock(
                     LinkCollectionInterface::class,
                     ['all' => [$this->createLink('relationship-link')]]
@@ -465,12 +344,12 @@ class SerializerTest extends TestCase
                         'all' => [
                             $this->createConfiguredMock(
                                 ResourceInterface::class,
-                                ['getType' => 'abc', 'getId' => '1']
+                                ['type' => 'abc', 'id' => '1']
                             ),
                         ],
                     ]
                 ),
-                'metaInformations' => $this->createMetaCollection(),
+                'metaInformation' => $this->createMetaCollection(),
             ]
         );
     }

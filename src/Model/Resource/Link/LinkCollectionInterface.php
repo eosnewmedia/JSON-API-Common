@@ -47,4 +47,11 @@ interface LinkCollectionInterface extends CollectionInterface
      * @return LinkCollectionInterface
      */
     public function removeElement(LinkInterface $link): LinkCollectionInterface;
+
+    /**
+     * @param string $name
+     * @param string $href
+     * @return LinkCollectionInterface
+     */
+    public function createLink(string $name, string $href): LinkCollectionInterface;
 }

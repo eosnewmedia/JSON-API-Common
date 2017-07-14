@@ -5,8 +5,8 @@ namespace Enm\JsonApi\Tests\Model\Resource\Relationship;
 
 use Enm\JsonApi\Model\Resource\Link\Link;
 use Enm\JsonApi\Model\Resource\Link\LinkInterface;
-use Enm\JsonApi\Model\Resource\Relationship\ToManyRelationship;
-use Enm\JsonApi\Model\Resource\Relationship\ToOneRelationship;
+use Enm\JsonApi\Model\Resource\Relationship\Relationship;
+use Enm\JsonApi\Model\Resource\ResourceCollection;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -18,29 +18,29 @@ class RelationshipTest extends TestCase
 
     public function testToOne()
     {
-        $relation = new ToOneRelationship(
+        $relation = new Relationship(
             'test', $this->createMock(ResourceInterface::class)
         );
         /** @var LinkInterface $link */
         $link = $this->createMock(LinkInterface::class);
         $relation->links()->set($link);
-        $relation->metaInformations()->set('test', 1);
+        $relation->metaInformation()->set('test', 1);
 
         self::assertEquals(1, $relation->related()->count());
-        self::assertEquals('test', $relation->getName());
+        self::assertEquals('test', $relation->name());
         self::assertEquals(1, $relation->links()->count());
-        self::assertEquals(1, $relation->metaInformations()->count());
+        self::assertEquals(1, $relation->metaInformation()->count());
     }
 
     public function testEmptyToOne()
     {
-        $relation = new ToOneRelationship('test');
+        $relation = new Relationship('test');
         self::assertEquals(0, $relation->related()->count());
     }
 
     public function testToMany()
     {
-        $relation = new ToManyRelationship(
+        $relation = new Relationship(
             'test',
             [
                 $this->createMock(ResourceInterface::class),
@@ -51,16 +51,16 @@ class RelationshipTest extends TestCase
 
     public function testEmptyToMany()
     {
-        $relation = new ToManyRelationship('test');
+        $relation = new Relationship('test');
         self::assertEquals(0, $relation->related()->count());
     }
 
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidNamedToOne()
+    public function testInvalidNamedRelationship()
     {
-        new ToOneRelationship('');
+        new Relationship('');
     }
 
     /**
@@ -68,30 +68,22 @@ class RelationshipTest extends TestCase
      */
     public function testImmutableToOne()
     {
-        $relation = new ToOneRelationship('test');
+        $relation = new Relationship('test', $this->createMock(ResourceInterface::class));
         /** @var ResourceInterface $resource */
         $resource = $this->createConfiguredMock(
             ResourceInterface::class,
-            ['getType' => 'test', 'getId' => '1']
+            ['type' => 'test', 'id' => '1']
         );
         $relation->related()->set($resource);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidNamedToMany()
-    {
-        new ToManyRelationship('');
-    }
-
     public function testDuplicateToOne()
     {
-        $relation = new ToOneRelationship(
+        $relation = new Relationship(
             'test',
             $this->createConfiguredMock(
                 ResourceInterface::class,
-                ['getType' => 'test', 'getId' => '1']
+                ['type' => 'test', 'id' => '1']
             )
         );
         $relation->links()->set(new Link('test', 'http://example.com'));
@@ -105,12 +97,12 @@ class RelationshipTest extends TestCase
 
     public function testDuplicateToMany()
     {
-        $relation = new ToManyRelationship(
+        $relation = new Relationship(
             'test',
             [
                 $this->createConfiguredMock(
                     ResourceInterface::class,
-                    ['getType' => 'test', 'getId' => '1']
+                    ['type' => 'test', 'id' => '1']
                 )
             ]
         );
@@ -121,5 +113,22 @@ class RelationshipTest extends TestCase
         self::assertNotSame($relation->related()->first(), $relation->duplicate()->related()->first());
         self::assertNotSame($relation->links(), $relation->duplicate()->links());
         self::assertNotSame($relation->links()->get('test'), $relation->duplicate()->links()->get('test'));
+    }
+
+    public function testWithResourceCollection()
+    {
+        $collection = new ResourceCollection();
+
+        $relation = new Relationship('test', $collection);
+
+        self::assertSame($collection, $relation->related());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidRelationshipData()
+    {
+        new Relationship('test', 'test');
     }
 }

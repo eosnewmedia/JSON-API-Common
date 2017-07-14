@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Enm\JsonApi\Model\Error;
 
@@ -13,25 +13,25 @@ interface ErrorInterface
     /**
      * @return int
      */
-    public function getStatus(): int;
-    
+    public function status(): int;
+
     /**
      * @return string
      */
-    public function getCode(): string;
-    
+    public function code(): string;
+
     /**
      * @return string
      */
-    public function getTitle(): string;
-    
+    public function title(): string;
+
     /**
      * @return string
      */
-    public function getDetail(): string;
-    
+    public function detail(): string;
+
     /**
      * @return KeyValueCollectionInterface
      */
-    public function metaInformations(): KeyValueCollectionInterface;
+    public function metaInformation(): KeyValueCollectionInterface;
 }

@@ -6,7 +6,7 @@ namespace Enm\JsonApi\Exception;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class ResourceNotFoundException extends Exception
+class ResourceNotFoundException extends JsonApiException
 {
     /**
      * @param string $type

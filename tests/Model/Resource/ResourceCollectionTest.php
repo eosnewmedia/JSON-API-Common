@@ -78,7 +78,7 @@ class ResourceCollectionTest extends TestCase
         /** @var ResourceInterface $resource */
         $resource = $this->createConfiguredMock(
             ResourceInterface::class,
-            ['getType' => 'test', 'getId' => '3']
+            ['type' => 'test', 'id' => '3']
         );
         $collection->set($resource);
 
@@ -104,7 +104,7 @@ class ResourceCollectionTest extends TestCase
         /** @var ResourceInterface $resource */
         $resource = $this->createConfiguredMock(
             ResourceInterface::class,
-            ['getType' => 'test', 'getId' => '2']
+            ['type' => 'test', 'id' => '2']
         );
 
         $collection->removeElement($resource);
@@ -120,11 +120,11 @@ class ResourceCollectionTest extends TestCase
         return [
             $this->createConfiguredMock(
                 ResourceInterface::class,
-                ['getType' => 'test', 'getId' => '1']
+                ['type' => 'test', 'id' => '1']
             ),
             $this->createConfiguredMock(
                 ResourceInterface::class,
-                ['getType' => 'test', 'getId' => '2']
+                ['type' => 'test', 'id' => '2']
             ),
         ];
     }

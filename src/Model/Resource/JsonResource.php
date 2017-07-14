@@ -52,10 +52,10 @@ class JsonResource implements ResourceInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $type, string $id, array $attributes = [])
+    public function __construct(string $type, string $id = '', array $attributes = [])
     {
-        if ($type === '' || $id === '') {
-            throw new \InvalidArgumentException('Invalid resource identifier');
+        if ($type === '') {
+            throw new \InvalidArgumentException('Invalid resource type!');
         }
         $this->type = $type;
         $this->id = $id;
@@ -70,7 +70,7 @@ class JsonResource implements ResourceInterface
     /**
      * @return string
      */
-    public function getType(): string
+    public function type(): string
     {
         return $this->type;
     }
@@ -78,7 +78,7 @@ class JsonResource implements ResourceInterface
     /**
      * @return string
      */
-    public function getId(): string
+    public function id(): string
     {
         return $this->id;
     }
@@ -110,7 +110,7 @@ class JsonResource implements ResourceInterface
     /**
      * @return KeyValueCollectionInterface
      */
-    public function metaInformations(): KeyValueCollectionInterface
+    public function metaInformation(): KeyValueCollectionInterface
     {
         return $this->metaCollection;
     }
@@ -125,9 +125,9 @@ class JsonResource implements ResourceInterface
      */
     public function duplicate(string $id = null): ResourceInterface
     {
-        $resource = new self($this->getType(), $id ?? $this->getId(), $this->attributes()->all());
+        $resource = new self($this->type(), $id ?? $this->id(), $this->attributes()->all());
 
-        $resource->metaInformations()->mergeCollection($this->metaInformations());
+        $resource->metaInformation()->mergeCollection($this->metaInformation());
 
         foreach ($this->relationships()->all() as $relationship) {
             $resource->relationships()->set($relationship->duplicate());

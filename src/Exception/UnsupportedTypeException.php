@@ -6,7 +6,7 @@ namespace Enm\JsonApi\Exception;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class UnsupportedTypeException extends Exception
+class UnsupportedTypeException extends JsonApiException
 {
     /**
      * @param string $type

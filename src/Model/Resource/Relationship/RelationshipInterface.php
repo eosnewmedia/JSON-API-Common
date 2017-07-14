@@ -12,18 +12,17 @@ use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
  */
 interface RelationshipInterface
 {
-    const TYPE_ONE = 'one';
-    const TYPE_MANY = 'many';
+    /**
+     * Indicates if the contained data should be handled as object collection or single object
+     *
+     * @return bool
+     */
+    public function shouldBeHandledAsCollection(): bool;
 
     /**
      * @return string
      */
-    public function getType(): string;
-
-    /**
-     * @return string
-     */
-    public function getName(): string;
+    public function name(): string;
 
     /**
      * @return ResourceCollectionInterface
@@ -38,7 +37,7 @@ interface RelationshipInterface
     /**
      * @return KeyValueCollectionInterface
      */
-    public function metaInformations(): KeyValueCollectionInterface;
+    public function metaInformation(): KeyValueCollectionInterface;
 
     /**
      * Creates a new relationship containing all data from the current one.

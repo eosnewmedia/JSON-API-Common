@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Model\Error;
 
-use Enm\JsonApi\Exception\Exception;
+use Enm\JsonApi\Exception\JsonApiException;
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 
@@ -54,33 +54,32 @@ class Error implements ErrorInterface
     }
 
     /**
-     * @param \Exception $exception
+     * @param \Exception|\Throwable $throwable
      * @param bool $debug
-     *
      * @return ErrorInterface
      */
-    public static function createFromException(\Exception $exception, $debug = false): ErrorInterface
+    public static function createFrom(\Throwable $throwable, $debug = false): ErrorInterface
     {
         $status = 500;
-        if ($exception instanceof Exception) {
-            $status = $exception->getHttpStatus();
+        if ($throwable instanceof JsonApiException) {
+            $status = $throwable->getHttpStatus();
         }
 
         $code = '';
-        if ($exception->getCode() !== 0) {
-            $code = (string)$exception->getCode();
+        if ($throwable->getCode() !== 0) {
+            $code = (string)$throwable->getCode();
         }
 
         $error = new self(
             $status,
-            $exception->getMessage(),
-            ($debug ? $exception->getTraceAsString() : ''),
+            $throwable->getMessage(),
+            ($debug ? $throwable->getTraceAsString() : ''),
             $code
         );
 
         if ($debug) {
-            $error->metaInformations()->set('file', $exception->getFile());
-            $error->metaInformations()->set('line', $exception->getLine());
+            $error->metaInformation()->set('file', $throwable->getFile());
+            $error->metaInformation()->set('line', $throwable->getLine());
         }
 
         return $error;
@@ -89,7 +88,7 @@ class Error implements ErrorInterface
     /**
      * @return int
      */
-    public function getStatus(): int
+    public function status(): int
     {
         return $this->status;
     }
@@ -97,7 +96,7 @@ class Error implements ErrorInterface
     /**
      * @return string
      */
-    public function getCode(): string
+    public function code(): string
     {
         return $this->code;
     }
@@ -105,7 +104,7 @@ class Error implements ErrorInterface
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function title(): string
     {
         return $this->title;
     }
@@ -113,7 +112,7 @@ class Error implements ErrorInterface
     /**
      * @return string
      */
-    public function getDetail(): string
+    public function detail(): string
     {
         return $this->detail;
     }
@@ -121,7 +120,7 @@ class Error implements ErrorInterface
     /**
      * @return KeyValueCollectionInterface
      */
-    public function metaInformations(): KeyValueCollectionInterface
+    public function metaInformation(): KeyValueCollectionInterface
     {
         return $this->metaCollection;
     }

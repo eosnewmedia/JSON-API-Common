@@ -45,31 +45,13 @@ class RelationshipCollectionTest extends TestCase
         /** @var RelationshipInterface $relationship */
         $relationship = $this->createConfiguredMock(
             RelationshipInterface::class,
-            ['getType' => RelationshipInterface::TYPE_ONE, 'getName' => 'test']
+            ['name' => 'test']
         );
         $collection->set(
             $relationship
         );
 
         self::assertTrue($collection->has('test'));
-    }
-
-    public function testSetToOne()
-    {
-        $collection = new RelationshipCollection();
-
-        $collection->createToOne('test');
-
-        self::assertEquals(RelationshipInterface::TYPE_ONE, $collection->get('test')->getType());
-    }
-
-    public function testSetToMany()
-    {
-        $collection = new RelationshipCollection();
-
-        $collection->createToMany('test');
-
-        self::assertEquals(RelationshipInterface::TYPE_MANY, $collection->get('test')->getType());
     }
 
     public function testRemove()
@@ -90,7 +72,7 @@ class RelationshipCollectionTest extends TestCase
         /** @var RelationshipInterface $relationship */
         $relationship = $this->createConfiguredMock(
             RelationshipInterface::class,
-            ['getType' => RelationshipInterface::TYPE_ONE, 'getName' => 'a']
+            ['name' => 'a']
         );
         $collection->removeElement($relationship);
 
@@ -105,11 +87,11 @@ class RelationshipCollectionTest extends TestCase
         return [
             $this->createConfiguredMock(
                 RelationshipInterface::class,
-                ['getType' => RelationshipInterface::TYPE_ONE, 'getName' => 'a']
+                ['name' => 'a']
             ),
             $this->createConfiguredMock(
                 RelationshipInterface::class,
-                ['getType' => RelationshipInterface::TYPE_MANY, 'getName' => 'b']
+                ['name' => 'b']
             ),
         ];
     }

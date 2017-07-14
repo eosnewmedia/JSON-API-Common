@@ -69,7 +69,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
         }
 
         foreach ($this->all() as $resource) {
-            if ($type === null || $resource->getType() === $type) {
+            if ($type === null || $resource->type() === $type) {
                 return $resource;
             }
         }
@@ -84,7 +84,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      */
     public function set(ResourceInterface $resource): ResourceCollectionInterface
     {
-        $this->collection[$this->buildArrayKey($resource->getType(), $resource->getId())] = $resource;
+        $this->collection[$this->buildArrayKey($resource->type(), $resource->id())] = $resource;
 
         return $this;
     }
@@ -110,7 +110,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      */
     public function removeElement(ResourceInterface $resource): ResourceCollectionInterface
     {
-        $this->remove($resource->getType(), $resource->getId());
+        $this->remove($resource->type(), $resource->id());
 
         return $this;
     }

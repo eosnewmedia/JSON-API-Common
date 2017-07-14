@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Model\Resource\Relationship;
 
 use Enm\JsonApi\Model\Common\CollectionInterface;
-use Enm\JsonApi\Model\Resource\ResourceInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
@@ -49,18 +48,4 @@ interface RelationshipCollectionInterface extends CollectionInterface
      * @return RelationshipCollectionInterface
      */
     public function removeElement(RelationshipInterface $relationship): RelationshipCollectionInterface;
-
-    /**
-     * @param string $name
-     * @param ResourceInterface|null $related
-     * @return RelationshipCollectionInterface
-     */
-    public function createToOne(string $name, ResourceInterface $related = null): RelationshipCollectionInterface;
-
-    /**
-     * @param string $name
-     * @param array $related
-     * @return RelationshipCollectionInterface
-     */
-    public function createToMany(string $name, array $related = []): RelationshipCollectionInterface;
 }

@@ -16,10 +16,18 @@ composer require enm/json-api-common
 *****
 
 ## Documentation
-1. [Resources](docs/01-resources.md)
-    1. [Relationships](docs/01-resources.md#relationships)
-1. [Attributes and Meta-Informations](docs/02-collections.md)
-1. [Links](docs/03-links.md)
-1. [Documents](docs/04-documents.md)
-    1. [Document Serializer](docs/04-documents.md#document-serializer)
-1. [Exceptions and Errors](docs/05-errors.md)
+1. [EntryPoint](docs/01-entry.md)
+1. [Resources](docs/02-resources.md)
+    1. [Relationships](docs/02-resources.md#relationships)
+1. [Attributes and Meta-Informations](docs/03-collections.md)
+1. [Links](docs/04-links.md)
+1. [Documents](docs/05-documents.md)
+    1. [Document Serializer](docs/05-documents.md#document-serializer)
+1. [Exceptions and Errors](docs/06-errors.md)
+1. [Factories](docs/07-factories.md)
+1. [Requests](docs/08-requests.md)
+
+*****
+
+## Changelog
+See the [Changelog](CHANGELOG.md).

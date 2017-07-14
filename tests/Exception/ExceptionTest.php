@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Tests\Exception;
 
-use Enm\JsonApi\Exception\Exception;
+use Enm\JsonApi\Exception\JsonApiException;
 use Enm\JsonApi\Exception\HttpException;
-use Enm\JsonApi\Exception\InvalidRequestException;
+use Enm\JsonApi\Exception\BadRequestException;
 use Enm\JsonApi\Exception\NotAllowedException;
 use Enm\JsonApi\Exception\ResourceNotFoundException;
 use Enm\JsonApi\Exception\UnsupportedMediaTypeException;
@@ -20,9 +20,9 @@ class ExceptionTest extends TestCase
 {
     public function testInvalidRequestException()
     {
-        $exception = new InvalidRequestException();
+        $exception = new BadRequestException();
         self::assertInstanceOf(\Exception::class, $exception);
-        self::assertInstanceOf(Exception::class, $exception);
+        self::assertInstanceOf(JsonApiException::class, $exception);
         self::assertEquals(400, $exception->getHttpStatus());
         self::assertEquals('Invalid Request!', $exception->getMessage());
         self::assertInstanceOf(
@@ -35,7 +35,7 @@ class ExceptionTest extends TestCase
     {
         $exception = new ResourceNotFoundException('test', 'id');
         self::assertInstanceOf(\Exception::class, $exception);
-        self::assertInstanceOf(Exception::class, $exception);
+        self::assertInstanceOf(JsonApiException::class, $exception);
         self::assertEquals(404, $exception->getHttpStatus());
         self::assertEquals(
             'Resource "id" of type "test" not found!',
@@ -49,11 +49,11 @@ class ExceptionTest extends TestCase
 
     public function testUnsupportedMediaTypeException()
     {
-        $exception = new UnsupportedMediaTypeException();
+        $exception = new UnsupportedMediaTypeException('text/html');
         self::assertInstanceOf(\Exception::class, $exception);
-        self::assertInstanceOf(Exception::class, $exception);
+        self::assertInstanceOf(JsonApiException::class, $exception);
         self::assertEquals(415, $exception->getHttpStatus());
-        self::assertEquals('', $exception->getMessage());
+        self::assertEquals('Invalid content type: text/html', $exception->getMessage());
         self::assertInstanceOf(
             ErrorInterface::class,
             $exception->createError()
@@ -62,7 +62,7 @@ class ExceptionTest extends TestCase
 
     public function testException()
     {
-        $exception = new Exception('Test');
+        $exception = new JsonApiException('Test');
         self::assertInstanceOf(\Exception::class, $exception);
         self::assertEquals(500, $exception->getHttpStatus());
 
@@ -71,8 +71,8 @@ class ExceptionTest extends TestCase
             ErrorInterface::class,
             $exception->createError()
         );
-        self::assertEquals(500, $error->getStatus());
-        self::assertEquals('Test', $error->getTitle());
+        self::assertEquals(500, $error->status());
+        self::assertEquals('Test', $error->title());
     }
 
     public function testUnsupportedTypeException()
@@ -86,8 +86,8 @@ class ExceptionTest extends TestCase
             ErrorInterface::class,
             $exception->createError()
         );
-        self::assertEquals(404, $error->getStatus());
-        self::assertEquals('Resource type "Test" not found', $error->getTitle());
+        self::assertEquals(404, $error->status());
+        self::assertEquals('Resource type "Test" not found', $error->title());
     }
 
     public function testNotAllowedException()
@@ -101,8 +101,8 @@ class ExceptionTest extends TestCase
             ErrorInterface::class,
             $exception->createError()
         );
-        self::assertEquals(403, $error->getStatus());
-        self::assertEquals('Test', $error->getTitle());
+        self::assertEquals(403, $error->status());
+        self::assertEquals('Test', $error->title());
     }
 
     public function testHttpException()
@@ -116,7 +116,7 @@ class ExceptionTest extends TestCase
             ErrorInterface::class,
             $exception->createError()
         );
-        self::assertEquals(503, $error->getStatus());
-        self::assertEquals('Test', $error->getTitle());
+        self::assertEquals(503, $error->status());
+        self::assertEquals('Test', $error->title());
     }
 }
