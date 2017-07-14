@@ -10,7 +10,7 @@ use Enm\JsonApi\Model\Document\DocumentInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class SaveRequest extends JsonApiRequest implements SaveRequestInterface
+class SaveSingleResourceRequest extends JsonApiRequest implements SaveRequestInterface
 {
     /**
      * @var DocumentInterface

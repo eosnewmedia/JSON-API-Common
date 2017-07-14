@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Tests\Model\Request;
 
 use Enm\JsonApi\Model\Document\Document;
-use Enm\JsonApi\Model\Request\SaveRequest;
+use Enm\JsonApi\Model\Request\SaveSingleResourceRequest;
 use Enm\JsonApi\Model\Resource\JsonResource;
 use PHPUnit\Framework\TestCase;
 
@@ -17,13 +17,13 @@ class SaveRequestTest extends TestCase
     {
         // create
         $document = new Document(new JsonResource('test', 'test-1'));
-        $request = new SaveRequest($document);
+        $request = new SaveSingleResourceRequest($document);
 
         self::assertSame($document, $request->document());
 
         // patch
         $document = new Document(new JsonResource('test', 'test-1'));
-        $request = new SaveRequest($document, 'test-1');
+        $request = new SaveSingleResourceRequest($document, 'test-1');
 
         self::assertSame($document, $request->document());
     }
@@ -34,7 +34,7 @@ class SaveRequestTest extends TestCase
     public function testSaveRequestInvalidId()
     {
         $document = new Document(new JsonResource('test', 'test-1'));
-        new SaveRequest($document, 'test-2');
+        new SaveSingleResourceRequest($document, 'test-2');
     }
 
     /**
@@ -42,7 +42,7 @@ class SaveRequestTest extends TestCase
      */
     public function testSaveRequestCollectionData()
     {
-        new SaveRequest(new Document([]));
+        new SaveSingleResourceRequest(new Document([]));
     }
 
     /**
@@ -50,6 +50,6 @@ class SaveRequestTest extends TestCase
      */
     public function testSaveRequestEmptyData()
     {
-        new SaveRequest(new Document());
+        new SaveSingleResourceRequest(new Document());
     }
 }

@@ -28,6 +28,17 @@
 1. removed class ```ErrorDocument``` (use ```Document``` instead)
 1. added interface ```JsonApiInterface``` for information about the used version in documents
 1. added model class ```JsonApi``` as default implementation of ```JsonApiInterface``` for information about the used version in documents
+1. added interface ```DocumentFactoryInterface``` and class ```DocumentFactory```
+1. added interface ```ResourceFactoryInterface``` and class ```ResourceFactory```
+1. added class ```ResourceFactoryRegistry```
+1. added interface ```RelationshipFactoryInterface``` and class ```RelationshipFactory```
+1. added interface `FetchRequestInterface`
+1. added class `FetchRequest`
+1. added interface `JsonApiRequestInterface`
+1. added class `JsonApiRequest`
+1. added interface `SaveRequestInterface`
+1. added class `RelationshipModificationRequest`
+1. added class `SaveSingleResourceRequest`
 
 ### Serializer changes:
 1. added argument "identifiersOnly" as second argument of ```DocumentSerializerInterface::serializeDocument```
@@ -37,8 +48,4 @@
 
 ### new in 2.0.0
 1. added ```JsonApiInterface``` and ```JsonApiTrait```
-1. added interface ```DocumentFactoryInterface``` and class ```DocumentFactory```
-1. added interface ```ResourceFactoryInterface``` and class ```ResourceFactory```
-1. added class ```ResourceFactoryRegistry```
-1. added interface ```RelationshipFactoryInterface``` and class ```RelationshipFactory```
 1. added interface ```JsonApiAwareInterface``` and trait ```JsonApiAwareTrait```
