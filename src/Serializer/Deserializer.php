@@ -84,12 +84,12 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
      */
     protected function buildResource(ResourceCollectionInterface $collection, array $resourceData): ResourceInterface
     {
-        if (!array_key_exists('type', $resourceData) || !array_key_exists('id', $resourceData)) {
+        if (!array_key_exists('type', $resourceData)) {
             throw new \InvalidArgumentException('Invalid resource given!');
         }
 
         $type = (string)$resourceData['type'];
-        $id = (string)$resourceData['id'];
+        $id = array_key_exists('id', $resourceData) ? (string)$resourceData['id'] : '';
         $resource = $this->jsonApi()->resource($type, $id);
         $collection->set($resource);
 
