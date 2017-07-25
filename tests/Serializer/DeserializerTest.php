@@ -96,7 +96,7 @@ class DeserializerTest extends TestCase
         $this->createDeserializer()->deserializeDocument(
             [
                 'data' => [
-                    'type' => 'test',
+                    'id' => 'test',
                 ]
             ]
         );
@@ -164,7 +164,7 @@ class DeserializerTest extends TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testMissingJsonApi()
+    public function testMissingJsonApiDependency()
     {
         $documentDeserializer = new Deserializer();
         $documentDeserializer->deserializeDocument(
