@@ -17,6 +17,27 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
 class Serializer implements DocumentSerializerInterface
 {
     /**
+     * @var bool
+     */
+    private $keepEmptyData;
+
+    /**
+     * @param bool $keepEmptyData
+     */
+    public function __construct(bool $keepEmptyData = false)
+    {
+        $this->keepEmptyData = $keepEmptyData;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldKeepEmptyData(): bool
+    {
+        return $this->keepEmptyData;
+    }
+
+    /**
      * @param DocumentInterface $document
      * @param bool $identifiersOnly
      *
@@ -137,7 +158,7 @@ class Serializer implements DocumentSerializerInterface
                 $data['data'] = $this->serializeResource($relationship->related()->first());
             }
         } // only add empty data if links or meta are not defined
-        elseif (count($data) === 0) {
+        elseif (count($data) === 0 || $this->shouldKeepEmptyData()) {
             if ($relationship->shouldBeHandledAsCollection()) {
                 $data['data'] = [];
             } else {
@@ -235,6 +256,6 @@ class Serializer implements DocumentSerializerInterface
             return true;
         }
 
-        return $document->errors()->isEmpty() && $document->metaInformation()->isEmpty();
+        return ($document->errors()->isEmpty() && $document->metaInformation()->isEmpty()) || $this->shouldKeepEmptyData();
     }
 }
