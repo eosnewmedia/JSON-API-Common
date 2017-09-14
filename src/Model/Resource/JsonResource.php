@@ -5,6 +5,8 @@ namespace Enm\JsonApi\Model\Resource;
 
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
+use Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationInterface;
+use Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationTrait;
 use Enm\JsonApi\Model\Resource\Link\LinkCollection;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\Relationship\RelationshipCollection;
@@ -13,8 +15,10 @@ use Enm\JsonApi\Model\Resource\Relationship\RelationshipCollectionInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class JsonResource implements ResourceInterface
+class JsonResource implements ResourceInterface, RelatedMetaInformationInterface
 {
+    use RelatedMetaInformationTrait;
+
     /**
      * @var string
      */

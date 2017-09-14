@@ -9,8 +9,10 @@ use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\ErrorCollectionInterface;
 use Enm\JsonApi\Model\Error\ErrorInterface;
+use Enm\JsonApi\Model\Resource\JsonResource;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkInterface;
+use Enm\JsonApi\Model\Resource\Relationship\Relationship;
 use Enm\JsonApi\Model\Resource\Relationship\RelationshipCollectionInterface;
 use Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface;
 use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
@@ -216,6 +218,87 @@ class SerializerTest extends TestCase
         $serialized = $serializer->serializeDocument($document);
 
         self::assertCount(0, $serialized['data']);
+    }
+
+    public function testEmptyToManyRelationship()
+    {
+        $serializer = new Serializer();
+
+        $jsonResource = new JsonResource('tests', 'ab631ed6-7ca0-49d0-97c7-ef8eb005ab44');
+        $jsonResource->relationships()->set(new Relationship('test', []));
+
+        /** @var DocumentInterface $document */
+        $document = $this->createConfiguredMock(
+            DocumentInterface::class,
+            [
+                'shouldBeHandledAsCollection' => false,
+                'data' => $this->createConfiguredMock(
+                    ResourceCollectionInterface::class,
+                    [
+                        'isEmpty' => false,
+                        'first' => $jsonResource
+                    ]
+                ),
+            ]
+        );
+
+        $serialized = $serializer->serializeDocument($document);
+        self::assertCount(0, $serialized['data']['relationships']['test']['data']);
+    }
+
+    public function testEmptyToOneRelationship()
+    {
+        $serializer = new Serializer();
+
+        $jsonResource = new JsonResource('tests', 'ab631ed6-7ca0-49d0-97c7-ef8eb005ab44');
+        $jsonResource->relationships()->set(new Relationship('test'));
+
+        /** @var DocumentInterface $document */
+        $document = $this->createConfiguredMock(
+            DocumentInterface::class,
+            [
+                'shouldBeHandledAsCollection' => false,
+                'data' => $this->createConfiguredMock(
+                    ResourceCollectionInterface::class,
+                    [
+                        'isEmpty' => false,
+                        'first' => $jsonResource
+                    ]
+                ),
+            ]
+        );
+
+        $serialized = $serializer->serializeDocument($document);
+        self::assertNull($serialized['data']['relationships']['test']['data']);
+    }
+
+    public function testRelationshipWithRelatedMeta()
+    {
+        $serializer = new Serializer();
+
+        $jsonResource = new JsonResource('tests', 'ab631ed6-7ca0-49d0-97c7-ef8eb005ab44');
+        $related = new JsonResource('tests', '31ed6ab6-7ca0-49d0-97c7-ef85ab44eb00');
+        $related->relatedMetaInformation()->set('test', 'test');
+
+        $jsonResource->relationships()->set(new Relationship('test', $related));
+
+        /** @var DocumentInterface $document */
+        $document = $this->createConfiguredMock(
+            DocumentInterface::class,
+            [
+                'shouldBeHandledAsCollection' => false,
+                'data' => $this->createConfiguredMock(
+                    ResourceCollectionInterface::class,
+                    [
+                        'isEmpty' => false,
+                        'first' => $jsonResource
+                    ]
+                ),
+            ]
+        );
+
+        $serialized = $serializer->serializeDocument($document);
+        self::assertEquals('test', $serialized['data']['relationships']['test']['data']['meta']['test']);
     }
 
     /**
