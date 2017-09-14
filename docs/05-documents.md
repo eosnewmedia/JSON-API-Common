@@ -9,6 +9,10 @@ The document serializer (a class implementing `Enm\JsonApi\Serializer\DocumentSe
 document objects (and their resources) into a php array in JSON API structure which can be JSON encoded and returned as response. 
 The default serializer should be a good choice but it's also possible to use a custom serializer.
 
+The default serializer will remove empty "data" if "errors" or "meta" is available. It will also remove empty data in 
+relationship if "meta" or "links" is available for a relationship.
+If empty data should be retained, the serializer offers the option `keepEmptyData` as first constructor argument. 
+
 ## Document Deserializer
 The document deserializer (a class implementing `Enm\JsonApi\Serializer\DocumentDeserializerInterface`) is responsible 
 for turning php arrays into document objects (and their resources).

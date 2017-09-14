@@ -43,6 +43,11 @@ The relationships of a resource are accessible via `ResourceInterface::relations
 | remove(string $name)                                         | $this                                                                                  | Remove a relationship by name from the collection.                                                     |
 | removeElement(RelationshipInterface $relationship)           | $this                                                                                  | Remove a relationship object from the collection.                                                      |
 
+
+### Related Resource Meta Information
+If a related resource should contain meta information which should only be accessible in the resource identifier object in the relationship,
+your Resource can implement `Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationInterface` and use `Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationTrait`.
+
 *****
 
 [back to Entry Point](../docs/01-entry.md) | [next: Attributes and Meta](../docs/03-collections.md)
