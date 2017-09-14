@@ -5,6 +5,7 @@ namespace Enm\JsonApi\Serializer;
 
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\ErrorInterface;
+use Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkInterface;
 use Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface;
 use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
@@ -15,6 +16,27 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
  */
 class Serializer implements DocumentSerializerInterface
 {
+    /**
+     * @var bool
+     */
+    private $keepEmptyData;
+
+    /**
+     * @param bool $keepEmptyData
+     */
+    public function __construct(bool $keepEmptyData = false)
+    {
+        $this->keepEmptyData = $keepEmptyData;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldKeepEmptyData(): bool
+    {
+        return $this->keepEmptyData;
+    }
+
     /**
      * @param DocumentInterface $document
      * @param bool $identifiersOnly
@@ -81,16 +103,22 @@ class Serializer implements DocumentSerializerInterface
             'id' => $resource->id(),
         ];
 
+        if (!$resource->metaInformation()->isEmpty()) {
+            $data['meta'] = $resource->metaInformation()->all();
+        }
+
         if ($identifierOnly) {
+            if ($resource instanceof RelatedMetaInformationInterface && !$resource->relatedMetaInformation()->isEmpty()) {
+                foreach ($resource->relatedMetaInformation()->all() as $key => $value) {
+                    $data['meta'][$key] = $value;
+                }
+            }
+
             return $data;
         }
 
         if (!$resource->attributes()->isEmpty()) {
             $data['attributes'] = $resource->attributes()->all();
-        }
-
-        if (!$resource->metaInformation()->isEmpty()) {
-            $data['meta'] = $resource->metaInformation()->all();
         }
 
         foreach ($resource->relationships()->all() as $relationship) {
@@ -113,20 +141,29 @@ class Serializer implements DocumentSerializerInterface
      */
     protected function serializeRelationship(RelationshipInterface $relationship): array
     {
-        $data = ['data' => null];
+        $data = [];
 
         foreach ($relationship->links()->all() as $link) {
             $data['links'][$link->name()] = $this->serializeLink($link);
         }
 
-        if ($relationship->shouldBeHandledAsCollection()) {
-            $data['data'] = $this->createCollectionData($relationship->related());
-        } elseif (!$relationship->related()->isEmpty()) {
-            $data['data'] = $this->serializeResource($relationship->related()->first());
-        }
-
         if (!$relationship->metaInformation()->isEmpty()) {
             $data['meta'] = $relationship->metaInformation()->all();
+        }
+
+        if (!$relationship->related()->isEmpty()) {
+            if ($relationship->shouldBeHandledAsCollection()) {
+                $data['data'] = $this->createCollectionData($relationship->related());
+            } else {
+                $data['data'] = $this->serializeResource($relationship->related()->first());
+            }
+        } // only add empty data if links or meta are not defined
+        elseif (count($data) === 0 || $this->shouldKeepEmptyData()) {
+            if ($relationship->shouldBeHandledAsCollection()) {
+                $data['data'] = [];
+            } else {
+                $data['data'] = null;
+            }
         }
 
         return $data;
@@ -219,6 +256,6 @@ class Serializer implements DocumentSerializerInterface
             return true;
         }
 
-        return $document->errors()->isEmpty() && $document->metaInformation()->isEmpty();
+        return ($document->errors()->isEmpty() && $document->metaInformation()->isEmpty()) || $this->shouldKeepEmptyData();
     }
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 2.1.0
+1. added `RelatedMetaInformationInterface`
+1. added `RelatedMetaInformationTrait`
+1. improved `Serializer` to ignore empty data if links or meta are provided by a relationship
+1. improved `Serializer` to write meta information into resource identifier objects
+1. added option "keepEmptyData" to `Serializer`
+
 ## Version 2.0.0
 ### Model changes:
 1. renamed all occurrences of method "metaInformations" to "metaInformation"

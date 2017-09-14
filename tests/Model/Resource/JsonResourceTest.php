@@ -22,6 +22,7 @@ class JsonResourceTest extends TestCase
         self::assertEquals(0, $resource->relationships()->count());
         self::assertEquals(0, $resource->links()->count());
         self::assertEquals(0, $resource->metaInformation()->count());
+        self::assertEquals(0, $resource->relatedMetaInformation()->count());
     }
 
     public function testDuplicateJsonResource()
