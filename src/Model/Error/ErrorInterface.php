@@ -34,4 +34,9 @@ interface ErrorInterface
      * @return KeyValueCollectionInterface
      */
     public function metaInformation(): KeyValueCollectionInterface;
+    
+    /**
+     * @return KeyValueCollectionInterface
+     */
+    public function source(): KeyValueCollectionInterface;
 }
