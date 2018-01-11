@@ -210,6 +210,10 @@ class Serializer implements DocumentSerializerInterface
         if (!$error->metaInformation()->isEmpty()) {
             $data['meta'] = $error->metaInformation()->all();
         }
+        
+        if (!$error->source()->isEmpty()) {
+            $data['source'] = $error->source()->all();
+        }
 
         return $data;
     }

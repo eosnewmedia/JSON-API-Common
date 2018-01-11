@@ -36,6 +36,11 @@ class Error implements ErrorInterface
      * @var KeyValueCollection
      */
     private $metaCollection;
+    
+    /**
+     * @var KeyValueCollection
+     */
+    private $source;
 
     /**
      * @param int $status
@@ -51,6 +56,7 @@ class Error implements ErrorInterface
         $this->code = $code;
 
         $this->metaCollection = new KeyValueCollection();
+        $this->source = new KeyValueCollection();
     }
 
     /**
@@ -123,5 +129,13 @@ class Error implements ErrorInterface
     public function metaInformation(): KeyValueCollectionInterface
     {
         return $this->metaCollection;
+    }
+    
+    /**
+     * @return KeyValueCollectionInterface
+     */
+    public function source(): KeyValueCollectionInterface
+    {
+        return $this->source;
     }
 }
