@@ -184,7 +184,7 @@ class Document implements DocumentInterface
      */
     public function withHttpHeader(string $key, string $value): DocumentInterface
     {
-        $this->httpHeaders[$key][] = $value;
+        $this->httpHeaders[$key] = $value;
 
         return $this;
     }
