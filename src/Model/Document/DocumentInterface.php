@@ -63,6 +63,11 @@ interface DocumentInterface
     public function httpStatus(): int;
 
     /**
+     * @return array
+     */
+    public function httpHeaders(): array;
+
+    /**
      * @param int $statusCode
      * @return DocumentInterface
      */
