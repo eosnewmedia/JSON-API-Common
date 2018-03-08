@@ -62,8 +62,14 @@ class Document implements DocumentInterface
     private $httpStatus = self::HTTP_OK;
 
     /**
+     * @var array
+     */
+    private $httpHeaders = [];
+
+    /**
      * @param ResourceCollectionInterface|ResourceInterface|ResourceInterface[]|null $data If data is not an array, "shouldBeHandledAsCollection" will return false
      * @param string $version
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct($data = null, string $version = \Enm\JsonApi\JsonApiInterface::CURRENT_VERSION)
@@ -151,12 +157,34 @@ class Document implements DocumentInterface
     }
 
     /**
+     * @return array
+     */
+    public function httpHeaders(): array
+    {
+        return $this->httpHeaders;
+    }
+
+    /**
      * @param int $statusCode
+     *
      * @return DocumentInterface
      */
     public function withHttpStatus(int $statusCode): DocumentInterface
     {
         $this->httpStatus = $statusCode;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     *
+     * @return DocumentInterface
+     */
+    public function withHttpHeader(string $key, string $value): DocumentInterface
+    {
+        $this->httpHeaders[$key][] = $value;
 
         return $this;
     }
