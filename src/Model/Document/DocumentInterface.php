@@ -73,11 +73,12 @@ interface DocumentInterface
      */
     public function withHttpStatus(int $statusCode): DocumentInterface;
 
-    /**
-     * @param string $key
-     * @param string $value
-     *
-     * @return DocumentInterface
-     */
-    public function withHttpHeader(string $key, string $value): DocumentInterface;
+//    @todo this could be used in version 3.0
+//    /**
+//     * @param string $key
+//     * @param string $value
+//     *
+//     * @return DocumentInterface
+//     */
+//    public function withHttpHeader(string $key, string $value): DocumentInterface;
 }
