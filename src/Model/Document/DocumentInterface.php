@@ -63,8 +63,21 @@ interface DocumentInterface
     public function httpStatus(): int;
 
     /**
+     * @return array
+     */
+    public function httpHeaders(): array;
+
+    /**
      * @param int $statusCode
      * @return DocumentInterface
      */
     public function withHttpStatus(int $statusCode): DocumentInterface;
+
+    /**
+     * @param string $key
+     * @param string $value
+     *
+     * @return DocumentInterface
+     */
+    public function withHttpHeader(string $key, string $value): DocumentInterface;
 }
