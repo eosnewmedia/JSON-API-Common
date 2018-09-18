@@ -47,4 +47,15 @@ class LinkTest extends TestCase
     {
         new Link('about', 'jsonapi.org');
     }
+
+    public function testRelativeLink()
+    {
+        $link = new Link('about', '/resource');
+        $link->metaInformation()->set('test', 'test');
+
+        self::assertEquals('about', $link->name());
+        self::assertEquals('/resource', $link->href());
+        self::assertArrayHasKey('test', $link->metaInformation()->all());
+    }
+
 }
