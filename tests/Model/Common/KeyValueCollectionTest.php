@@ -11,43 +11,43 @@ use PHPUnit\Framework\TestCase;
  */
 class KeyValueCollectionTest extends TestCase
 {
-    public function testAll()
+    public function testAll(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertArrayHasKey('test', $collection->all());
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertEquals(1, $collection->count());
     }
 
-    public function testIsEmpty()
+    public function testIsEmpty(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertFalse($collection->isEmpty());
     }
 
-    public function testHas()
+    public function testHas(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertTrue($collection->has('test'));
     }
 
-    public function testGetRequired()
+    public function testGetRequired(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertEquals('test', $collection->getRequired('test'));
     }
 
-    public function testGetOptional()
+    public function testGetOptional(): void
     {
         $collection = new KeyValueCollection();
         self::assertEquals('test', $collection->getOptional('test', 'test'));
     }
 
-    public function testCreateSubCollection()
+    public function testCreateSubCollection(): void
     {
         $collection = new KeyValueCollection(['test' => ['abc' => 'abc']]);
 
@@ -57,7 +57,7 @@ class KeyValueCollectionTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testCreateSubCollectionInvalid()
+    public function testCreateSubCollectionInvalid(): void
     {
         $collection = new KeyValueCollection(['test' => 'abc']);
 
@@ -67,20 +67,20 @@ class KeyValueCollectionTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testCreateSubCollectionRequired()
+    public function testCreateSubCollectionRequired(): void
     {
         $collection = new KeyValueCollection();
         $collection->createSubCollection('test');
     }
 
-    public function testCreateSubCollectionOptional()
+    public function testCreateSubCollectionOptional(): void
     {
         $collection = new KeyValueCollection();
 
         self::assertCount(0, $collection->createSubCollection('test', false)->all());
     }
 
-    public function testMergeCollection()
+    public function testMergeCollection(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
 
@@ -92,7 +92,7 @@ class KeyValueCollectionTest extends TestCase
         self::assertEquals('def', $collection->getRequired('test2'));
     }
 
-    public function testMergeCollectionNoOverwrite()
+    public function testMergeCollectionNoOverwrite(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
 
@@ -104,7 +104,7 @@ class KeyValueCollectionTest extends TestCase
         self::assertEquals('def', $collection->getRequired('test2'));
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
 
@@ -117,7 +117,7 @@ class KeyValueCollectionTest extends TestCase
     }
 
 
-    public function testMergeNoOverwrite()
+    public function testMergeNoOverwrite(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
 
@@ -133,13 +133,13 @@ class KeyValueCollectionTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testGetInvalid()
+    public function testGetInvalid(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         $collection->getRequired('abc');
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertFalse($collection->has('abc'));
@@ -147,7 +147,7 @@ class KeyValueCollectionTest extends TestCase
         self::assertTrue($collection->has('abc'));
     }
 
-    public function testSetCollection()
+    public function testSetCollection(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertFalse($collection->has('abc'));
@@ -156,7 +156,7 @@ class KeyValueCollectionTest extends TestCase
         self::assertArrayHasKey('test', $collection->getRequired('abc'));
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertTrue($collection->has('test'));
@@ -164,7 +164,7 @@ class KeyValueCollectionTest extends TestCase
         self::assertFalse($collection->has('test'));
     }
 
-    public function testRemoveInvalid()
+    public function testRemoveInvalid(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         $collection->remove('abc');

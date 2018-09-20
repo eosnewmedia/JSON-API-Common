@@ -12,28 +12,29 @@ use PHPUnit\Framework\TestCase;
  */
 class LinkCollectionTest extends TestCase
 {
-    public function testHas()
+    public function testHas(): void
     {
         $collection = new LinkCollection($this->getLinks());
         self::assertTrue($collection->has('a'));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $collection = new LinkCollection($this->getLinks());
+        /** @noinspection UnnecessaryAssertionInspection */
         self::assertInstanceOf(LinkInterface::class, $collection->get('a'));
     }
 
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testGetInvalid()
+    public function testGetInvalid(): void
     {
         $collection = new LinkCollection($this->getLinks());
         $collection->get('c');
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $collection = new LinkCollection($this->getLinks());
         self::assertFalse($collection->has('c'));
@@ -47,7 +48,7 @@ class LinkCollectionTest extends TestCase
         self::assertTrue($collection->has('c'));
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $collection = new LinkCollection($this->getLinks());
         self::assertTrue($collection->has('a'));
@@ -55,7 +56,7 @@ class LinkCollectionTest extends TestCase
         self::assertFalse($collection->has('a'));
     }
 
-    public function testRemoveElement()
+    public function testRemoveElement(): void
     {
         $collection = new LinkCollection($this->getLinks());
         self::assertTrue($collection->has('a'));
@@ -67,7 +68,7 @@ class LinkCollectionTest extends TestCase
         self::assertFalse($collection->has('a'));
     }
 
-    public function testCreateLink()
+    public function testCreateLink(): void
     {
         $collection = new LinkCollection();
         $collection->createLink('test', 'http://example.com');

@@ -3,19 +3,12 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi;
 
-use Enm\JsonApi\Model\Factory\DocumentFactory;
-use Enm\JsonApi\Model\Factory\DocumentFactoryInterface;
-use Enm\JsonApi\Model\Factory\RelationshipFactory;
-use Enm\JsonApi\Model\Factory\RelationshipFactoryInterface;
-use Enm\JsonApi\Model\Factory\ResourceFactory;
-use Enm\JsonApi\Model\Factory\ResourceFactoryInterface;
+use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Document\DocumentInterface;
+use Enm\JsonApi\Model\Resource\JsonResource;
+use Enm\JsonApi\Model\Resource\Relationship\Relationship;
 use Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
-use Enm\JsonApi\Serializer\Deserializer;
-use Enm\JsonApi\Serializer\DocumentDeserializerInterface;
-use Enm\JsonApi\Serializer\DocumentSerializerInterface;
-use Enm\JsonApi\Serializer\Serializer;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
@@ -23,42 +16,18 @@ use Enm\JsonApi\Serializer\Serializer;
 trait JsonApiTrait
 {
     /**
-     * @var DocumentFactoryInterface
-     */
-    private $documentFactory;
-
-    /**
-     * @var ResourceFactoryInterface
-     */
-    private $resourceFactory;
-
-    /**
-     * @var RelationshipFactoryInterface
-     */
-    private $relationshipFactory;
-
-    /**
-     * @var DocumentSerializerInterface
-     */
-    private $documentSerializer;
-
-    /**
-     * @var DocumentDeserializerInterface
-     */
-    private $documentDeserializer;
-
-    /**
      * @param string $type
      * @param string $id
      * @return ResourceInterface
      */
     public function resource(string $type, string $id): ResourceInterface
     {
-        return $this->resourceFactory()->create($type, $id);
+        return new JsonResource($type, $id);
     }
 
     /**
      * @return string A valid uuid
+     * @throws \Exception
      */
     public function generateUuid(): string
     {
@@ -86,44 +55,20 @@ trait JsonApiTrait
 
     /**
      * @param ResourceInterface|null $resource
-     * @param string $version
      * @return DocumentInterface
      */
-    public function singleResourceDocument(
-        ResourceInterface $resource = null,
-        string $version = self::CURRENT_VERSION
-    ): DocumentInterface {
-        return $this->documentFactory()->create($resource, $version);
+    public function singleResourceDocument(ResourceInterface $resource = null): DocumentInterface
+    {
+        return new Document($resource);
     }
 
     /**
      * @param ResourceInterface[] $resource
-     * @param string $version
      * @return DocumentInterface
      */
-    public function multiResourceDocument(
-        array $resource = [],
-        string $version = self::CURRENT_VERSION
-    ): DocumentInterface {
-        return $this->documentFactory()->create($resource, $version);
-    }
-
-    /**
-     * @param DocumentInterface $document
-     * @return array
-     */
-    public function serializeDocument(DocumentInterface $document): array
+    public function multiResourceDocument(array $resource = []): DocumentInterface
     {
-        return $this->documentSerializer()->serializeDocument($document);
-    }
-
-    /**
-     * @param array $document
-     * @return DocumentInterface
-     */
-    public function deserializeDocument(array $document): DocumentInterface
-    {
-        return $this->documentDeserializer()->deserializeDocument($document);
+        return new Document($resource);
     }
 
     /**
@@ -133,7 +78,7 @@ trait JsonApiTrait
      */
     public function toOneRelationship(string $name, ResourceInterface $related = null): RelationshipInterface
     {
-        return $this->relationshipFactory()->create($name, $related);
+        return new Relationship($name, $related);
     }
 
     /**
@@ -143,110 +88,6 @@ trait JsonApiTrait
      */
     public function toManyRelationship(string $name, array $related = []): RelationshipInterface
     {
-        return $this->relationshipFactory()->create($name, $related);
-    }
-
-    /**
-     * @param DocumentFactoryInterface $documentFactory
-     */
-    public function setDocumentFactory(DocumentFactoryInterface $documentFactory)
-    {
-        $this->documentFactory = $documentFactory;
-    }
-
-    /**
-     * @param ResourceFactoryInterface $resourceFactory
-     */
-    public function setResourceFactory(ResourceFactoryInterface $resourceFactory)
-    {
-        $this->resourceFactory = $resourceFactory;
-    }
-
-    /**
-     * @param RelationshipFactoryInterface $relationshipFactory
-     */
-    public function setRelationshipFactory(RelationshipFactoryInterface $relationshipFactory)
-    {
-        $this->relationshipFactory = $relationshipFactory;
-    }
-
-    /**
-     * @param DocumentSerializerInterface $documentSerializer
-     */
-    public function setDocumentSerializer(DocumentSerializerInterface $documentSerializer)
-    {
-        $this->documentSerializer = $documentSerializer;
-    }
-
-    /**
-     * @param DocumentDeserializerInterface $documentDeserializer
-     */
-    public function setDocumentDeserializer(DocumentDeserializerInterface $documentDeserializer)
-    {
-        $this->documentDeserializer = $documentDeserializer;
-    }
-
-    /**
-     * @return DocumentFactoryInterface
-     */
-    private function documentFactory(): DocumentFactoryInterface
-    {
-        if (!$this->documentFactory instanceof DocumentFactoryInterface) {
-            $this->documentFactory = new DocumentFactory();
-        }
-
-        return $this->documentFactory;
-    }
-
-    /**
-     * @return ResourceFactoryInterface
-     */
-    private function resourceFactory(): ResourceFactoryInterface
-    {
-        if (!$this->resourceFactory instanceof ResourceFactoryInterface) {
-            $this->resourceFactory = new ResourceFactory();
-        }
-
-        return $this->resourceFactory;
-    }
-
-    /**
-     * @return RelationshipFactoryInterface
-     */
-    private function relationshipFactory(): RelationshipFactoryInterface
-    {
-        if (!$this->relationshipFactory instanceof RelationshipFactoryInterface) {
-            $this->relationshipFactory = new RelationshipFactory();
-        }
-
-        return $this->relationshipFactory;
-    }
-
-    /**
-     * @return DocumentSerializerInterface
-     */
-    private function documentSerializer(): DocumentSerializerInterface
-    {
-        if (!$this->documentSerializer instanceof DocumentSerializerInterface) {
-            $this->documentSerializer = new Serializer();
-        }
-
-        return $this->documentSerializer;
-    }
-
-    /**
-     * @return DocumentDeserializerInterface
-     */
-    private function documentDeserializer(): DocumentDeserializerInterface
-    {
-        if (!$this->documentDeserializer instanceof DocumentDeserializerInterface) {
-            $this->documentDeserializer = new Deserializer();
-        }
-
-        if ($this instanceof JsonApiInterface && $this->documentDeserializer instanceof JsonApiAwareInterface) {
-            $this->documentDeserializer->setJsonApi($this);
-        }
-
-        return $this->documentDeserializer;
+        return new Relationship($name, $related);
     }
 }

@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class SingleResourceCollectionTest extends TestCase
 {
 
-    public function testSet()
+    public function testSet(): void
     {
         $collection = new SingleResourceCollection();
 
@@ -29,7 +29,7 @@ class SingleResourceCollectionTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testConstructMultiple()
+    public function testConstructMultiple(): void
     {
         new SingleResourceCollection(
             [
@@ -42,7 +42,7 @@ class SingleResourceCollectionTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testSetMultiple()
+    public function testSetMultiple(): void
     {
         $collection = new SingleResourceCollection();
         /** @var ResourceInterface $resource */

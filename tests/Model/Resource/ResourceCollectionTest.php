@@ -1,8 +1,10 @@
 <?php
+/** @noinspection UnnecessaryAssertionInspection */
 declare(strict_types=1);
 
 namespace Enm\JsonApi\Tests\Model\Resource;
 
+use Enm\JsonApi\Exception\ResourceNotFoundException;
 use Enm\JsonApi\Model\Resource\ResourceCollection;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use PHPUnit\Framework\TestCase;
@@ -12,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ResourceCollectionTest extends TestCase
 {
-    public function testHas()
+    public function testHas(): void
     {
         $collection = new ResourceCollection($this->getResources());
         self::assertTrue($collection->has('test', '1'));
@@ -20,16 +22,20 @@ class ResourceCollectionTest extends TestCase
         self::assertFalse($collection->has('test', '3'));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $collection = new ResourceCollection($this->getResources());
-        self::assertInstanceOf(
-            ResourceInterface::class,
-            $collection->get('test', '1')
-        );
+        try {
+            self::assertInstanceOf(
+                ResourceInterface::class,
+                $collection->get('test', '1')
+            );
+        } catch (ResourceNotFoundException $e) {
+            $this->fail($e->getMessage());
+        }
     }
 
-    public function testFirst()
+    public function testFirst(): void
     {
         $collection = new ResourceCollection($this->getResources());
         self::assertInstanceOf(
@@ -41,7 +47,7 @@ class ResourceCollectionTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testFirstEmptyCollection()
+    public function testFirstEmptyCollection(): void
     {
         $collection = new ResourceCollection();
         self::assertInstanceOf(
@@ -53,7 +59,7 @@ class ResourceCollectionTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testFirstMissingType()
+    public function testFirstMissingType(): void
     {
         $collection = new ResourceCollection($this->getResources());
         self::assertInstanceOf(
@@ -65,13 +71,13 @@ class ResourceCollectionTest extends TestCase
     /**
      * @expectedException \Enm\JsonApi\Exception\ResourceNotFoundException
      */
-    public function testGetInvalid()
+    public function testGetInvalid(): void
     {
         $collection = new ResourceCollection($this->getResources());
         $collection->get('test', '3');
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $collection = new ResourceCollection($this->getResources());
         self::assertFalse($collection->has('test', '3'));
@@ -85,7 +91,7 @@ class ResourceCollectionTest extends TestCase
         self::assertTrue($collection->has('test', '3'));
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $collection = new ResourceCollection($this->getResources());
         self::assertTrue($collection->has('test', '2'));
@@ -96,7 +102,7 @@ class ResourceCollectionTest extends TestCase
     }
 
 
-    public function testRemoveElement()
+    public function testRemoveElement(): void
     {
         $collection = new ResourceCollection($this->getResources());
         self::assertTrue($collection->has('test', '2'));

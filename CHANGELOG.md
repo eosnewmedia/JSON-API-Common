@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 3.0.0
+
+
+## Version 2.4.0
+1. allow relative url's in links
+
+## Version 2.3.0
+1. added `SaveRequest` to save multiple resources at one when manipulating relationships
+
+## Version 2.2.0
+1. added method `source` to `ErrorInterface` and use it in `Serializer`
+
 ## Version 2.1.0
 1. added `RelatedMetaInformationInterface`
 1. added `RelatedMetaInformationTrait`

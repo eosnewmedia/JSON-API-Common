@@ -11,14 +11,14 @@ use PHPUnit\Framework\TestCase;
  */
 class ErrorTest extends TestCase
 {
-    public function testSimpleError()
+    public function testSimpleError(): void
     {
         $error = new Error(500, 'Test Error');
         self::assertEquals('Test Error', $error->title());
         self::assertEquals(500, $error->status());
     }
 
-    public function testConfiguredError()
+    public function testConfiguredError(): void
     {
         $error = new Error(
             400,
@@ -43,7 +43,7 @@ class ErrorTest extends TestCase
         self::assertEquals('test', $error->metaInformation()->getRequired('test'));
     }
 
-    public function testErrorFromException()
+    public function testErrorFromException(): void
     {
         $error = Error::createFrom(new \Exception('Test', 13));
 
@@ -52,7 +52,7 @@ class ErrorTest extends TestCase
         self::assertEquals(500, $error->status());
     }
 
-    public function testErrorFromExceptionWithDebug()
+    public function testErrorFromExceptionWithDebug(): void
     {
         $error = Error::createFrom(new \Exception('Test'), true);
 

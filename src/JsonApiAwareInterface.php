@@ -12,5 +12,5 @@ interface JsonApiAwareInterface
      * @param JsonApiInterface $jsonApi
      * @return void
      */
-    public function setJsonApi(JsonApiInterface $jsonApi);
+    public function setJsonApi(JsonApiInterface $jsonApi): void;
 }

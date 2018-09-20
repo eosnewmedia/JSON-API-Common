@@ -5,8 +5,6 @@ namespace Enm\JsonApi\Model\Document;
 
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
-use Enm\JsonApi\Model\Document\JsonApi\JsonApi;
-use Enm\JsonApi\Model\Document\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Error\ErrorCollection;
 use Enm\JsonApi\Model\Error\ErrorCollectionInterface;
 use Enm\JsonApi\Model\Resource\Link\LinkCollection;
@@ -51,35 +49,20 @@ class Document implements DocumentInterface
      */
     private $errors;
 
-    /**
-     * @var JsonApi
-     */
-    private $jsonApi;
-
-    /**
-     * @var int
-     */
-    private $httpStatus = self::HTTP_OK;
-
-    /**
-     * @var array
-     */
-    private $httpHeaders = [];
 
     /**
      * @param ResourceCollectionInterface|ResourceInterface|ResourceInterface[]|null $data If data is not an array, "shouldBeHandledAsCollection" will return false
-     * @param string $version
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($data = null, string $version = \Enm\JsonApi\JsonApiInterface::CURRENT_VERSION)
+    public function __construct($data = null)
     {
         if (null === $data || $data instanceof ResourceInterface) {
             $this->data = new SingleResourceCollection($data !== null ? [$data] : []);
             $this->handleAsCollection = false;
         } elseif ($data instanceof ResourceCollectionInterface) {
             $this->data = $data;
-        } elseif (is_array($data)) {
+        } elseif (\is_array($data)) {
             $this->data = new ResourceCollection($data);
         } else {
             throw new \InvalidArgumentException('Invalid data given!');
@@ -89,7 +72,6 @@ class Document implements DocumentInterface
         $this->included = new ResourceCollection();
         $this->metaInformation = new KeyValueCollection();
         $this->errors = new ErrorCollection();
-        $this->jsonApi = new JsonApi($version);
     }
 
     /**
@@ -138,54 +120,5 @@ class Document implements DocumentInterface
     public function errors(): ErrorCollectionInterface
     {
         return $this->errors;
-    }
-
-    /**
-     * @return JsonApiInterface
-     */
-    public function jsonApi(): JsonApiInterface
-    {
-        return $this->jsonApi;
-    }
-
-    /**
-     * @return int
-     */
-    public function httpStatus(): int
-    {
-        return $this->httpStatus;
-    }
-
-    /**
-     * @return array
-     */
-    public function httpHeaders(): array
-    {
-        return $this->httpHeaders;
-    }
-
-    /**
-     * @param int $statusCode
-     *
-     * @return DocumentInterface
-     */
-    public function withHttpStatus(int $statusCode): DocumentInterface
-    {
-        $this->httpStatus = $statusCode;
-
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param string $value
-     *
-     * @return DocumentInterface
-     */
-    public function withHttpHeader(string $key, string $value): DocumentInterface
-    {
-        $this->httpHeaders[$key] = $value;
-
-        return $this;
     }
 }

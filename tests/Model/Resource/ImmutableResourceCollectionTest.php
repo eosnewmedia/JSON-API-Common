@@ -15,7 +15,7 @@ class ImmutableResourceCollectionTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testSet()
+    public function testSet(): void
     {
         $collection = new ImmutableResourceCollection();
         /** @var ResourceInterface $resource */
@@ -26,7 +26,7 @@ class ImmutableResourceCollectionTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testRemove()
+    public function testRemove(): void
     {
         $collection = new ImmutableResourceCollection();
         $collection->remove('test', '1');
@@ -35,7 +35,7 @@ class ImmutableResourceCollectionTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testRemoveElement()
+    public function testRemoveElement(): void
     {
         $collection = new ImmutableResourceCollection();
         /** @var ResourceInterface $resource */

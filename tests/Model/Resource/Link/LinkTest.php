@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class LinkTest extends TestCase
 {
-    public function testLink()
+    public function testLink(): void
     {
         $link = new Link('about', 'http://jsonapi.org');
         $link->metaInformation()->set('test', 'test');
@@ -21,7 +21,7 @@ class LinkTest extends TestCase
         self::assertArrayHasKey('test', $link->metaInformation()->all());
     }
 
-    public function testDuplicateLink()
+    public function testDuplicateLink(): void
     {
         $link = new Link('about', 'http://jsonapi.org');
         $link->metaInformation()->set('test', 'test');
@@ -35,7 +35,7 @@ class LinkTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testExceptionOnInvalidName()
+    public function testExceptionOnInvalidName(): void
     {
         new Link('', 'http://jsonapi.org');
     }
@@ -43,12 +43,12 @@ class LinkTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testExceptionOnInvalidUrl()
+    public function testExceptionOnInvalidUrl(): void
     {
         new Link('about', 'jsonapi.org');
     }
 
-    public function testRelativeLink()
+    public function testRelativeLink(): void
     {
         $link = new Link('about', '/resource');
         $link->metaInformation()->set('test', 'test');

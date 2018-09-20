@@ -14,9 +14,9 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
  */
 interface JsonApiInterface
 {
-    const CONTENT_TYPE = 'application/vnd.api+json';
+    public const CONTENT_TYPE = 'application/vnd.api+json';
 
-    const CURRENT_VERSION = '1.0';
+    public const CURRENT_VERSION = '1.0';
 
     /**
      * @return string A valid uuid
@@ -32,35 +32,15 @@ interface JsonApiInterface
 
     /**
      * @param ResourceInterface|null $resource
-     * @param string $version
      * @return DocumentInterface
      */
-    public function singleResourceDocument(
-        ResourceInterface $resource = null,
-        string $version = self::CURRENT_VERSION
-    ): DocumentInterface;
+    public function singleResourceDocument(ResourceInterface $resource = null): DocumentInterface;
 
     /**
      * @param ResourceInterface[] $resource
-     * @param string $version
      * @return DocumentInterface
      */
-    public function multiResourceDocument(
-        array $resource = [],
-        string $version = self::CURRENT_VERSION
-    ): DocumentInterface;
-
-    /**
-     * @param DocumentInterface $document
-     * @return array
-     */
-    public function serializeDocument(DocumentInterface $document): array;
-
-    /**
-     * @param array $document
-     * @return DocumentInterface
-     */
-    public function deserializeDocument(array $document): DocumentInterface;
+    public function multiResourceDocument(array $resource = []): DocumentInterface;
 
     /**
      * @param string $name

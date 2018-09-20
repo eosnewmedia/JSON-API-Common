@@ -1,19 +1,15 @@
 language: php
 
 php:
-  - 7.0
-  - 7.1
-
-env:
-  - JSON API
+- 7.2
 
 before_script:
-  - composer self-update
-  - composer install
+- composer self-update
+- composer install
 
 script: php vendor/bin/phpunit --coverage-text
 
 notifications:
-  email:
+    email:
     - bogomolov@eosnewmedia.de
     - marien@eosnewmedia.de

@@ -18,21 +18,16 @@ trait JsonApiAwareTrait
      *
      * @return void
      */
-    public function setJsonApi(JsonApiInterface $jsonApi)
+    public function setJsonApi(JsonApiInterface $jsonApi): void
     {
         $this->jsonApi = $jsonApi;
     }
 
     /**
      * @return JsonApiInterface
-     * @throws \RuntimeException
      */
     protected function jsonApi(): JsonApiInterface
     {
-        if (!$this->jsonApi instanceof JsonApiInterface) {
-            throw new \RuntimeException('JsonApi not available!');
-        }
-
         return $this->jsonApi;
     }
 }

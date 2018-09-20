@@ -6,6 +6,7 @@ namespace Enm\JsonApi\Tests\Model\Request;
 use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Request\RelationshipModificationRequest;
 use Enm\JsonApi\Model\Resource\JsonResource;
+use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,46 +14,49 @@ use PHPUnit\Framework\TestCase;
  */
 class RelationshipModificationRequestTest extends TestCase
 {
-    public function testRequest()
+    /**
+     * @throws \Enm\JsonApi\Exception\BadRequestException
+     */
+    public function testRequest(): void
     {
         $document = new Document(new JsonResource('tests', 'test-1'));
-        $request = new RelationshipModificationRequest('examples', 'example-1', $document);
+        $request = new RelationshipModificationRequest('POST', new Uri('/examples/example-1'), $document);
 
-        self::assertSame($document, $request->document());
+        self::assertSame($document, $request->requestBody());
     }
 
     /**
      * @expectedException \Enm\JsonApi\Exception\BadRequestException
      */
-    public function testRequestInvalidType()
+    public function testRequestInvalidType(): void
     {
         $document = new Document(new JsonResource('tests', 'test-1'));
-        new RelationshipModificationRequest('', 'example-1', $document);
+        new RelationshipModificationRequest('POST', new Uri('/'), $document);
     }
 
     /**
      * @expectedException \Enm\JsonApi\Exception\BadRequestException
      */
-    public function testRequestInvalidId()
+    public function testRequestInvalidId(): void
     {
         $document = new Document(new JsonResource('tests', 'test-1'));
-        new RelationshipModificationRequest('examples', '', $document);
+        new RelationshipModificationRequest('POST', new Uri('/tests'), $document);
     }
 
     /**
      * @expectedException \Enm\JsonApi\Exception\BadRequestException
      */
-    public function testRequestInvalidResourceId()
+    public function testRequestInvalidResourceId(): void
     {
         $document = new Document(new JsonResource('test', ''));
 
-        new RelationshipModificationRequest('examples', 'example-1', $document);
+        new RelationshipModificationRequest('POST', new Uri('/examples/example-1'), $document);
     }
 
     /**
      * @expectedException \Enm\JsonApi\Exception\BadRequestException
      */
-    public function testRequestInvalidResourceType()
+    public function testRequestInvalidResourceType(): void
     {
         $document = new Document(
             [
@@ -61,6 +65,6 @@ class RelationshipModificationRequestTest extends TestCase
             ]
         );
 
-        new RelationshipModificationRequest('examples', 'example-1', $document);
+        new RelationshipModificationRequest('POST', new Uri('/examples/example-1'), $document);
     }
 }

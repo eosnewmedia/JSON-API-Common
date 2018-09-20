@@ -42,6 +42,6 @@ abstract class AbstractCollection implements CollectionInterface
      */
     public function count(): int
     {
-        return count($this->collection);
+        return \count($this->collection);
     }
 }

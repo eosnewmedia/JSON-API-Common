@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Serializer;
 
+use Enm\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\ErrorInterface;
 use Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationInterface;
@@ -80,11 +81,8 @@ class Serializer implements DocumentSerializerInterface
 
         // informations about json api
         $result['jsonapi'] = [
-            'version' => $document->jsonApi()->getVersion()
+            'version' => JsonApiInterface::CURRENT_VERSION
         ];
-        if (!$document->jsonApi()->metaInformation()->isEmpty()) {
-            $result['jsonapi']['meta'] = $document->jsonApi()->metaInformation()->all();
-        }
 
         return $result;
     }
@@ -158,7 +156,7 @@ class Serializer implements DocumentSerializerInterface
                 $data['data'] = $this->serializeResource($relationship->related()->first());
             }
         } // only add empty data if links or meta are not defined
-        elseif (count($data) === 0 || $this->shouldKeepEmptyData()) {
+        elseif (\count($data) === 0 || $this->shouldKeepEmptyData()) {
             if ($relationship->shouldBeHandledAsCollection()) {
                 $data['data'] = [];
             } else {
@@ -210,7 +208,7 @@ class Serializer implements DocumentSerializerInterface
         if (!$error->metaInformation()->isEmpty()) {
             $data['meta'] = $error->metaInformation()->all();
         }
-        
+
         if (!$error->source()->isEmpty()) {
             $data['source'] = $error->source()->all();
         }

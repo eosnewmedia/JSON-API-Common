@@ -55,7 +55,7 @@ class KeyValueCollection extends AbstractCollection implements KeyValueCollectio
     public function createSubCollection(string $key, bool $required = true): KeyValueCollectionInterface
     {
         $data = $required ? $this->getRequired($key) : $this->getOptional($key, []);
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             throw new \InvalidArgumentException('Element ' . $key . ' have to be an array to use it as collection.');
         }
 

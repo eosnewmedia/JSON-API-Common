@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Tests;
 
-use Enm\JsonApi\Model\Factory\DocumentFactory;
-use Enm\JsonApi\Model\Factory\RelationshipFactory;
-use Enm\JsonApi\Model\Factory\ResourceFactory;
-use Enm\JsonApi\Model\Resource\ResourceInterface;
-use Enm\JsonApi\Serializer\Deserializer;
-use Enm\JsonApi\Serializer\Serializer;
+use Enm\JsonApi\JsonApiInterface;
+use Enm\JsonApi\JsonApiTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,152 +12,69 @@ use PHPUnit\Framework\TestCase;
  */
 class JsonApiTest extends TestCase
 {
-    public function testResource()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testResource(): void
     {
-        $api = new DummyJsonApi();
-
-        self::assertInstanceOf(ResourceInterface::class, $api->resource('test', 'test-1'));
+        /** @var JsonApiInterface $jsonApi */
+        $jsonApi = $this->getObjectForTrait(JsonApiTrait::class);
+        self::assertEquals('test-1', $jsonApi->resource('test', 'test-1')->id());
     }
 
-    public function testSingleResourceDocument()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testSingleResourceDocument(): void
     {
-        $api = new DummyJsonApi();
+        /** @var JsonApiInterface $jsonApi */
+        $jsonApi = $this->getObjectForTrait(JsonApiTrait::class);
 
-        self::assertFalse($api->singleResourceDocument()->shouldBeHandledAsCollection());
+        self::assertFalse($jsonApi->singleResourceDocument()->shouldBeHandledAsCollection());
     }
 
-    public function testMultiResourceDocument()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testMultiResourceDocument(): void
     {
-        $api = new DummyJsonApi();
+        /** @var JsonApiInterface $jsonApi */
+        $jsonApi = $this->getObjectForTrait(JsonApiTrait::class);
 
-        self::assertTrue($api->multiResourceDocument()->shouldBeHandledAsCollection());
+        self::assertTrue($jsonApi->multiResourceDocument()->shouldBeHandledAsCollection());
     }
 
-    public function testSerializeDocument()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testToOneRelationship(): void
     {
-        $api = new DummyJsonApi();
+        /** @var JsonApiInterface $jsonApi */
+        $jsonApi = $this->getObjectForTrait(JsonApiTrait::class);
 
-        $data = $api->serializeDocument($api->singleResourceDocument());
-        self::assertArrayHasKey('data', $data);
-        self::assertNull($data['data']);
+        self::assertFalse($jsonApi->toOneRelationship('test')->shouldBeHandledAsCollection());
     }
 
-    public function testDeserializeDocument()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testToManyRelationship(): void
     {
-        $api = new DummyJsonApi();
-
-        $document = $api->deserializeDocument(['data' => null]);
-        self::assertEquals(0, $document->data()->count());
-        self::assertFalse($document->shouldBeHandledAsCollection());
+        /** @var JsonApiInterface $jsonApi */
+        $jsonApi = $this->getObjectForTrait(JsonApiTrait::class);
+        self::assertTrue($jsonApi->toManyRelationship('test')->shouldBeHandledAsCollection());
     }
 
-    public function testSetDocumentFactory()
+    /**
+     * @throws \ReflectionException
+     */
+    public function testUuid(): void
     {
-        $api = new DummyJsonApi();
-        $factory = new DocumentFactory();
-
-        $reflection = new \ReflectionObject($api);
-        $method = $reflection->getMethod('documentFactory');
-        $method->setAccessible(true);
-
-        self::assertNotSame(
-            $factory,
-            $method->invoke($api)
-        );
-
-        $api->setDocumentFactory($factory);
-
-        self::assertSame(
-            $factory,
-            $method->invoke($api)
-        );
-    }
-
-    public function testSetResourceFactory()
-    {
-        $api = new DummyJsonApi();
-        $factory = new ResourceFactory();
-
-        $reflection = new \ReflectionObject($api);
-        $method = $reflection->getMethod('resourceFactory');
-        $method->setAccessible(true);
-
-        self::assertNotSame(
-            $factory,
-            $method->invoke($api)
-        );
-
-        $api->setResourceFactory($factory);
-
-        self::assertSame(
-            $factory,
-            $method->invoke($api)
-        );
-    }
-
-    public function testSetDocumentSerializer()
-    {
-        $api = new DummyJsonApi();
-        $documentSerializer = new Serializer();
-
-        $reflection = new \ReflectionObject($api);
-        $method = $reflection->getMethod('documentSerializer');
-        $method->setAccessible(true);
-
-        self::assertNotSame(
-            $documentSerializer,
-            $method->invoke($api)
-        );
-
-        $api->setDocumentSerializer($documentSerializer);
-
-        self::assertSame(
-            $documentSerializer,
-            $method->invoke($api)
-        );
-    }
-
-    public function testSetDocumentDeserializer()
-    {
-        $api = new DummyJsonApi();
-        $documentDeserializer = new Deserializer();
-
-        $reflection = new \ReflectionObject($api);
-        $method = $reflection->getMethod('documentDeserializer');
-        $method->setAccessible(true);
-
-        self::assertNotSame(
-            $documentDeserializer,
-            $method->invoke($api)
-        );
-
-        $api->setDocumentDeserializer($documentDeserializer);
-
-        self::assertSame(
-            $documentDeserializer,
-            $method->invoke($api)
-        );
-    }
-
-    public function testToOneRelationship()
-    {
-        $api = new DummyJsonApi();
-        $api->setRelationshipFactory(new RelationshipFactory());
-        self::assertFalse($api->toOneRelationship('test')->shouldBeHandledAsCollection());
-    }
-
-    public function testToManyRelationship()
-    {
-        $api = new DummyJsonApi();
-        self::assertTrue($api->toManyRelationship('test')->shouldBeHandledAsCollection());
-    }
-
-    public function testUuid()
-    {
-        $api = new DummyJsonApi();
+        /** @var JsonApiInterface $jsonApi */
+        $jsonApi = $this->getObjectForTrait(JsonApiTrait::class);
         self::assertStringMatchesFormat(
             '%x%x%x%x%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x-%x%x%x%x%x%x%x%x%x%x%x%x',
-            $api->generateUuid()
+            $jsonApi->generateUuid()
         );
     }
 }

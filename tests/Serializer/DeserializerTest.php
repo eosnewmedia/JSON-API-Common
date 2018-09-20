@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Enm\JsonApi\Tests\Serializer;
 
 use Enm\JsonApi\Serializer\Deserializer;
-use Enm\JsonApi\Tests\DummyJsonApi;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class DeserializerTest extends TestCase
 {
-    public function testDeserializeResourceDocument()
+    public function testDeserializeResourceDocument(): void
     {
         $documentDeserializer = $this->createDeserializer();
 
@@ -73,7 +72,7 @@ class DeserializerTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidLink()
+    public function testInvalidLink(): void
     {
         $this->createDeserializer()->deserializeDocument(
             [
@@ -91,7 +90,7 @@ class DeserializerTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidResource()
+    public function testInvalidResource(): void
     {
         $this->createDeserializer()->deserializeDocument(
             [
@@ -102,7 +101,7 @@ class DeserializerTest extends TestCase
         );
     }
 
-    public function testErrorDocument()
+    public function testErrorDocument(): void
     {
         $document = $this->createDeserializer()->deserializeDocument(
             [
@@ -122,7 +121,7 @@ class DeserializerTest extends TestCase
         self::assertEquals('value', $document->errors()->all()[0]->metaInformation()->getRequired('key'));
     }
 
-    public function testResourceCollectionDocument()
+    public function testResourceCollectionDocument(): void
     {
         $document = $this->createDeserializer()->deserializeDocument(
             [
@@ -162,32 +161,10 @@ class DeserializerTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     */
-    public function testMissingJsonApiDependency()
-    {
-        $documentDeserializer = new Deserializer();
-        $documentDeserializer->deserializeDocument(
-            [
-                'data' => [
-                    'type' => 'test',
-                    'id' => 'test-2',
-                    'attributes' => [
-                        'key' => 'value'
-                    ],
-                ]
-            ]
-        );
-    }
-
-    /**
      * @return Deserializer
      */
     protected function createDeserializer(): Deserializer
     {
-        $documentDeserializer = new Deserializer();
-        $documentDeserializer->setJsonApi(new DummyJsonApi());
-
-        return $documentDeserializer;
+        return new Deserializer();
     }
 }
