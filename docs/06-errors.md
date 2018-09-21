@@ -9,7 +9,7 @@ error object from an exception.
 Enm\JsonApi\Model\Error\Error::createFrom(new \Exception('Test'));
 ```
 
-The following Exception are available to be handled including the correct http status code:
+These exceptions are available to be handled including the correct http status code:
 
 |  Exception                                            | Description                           |
 |-------------------------------------------------------|---------------------------------------|
@@ -26,4 +26,4 @@ Document errors are grouped within their document by an object of type `Enm\Json
 
 *****
 
-[prev: Documents](../docs/05-documents.md) | [back to README](../README.md) | [next: Factories](../docs/07-factories.md)
+[prev: Documents](../docs/05-documents.md) | [back to README](../README.md) | [next: Request and Response](../docs/07-requests.md)

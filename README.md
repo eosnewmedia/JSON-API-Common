@@ -16,7 +16,7 @@ composer require enm/json-api-common
 *****
 
 ## Documentation
-1. [EntryPoint](docs/01-entry.md)
+1. [JsonApiInterface](docs/01-entry.md)
 1. [Resources](docs/02-resources.md)
     1. [Relationships](docs/02-resources.md#relationships)
 1. [Attributes and Meta-Informations](docs/03-collections.md)
@@ -24,8 +24,7 @@ composer require enm/json-api-common
 1. [Documents](docs/05-documents.md)
     1. [Document Serializer](docs/05-documents.md#document-serializer)
 1. [Exceptions and Errors](docs/06-errors.md)
-1. [Factories](docs/07-factories.md)
-1. [Requests](docs/08-requests.md)
+1. [Requests](docs/07-requests.md)
 
 *****
 

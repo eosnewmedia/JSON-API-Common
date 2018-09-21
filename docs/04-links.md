@@ -18,8 +18,8 @@ A link itself is an object of type `Enm\JsonApi\Model\Resource\Link\LinkInterfac
 
 | Method                         | Return type                                                                          | Description                                                       |
 |--------------------------------|--------------------------------------------------------------------------------------|-------------------------------------------------------------------|
-| getName()                      | string                                                                               | The link name.                                                    |
-| getHref()                      | string                                                                               | The link target.                                                  |
+| name()                         | string                                                                               | The link name.                                                    |
+| href()                         | string                                                                               | The link target.                                                  |
 | metaInformation()              | [KeyValueCollectionInterface](../src/Model/Common/KeyValueCollectionInterface.php)   | Collection of meta informations for this link.                    |
 | duplicate(string $name = null) | $this                                                                                | Helper method to duplicate this linl, optional with another name. |
 
