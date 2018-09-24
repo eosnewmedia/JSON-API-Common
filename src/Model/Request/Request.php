@@ -5,7 +5,6 @@ namespace Enm\JsonApi\Model\Request;
 
 use Enm\JsonApi\Exception\BadRequestException;
 use Enm\JsonApi\Exception\UnsupportedMediaTypeException;
-use Enm\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 use Enm\JsonApi\Model\Document\DocumentInterface;
@@ -301,7 +300,7 @@ class Request implements RequestInterface
         }
 
         try {
-            if ($apiRequest->headers()->getRequired('content-type') !== JsonApiInterface::CONTENT_TYPE) {
+            if ($apiRequest->headers()->getRequired('content-type') !== 'application/vnd.api+json') {
                 throw new UnsupportedMediaTypeException($apiRequest->headers()->getRequired('content-type'));
             }
         } catch (\InvalidArgumentException $e) {

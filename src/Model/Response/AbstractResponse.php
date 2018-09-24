@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Model\Response;
 
-use Enm\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 
 /**
@@ -29,7 +28,7 @@ abstract class AbstractResponse implements ResponseInterface
     {
         $this->status = $status;
         $this->headers = $headers;
-        $this->headers->set('Content-Type', JsonApiInterface::CONTENT_TYPE);
+        $this->headers->set('Content-Type', 'application/vnd.api+json');
     }
 
     /**

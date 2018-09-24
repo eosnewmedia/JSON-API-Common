@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Serializer;
 
-use Enm\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\ErrorInterface;
 use Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationInterface;
@@ -81,7 +80,7 @@ class Serializer implements DocumentSerializerInterface
 
         // informations about json api
         $result['jsonapi'] = [
-            'version' => JsonApiInterface::CURRENT_VERSION
+            'version' => '1.0'
         ];
 
         return $result;
