@@ -1,7 +1,15 @@
 # Changelog
 
 ## Version 3.0.0
-
+1. moved core logic from json api server library to this library
+1. simplified most interfaces
+1. better control for responses
+1. same requests and responses on client and server side
+1. moved object-resource mappers to this library
+1. removed (mostly) unused features like factories and `JsonApiInterface`
+1. removed `JsonApiAwareInterface`, use `JsonApiTrait` directly instead
+1. simplified `JsonApiTrait`
+1. moved pagination to this library but not with traits and interfaces but wih document extensions
 
 ## Version 2.4.0
 1. allow relative url's in links

@@ -1,7 +1,6 @@
 JSON API Common
 ===============
 [![Build Status](https://travis-ci.org/eosnewmedia/JSON-API-Common.svg?branch=master)](https://travis-ci.org/eosnewmedia/JSON-API-Common)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/a1696b25-a508-44ec-a39f-4c7180db2c46/mini.png)](https://insight.sensiolabs.com/projects/a1696b25-a508-44ec-a39f-4c7180db2c46)
 
 This library contains php classes and interfaces shared between 
 [`enm/json-api-server`](https://eosnewmedia.github.io/JSON-API-Server/) and 
@@ -22,9 +21,8 @@ composer require enm/json-api-common
 1. [Attributes and Meta-Informations](docs/03-collections.md)
 1. [Links](docs/04-links.md)
 1. [Documents](docs/05-documents.md)
-    1. [Document Serializer](docs/05-documents.md#document-serializer)
 1. [Exceptions and Errors](docs/06-errors.md)
-1. [Requests](docs/07-requests.md)
+1. [Request and Response](docs/07-requests.md)
 
 *****
 

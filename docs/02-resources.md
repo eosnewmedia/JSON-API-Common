@@ -8,8 +8,8 @@ A JSON API resource is represented through a PHP object of type `Enm\JsonApi\Mod
 |--------------------|--------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | type()             | string                                                                                                       | Resource Type Identifier ("type")                 |
 | id()               | string                                                                                                       | Resource Identifier ("id")                        |
-| attributes         | [KeyValueCollection](../src/Model/Common/KeyValueCollection.php)                                             | Attributes of the resource ("attributes")         |
-| relationships      | [RelationshipCollectionInterface](../src/Model/Resource/Relationship/RelationshipCollectionInterface.php)    | The relationships of a resource ("relationships") |
+| attributes()       | [KeyValueCollection](../src/Model/Common/KeyValueCollection.php)                                             | Attributes of the resource ("attributes")         |
+| relationships()    | [RelationshipCollectionInterface](../src/Model/Resource/Relationship/RelationshipCollectionInterface.php)    | The relationships of a resource ("relationships") |
 | links()            | [LinkCollectionInterface](../src/Model/Resource/Link/LinkCollectionInterface.php)                            | The links for a resource ("links")                |
 | metaInformation()  | [KeyValueCollection](../src/Model/Common/KeyValueCollection.php)                                             | Meta Informations for a resource ("meta")         |
 

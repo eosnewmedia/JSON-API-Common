@@ -1,6 +1,6 @@
 [back to README](../README.md)
 # Documents
-Documents are the root objects for a request or response (`Enm\JsonApi\Model\Document\DocumentInterface`).
+Documents are the root objects for a request body (post, patch) or response body (`Enm\JsonApi\Model\Document\DocumentInterface`).
 
 A document contains "data" (the resources) and can contain meta information, errors, links and related resources ("includes").
 

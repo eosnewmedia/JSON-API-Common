@@ -76,6 +76,7 @@ interface RequestInterface
     public function requestField(string $type, string $name): void;
 
     /**
+     * Indicates if the response should contain the given field for the given type.
      * @param string $type
      * @param string $name
      * @return bool
@@ -89,6 +90,7 @@ interface RequestInterface
     public function requestInclude(string $relationship): void;
 
     /**
+     * Indicates if a response should include the given relationship.
      * @param string $relationship
      * @return bool
      */
@@ -103,12 +105,14 @@ interface RequestInterface
     public function addFilter(string $name, $value): void;
 
     /**
+     * Indicates if the given filter is available.
      * @param string $name
      * @return bool
      */
     public function hasFilter(string $name): bool;
 
     /**
+     * Retrieve the value for the given filter.
      * @param string $name
      * @param string|null $explodeBy
      * @return array|string|int|float
@@ -136,18 +140,21 @@ interface RequestInterface
     public function addPagination(string $key, $value): void;
 
     /**
+     * Indicates if the given pagination parameter is available.
      * @param string $key
      * @return bool
      */
     public function hasPagination(string $key): bool;
 
     /**
+     * Retrieve a pagination value.
      * @param string $key
      * @return array|string|int|float
      */
     public function paginationValue(string $key);
 
     /**
+     * Retrieve the request body if available.
      * @return DocumentInterface|null
      */
     public function requestBody(): ?DocumentInterface;
