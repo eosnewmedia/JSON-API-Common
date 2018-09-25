@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 class JsonResourceTest extends TestCase
 {
-    public function testJsonResource()
+    public function testJsonResource(): void
     {
         $resource = new JsonResource('test', '1', ['attr' => 'test']);
         self::assertEquals('test', $resource->attributes()->getRequired('attr'));
@@ -25,7 +25,7 @@ class JsonResourceTest extends TestCase
         self::assertEquals(0, $resource->relatedMetaInformation()->count());
     }
 
-    public function testDuplicateJsonResource()
+    public function testDuplicateJsonResource(): void
     {
         $resource = new JsonResource('test', '1', ['attr' => 'test']);
         $resource->links()->set(new Link('test', 'http://test.de'));
@@ -46,7 +46,7 @@ class JsonResourceTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testJsonResourceEmptyType()
+    public function testJsonResourceEmptyType(): void
     {
         new JsonResource('', '1');
     }

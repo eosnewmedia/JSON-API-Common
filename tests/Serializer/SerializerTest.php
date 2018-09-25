@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Server\Tests\Serializer;
 
-use Enm\JsonApi\JsonApiInterface;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Document\DocumentInterface;
@@ -25,10 +24,11 @@ use PHPUnit\Framework\TestCase;
  */
 class SerializerTest extends TestCase
 {
-    public function testSerializeErrorDocument()
+    public function testSerializeErrorDocument(): void
     {
         $serializer = new Serializer();
         $document = new Document();
+        /** @noinspection PhpParamsInspection */
         $document->errors()->add(
             $this->createConfiguredMock(
                 ErrorInterface::class,
@@ -40,7 +40,12 @@ class SerializerTest extends TestCase
             )
         );
 
-        $serialized = $serializer->serializeDocument($document);
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
 
         self::assertArrayHasKey('errors', $serialized);
         self::assertEquals('1', $serialized['errors'][0]['code']);
@@ -50,10 +55,10 @@ class SerializerTest extends TestCase
         self::assertArrayNotHasKey('links', $serialized);
         self::assertArrayNotHasKey('included', $serialized);
         self::assertArrayNotHasKey('meta', $serialized);
-        self::assertEquals(JsonApiInterface::CURRENT_VERSION, $serialized['jsonapi']['version']);
+        self::assertEquals('1.0', $serialized['jsonapi']['version']);
     }
 
-    public function testSerializeResourceDocument()
+    public function testSerializeResourceDocument(): void
     {
         $serializer = new Serializer();
         /** @var DocumentInterface $document */
@@ -88,7 +93,12 @@ class SerializerTest extends TestCase
                 'metaInformation' => $this->createMetaCollection(),
             ]
         );
-        $serialized = $serializer->serializeDocument($document);
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
 
         self::assertArrayHasKey('data', $serialized);
         self::assertArrayHasKey('meta', $serialized);
@@ -106,7 +116,7 @@ class SerializerTest extends TestCase
         );
     }
 
-    public function testSerializeResourceCollectionDocument()
+    public function testSerializeResourceCollectionDocument(): void
     {
         $serializer = new Serializer();
         /** @var DocumentInterface $document */
@@ -147,7 +157,12 @@ class SerializerTest extends TestCase
                 ),
             ]
         );
-        $serialized = $serializer->serializeDocument($document);
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
 
         self::assertArrayHasKey('data', $serialized);
         self::assertEquals('test', $serialized['data'][0]['type']);
@@ -157,7 +172,7 @@ class SerializerTest extends TestCase
         self::assertEquals('test-2', $serialized['data'][1]['id']);
     }
 
-    public function testEmptyResourceDocument()
+    public function testEmptyResourceDocument(): void
     {
         $serializer = new Serializer();
         /** @var DocumentInterface $document */
@@ -184,12 +199,17 @@ class SerializerTest extends TestCase
                 )
             ]
         );
-        $serialized = $serializer->serializeDocument($document);
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
 
         self::assertNull($serialized['data']);
     }
 
-    public function testEmptyResourceCollectionDocument()
+    public function testEmptyResourceCollectionDocument(): void
     {
         $serializer = new Serializer();
         /** @var DocumentInterface $document */
@@ -215,12 +235,18 @@ class SerializerTest extends TestCase
                     ]
                 )
             ]);
-        $serialized = $serializer->serializeDocument($document);
+
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
 
         self::assertCount(0, $serialized['data']);
     }
 
-    public function testEmptyToManyRelationship()
+    public function testEmptyToManyRelationship(): void
     {
         $serializer = new Serializer();
 
@@ -242,11 +268,16 @@ class SerializerTest extends TestCase
             ]
         );
 
-        $serialized = $serializer->serializeDocument($document);
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
         self::assertCount(0, $serialized['data']['relationships']['test']['data']);
     }
 
-    public function testEmptyToOneRelationship()
+    public function testEmptyToOneRelationship(): void
     {
         $serializer = new Serializer();
 
@@ -268,11 +299,16 @@ class SerializerTest extends TestCase
             ]
         );
 
-        $serialized = $serializer->serializeDocument($document);
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
         self::assertNull($serialized['data']['relationships']['test']['data']);
     }
 
-    public function testRelationshipWithRelatedMeta()
+    public function testRelationshipWithRelatedMeta(): void
     {
         $serializer = new Serializer();
 
@@ -297,7 +333,12 @@ class SerializerTest extends TestCase
             ]
         );
 
-        $serialized = $serializer->serializeDocument($document);
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
         self::assertEquals('test', $serialized['data']['relationships']['test']['data']['meta']['test']);
     }
 
@@ -305,9 +346,9 @@ class SerializerTest extends TestCase
      * @param string $type
      * @param string $id
      *
-     * @return ResourceInterface
+     * @return ResourceInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createResource(string $type, string $id): ResourceInterface
+    private function createResource(string $type, string $id)
     {
         return $this->createConfiguredMock(
             ResourceInterface::class, [
@@ -342,9 +383,9 @@ class SerializerTest extends TestCase
     }
 
     /**
-     * @return KeyValueCollectionInterface
+     * @return KeyValueCollectionInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createMetaCollection(): KeyValueCollectionInterface
+    private function createMetaCollection()
     {
         return $this->createConfiguredMock(
             KeyValueCollectionInterface::class,
@@ -357,9 +398,9 @@ class SerializerTest extends TestCase
     /**
      * @param $name
      *
-     * @return LinkInterface
+     * @return LinkInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createLink($name): LinkInterface
+    private function createLink($name)
     {
         return $this->createConfiguredMock(
             LinkInterface::class,
@@ -374,9 +415,9 @@ class SerializerTest extends TestCase
     /**
      * @param string $name
      *
-     * @return RelationshipInterface
+     * @return RelationshipInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createToOneRelationship(string $name): RelationshipInterface
+    private function createToOneRelationship(string $name)
     {
         return $this->createConfiguredMock(
             RelationshipInterface::class,
@@ -407,9 +448,9 @@ class SerializerTest extends TestCase
     /**
      * @param string $name
      *
-     * @return RelationshipInterface
+     * @return RelationshipInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createToManyRelationship(string $name): RelationshipInterface
+    private function createToManyRelationship(string $name)
     {
         return $this->createConfiguredMock(
             RelationshipInterface::class,

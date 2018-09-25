@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class RelationshipCollectionTest extends TestCase
 {
-    public function testHas()
+    public function testHas(): void
     {
         $collection = new RelationshipCollection($this->getResources());
         self::assertTrue($collection->has('a'));
@@ -20,9 +20,10 @@ class RelationshipCollectionTest extends TestCase
         self::assertFalse($collection->has('test'));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $collection = new RelationshipCollection($this->getResources());
+        /** @noinspection UnnecessaryAssertionInspection */
         self::assertInstanceOf(
             RelationshipInterface::class,
             $collection->get('a')
@@ -32,13 +33,13 @@ class RelationshipCollectionTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testGetInvalid()
+    public function testGetInvalid(): void
     {
         $collection = new RelationshipCollection($this->getResources());
         $collection->get('test');
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $collection = new RelationshipCollection($this->getResources());
         self::assertFalse($collection->has('test'));
@@ -54,7 +55,7 @@ class RelationshipCollectionTest extends TestCase
         self::assertTrue($collection->has('test'));
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $collection = new RelationshipCollection($this->getResources());
         self::assertTrue($collection->has('a'));
@@ -65,7 +66,7 @@ class RelationshipCollectionTest extends TestCase
     }
 
 
-    public function testRemoveElement()
+    public function testRemoveElement(): void
     {
         $collection = new RelationshipCollection($this->getResources());
         self::assertTrue($collection->has('a'));

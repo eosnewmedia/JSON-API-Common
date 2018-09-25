@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Enm\JsonApi\Serializer;
 
-use Enm\JsonApi\JsonApiAwareInterface;
-use Enm\JsonApi\JsonApiAwareTrait;
-use Enm\JsonApi\JsonApiInterface;
+use Enm\JsonApi\JsonApiTrait;
 use Enm\JsonApi\Model\Document\DocumentInterface;
 use Enm\JsonApi\Model\Error\Error;
 use Enm\JsonApi\Model\Error\ErrorInterface;
@@ -16,9 +14,9 @@ use Enm\JsonApi\Model\Resource\ResourceInterface;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterface
+class Deserializer implements DocumentDeserializerInterface
 {
-    use JsonApiAwareTrait;
+    use JsonApiTrait;
 
     /**
      * @param array $documentData
@@ -29,18 +27,13 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
     {
         $data = $documentData['data'] ?? null;
 
-        $hasJsonApi = array_key_exists('jsonapi', $documentData);
-
-        $version = $hasJsonApi && array_key_exists('version', $documentData['jsonapi']) ?
-            (string)$documentData['jsonapi']['version'] : JsonApiInterface::CURRENT_VERSION;
-
-        if (!is_array($data) || $this->isSingleResource($data)) {
-            $document = $this->jsonApi()->singleResourceDocument(null, $version);
+        if (!\is_array($data) || $this->isSingleResource($data)) {
+            $document = $this->singleResourceDocument();
         } else {
-            $document = $this->jsonApi()->multiResourceDocument([], $version);
+            $document = $this->multiResourceDocument();
         }
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             if ($this->isSingleResource($data)) {
                 $this->buildResource($document->data(), $data);
             } else {
@@ -48,10 +41,6 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
                     $this->buildResource($document->data(), $resource);
                 }
             }
-        }
-
-        if ($hasJsonApi && array_key_exists('meta', $documentData['jsonapi'])) {
-            $document->jsonApi()->metaInformation()->merge((array)$documentData['jsonapi']);
         }
 
         $errors = array_key_exists('errors', $documentData) ? (array)$documentData['errors'] : [];
@@ -65,7 +54,7 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
 
         $links = array_key_exists('links', $documentData) ? (array)$documentData['links'] : [];
         foreach ($links as $name => $link) {
-            $this->buildLink($document->links(), $name, is_array($link) ? $link : ['href' => $link]);
+            $this->buildLink($document->links(), $name, \is_array($link) ? $link : ['href' => $link]);
         }
 
         $included = array_key_exists('included', $documentData) ? (array)$documentData['included'] : [];
@@ -90,7 +79,7 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
 
         $type = (string)$resourceData['type'];
         $id = array_key_exists('id', $resourceData) ? (string)$resourceData['id'] : '';
-        $resource = $this->jsonApi()->resource($type, $id);
+        $resource = $this->resource($type, $id);
         $collection->set($resource);
 
         if (array_key_exists('attributes', $resourceData)) {
@@ -102,7 +91,7 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
 
         $links = array_key_exists('links', $resourceData) ? (array)$resourceData['links'] : [];
         foreach ($links as $name => $link) {
-            $this->buildLink($resource->links(), $name, is_array($link) ? $link : ['href' => $link]);
+            $this->buildLink($resource->links(), $name, \is_array($link) ? $link : ['href' => $link]);
         }
 
         if (array_key_exists('meta', $resourceData)) {
@@ -129,6 +118,10 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
             $error->metaInformation()->merge((array)$data['meta']);
         }
 
+        if (array_key_exists('source', $data)) {
+            $error->source()->merge((array)$data['source']);
+        }
+
         return $error;
     }
 
@@ -139,7 +132,7 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
      * @return void
      * @throws \InvalidArgumentException
      */
-    protected function buildLink(LinkCollectionInterface $collection, string $name, array $data)
+    protected function buildLink(LinkCollectionInterface $collection, string $name, array $data): void
     {
         if (!array_key_exists('href', $data)) {
             throw new \InvalidArgumentException('Invalid link given!');
@@ -157,21 +150,21 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
      * @return void
      * @throws \InvalidArgumentException|\RuntimeException
      */
-    protected function buildResourceRelationships(array $relationships, ResourceInterface $resource)
+    protected function buildResourceRelationships(array $relationships, ResourceInterface $resource): void
     {
         foreach ($relationships as $name => $relationship) {
             $related = $relationship['data'] ?? null;
 
-            if (!is_array($related)) {
+            if (!\is_array($related)) {
                 // empty to one relationship
-                $relationshipObject = $this->jsonApi()->toOneRelationship($name);
-            } elseif (count($related) > 0 && array_keys($related) !== range(0, count($related) - 1)) {
+                $relationshipObject = $this->toOneRelationship($name);
+            } elseif (\count($related) > 0 && array_keys($related) !== range(0, \count($related) - 1)) {
                 // to one relationship
-                $relationshipObject = $this->jsonApi()->toOneRelationship($name);
+                $relationshipObject = $this->toOneRelationship($name);
                 $this->buildResource($relationshipObject->related(), $related);
             } else {
                 // to many relationship
-                $relationshipObject = $this->jsonApi()->toManyRelationship($name);
+                $relationshipObject = $this->toManyRelationship($name);
                 foreach ($related as $relatedResource) {
                     $this->buildResource($relationshipObject->related(), $relatedResource);
                 }
@@ -182,7 +175,7 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
                 $this->buildLink(
                     $relationshipObject->links(),
                     $linkName,
-                    is_array($link) ? $link : ['href' => $link]
+                    \is_array($link) ? $link : ['href' => $link]
                 );
             }
 
@@ -200,6 +193,6 @@ class Deserializer implements DocumentDeserializerInterface, JsonApiAwareInterfa
      */
     protected function isSingleResource(array $data): bool
     {
-        return count($data) > 0 && array_keys($data) !== range(0, count($data) - 1);
+        return \count($data) > 0 && array_keys($data) !== range(0, \count($data) - 1);
     }
 }

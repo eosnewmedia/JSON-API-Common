@@ -80,11 +80,8 @@ class Serializer implements DocumentSerializerInterface
 
         // informations about json api
         $result['jsonapi'] = [
-            'version' => $document->jsonApi()->getVersion()
+            'version' => '1.0'
         ];
-        if (!$document->jsonApi()->metaInformation()->isEmpty()) {
-            $result['jsonapi']['meta'] = $document->jsonApi()->metaInformation()->all();
-        }
 
         return $result;
     }
@@ -158,7 +155,7 @@ class Serializer implements DocumentSerializerInterface
                 $data['data'] = $this->serializeResource($relationship->related()->first());
             }
         } // only add empty data if links or meta are not defined
-        elseif (count($data) === 0 || $this->shouldKeepEmptyData()) {
+        elseif (\count($data) === 0 || $this->shouldKeepEmptyData()) {
             if ($relationship->shouldBeHandledAsCollection()) {
                 $data['data'] = [];
             } else {
@@ -210,7 +207,7 @@ class Serializer implements DocumentSerializerInterface
         if (!$error->metaInformation()->isEmpty()) {
             $data['meta'] = $error->metaInformation()->all();
         }
-        
+
         if (!$error->source()->isEmpty()) {
             $data['source'] = $error->source()->all();
         }

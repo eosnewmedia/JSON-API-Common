@@ -27,11 +27,14 @@ class Link implements LinkInterface
             throw new \InvalidArgumentException('Invalid link name');
         }
 
-        $validateUrl = $href;
-        if (substr($validateUrl, 0, 1) === '/')  {
-               $validateUrl = 'http://www.example.com' . $href;
+        if ($href === '') {
+            throw new \InvalidArgumentException('Invalid link');
         }
 
+        $validateUrl = $href;
+        if ($validateUrl[0] === '/') {
+            $validateUrl = 'http://www.example.com' . $href;
+        }
         if (filter_var($validateUrl, FILTER_VALIDATE_URL) === false) {
             throw new \InvalidArgumentException('Invalid link target');
         }

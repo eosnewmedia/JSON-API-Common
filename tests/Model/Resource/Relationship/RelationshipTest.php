@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 class RelationshipTest extends TestCase
 {
 
-    public function testToOne()
+    public function testToOne(): void
     {
         $relation = new Relationship(
             'test', $this->createMock(ResourceInterface::class)
@@ -32,13 +32,13 @@ class RelationshipTest extends TestCase
         self::assertEquals(1, $relation->metaInformation()->count());
     }
 
-    public function testEmptyToOne()
+    public function testEmptyToOne(): void
     {
         $relation = new Relationship('test');
         self::assertEquals(0, $relation->related()->count());
     }
 
-    public function testToMany()
+    public function testToMany(): void
     {
         $relation = new Relationship(
             'test',
@@ -49,7 +49,7 @@ class RelationshipTest extends TestCase
         self::assertEquals(1, $relation->related()->count());
     }
 
-    public function testEmptyToMany()
+    public function testEmptyToMany(): void
     {
         $relation = new Relationship('test');
         self::assertEquals(0, $relation->related()->count());
@@ -58,7 +58,7 @@ class RelationshipTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidNamedRelationship()
+    public function testInvalidNamedRelationship(): void
     {
         new Relationship('');
     }
@@ -66,7 +66,7 @@ class RelationshipTest extends TestCase
     /**
      * @expectedException \LogicException
      */
-    public function testImmutableToOne()
+    public function testImmutableToOne(): void
     {
         $relation = new Relationship('test', $this->createMock(ResourceInterface::class));
         /** @var ResourceInterface $resource */
@@ -77,7 +77,7 @@ class RelationshipTest extends TestCase
         $relation->related()->set($resource);
     }
 
-    public function testDuplicateToOne()
+    public function testDuplicateToOne(): void
     {
         $relation = new Relationship(
             'test',
@@ -95,7 +95,7 @@ class RelationshipTest extends TestCase
         self::assertNotSame($relation->links()->get('test'), $relation->duplicate()->links()->get('test'));
     }
 
-    public function testDuplicateToMany()
+    public function testDuplicateToMany(): void
     {
         $relation = new Relationship(
             'test',
@@ -115,7 +115,7 @@ class RelationshipTest extends TestCase
         self::assertNotSame($relation->links()->get('test'), $relation->duplicate()->links()->get('test'));
     }
 
-    public function testWithResourceCollection()
+    public function testWithResourceCollection(): void
     {
         $collection = new ResourceCollection();
 
@@ -127,7 +127,7 @@ class RelationshipTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidRelationshipData()
+    public function testInvalidRelationshipData(): void
     {
         new Relationship('test', 'test');
     }
