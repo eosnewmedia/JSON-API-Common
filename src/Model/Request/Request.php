@@ -131,6 +131,7 @@ class Request implements RequestInterface
         $this->parseUriQuery($this->uri->getQuery());
 
         $this->headers = new KeyValueCollection();
+        $this->headers->set('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -296,15 +297,11 @@ class Request implements RequestInterface
         $apiRequest = new self($request->getMethod(), $request->getUri(), $requestBody, $apiPrefix);
 
         foreach ($request->getHeaders() as $header => $values) {
-            $apiRequest->headers()->set(strtolower($header), \count($values) !== 1 ? $values : $values[0]);
+            $apiRequest->headers()->set($header, \count($values) !== 1 ? $values : $values[0]);
         }
 
-        try {
-            if ($apiRequest->headers()->getRequired('content-type') !== 'application/vnd.api+json') {
-                throw new UnsupportedMediaTypeException($apiRequest->headers()->getRequired('content-type'));
-            }
-        } catch (\InvalidArgumentException $e) {
-            throw new UnsupportedMediaTypeException('Missing Content-Type');
+        if ($apiRequest->headers()->getRequired('content-type') !== 'application/vnd.api+json') {
+            throw new UnsupportedMediaTypeException($apiRequest->headers()->getRequired('content-type'));
         }
 
         return $apiRequest;

@@ -9,13 +9,30 @@ namespace Enm\JsonApi\Model\Common;
 class KeyValueCollection extends AbstractCollection implements KeyValueCollectionInterface
 {
     /**
+     * @var array
+     */
+    private $keyMap = [];
+
+    /**
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        parent::__construct();
+        foreach ($data as $key => $value) {
+            $this->set($key, $value);
+        }
+    }
+
+    /**
      * @param string $key
      *
      * @return bool
      */
     public function has(string $key): bool
     {
-        return array_key_exists($key, $this->collection);
+        return array_key_exists(strtolower($key), $this->keyMap) &&
+            array_key_exists($this->keyMap[strtolower($key)], $this->collection);
     }
 
     /**
@@ -30,7 +47,7 @@ class KeyValueCollection extends AbstractCollection implements KeyValueCollectio
             throw new \InvalidArgumentException('Element ' . $key . ' does not exist');
         }
 
-        return $this->collection[$key];
+        return $this->collection[$this->keyMap[strtolower($key)]];
     }
 
     /**
@@ -40,7 +57,7 @@ class KeyValueCollection extends AbstractCollection implements KeyValueCollectio
      */
     public function getOptional(string $key, $defaultValue = null)
     {
-        return $this->has($key) ? $this->collection[$key] : $defaultValue;
+        return $this->has($key) ? $this->collection[$this->keyMap[strtolower($key)]] : $defaultValue;
     }
 
     /**
@@ -83,8 +100,10 @@ class KeyValueCollection extends AbstractCollection implements KeyValueCollectio
      * @param bool $overwrite
      * @return KeyValueCollectionInterface
      */
-    public function mergeCollection(KeyValueCollectionInterface $collection, bool $overwrite = true): KeyValueCollectionInterface
-    {
+    public function mergeCollection(
+        KeyValueCollectionInterface $collection,
+        bool $overwrite = true
+    ): KeyValueCollectionInterface {
         $this->merge($collection->all(), $overwrite);
 
         return $this;
@@ -98,6 +117,7 @@ class KeyValueCollection extends AbstractCollection implements KeyValueCollectio
      */
     public function set(string $key, $value): KeyValueCollectionInterface
     {
+        $this->keyMap[strtolower($key)] = $key;
         if ($value instanceof KeyValueCollectionInterface) {
             $value = $value->all();
         }
@@ -114,7 +134,7 @@ class KeyValueCollection extends AbstractCollection implements KeyValueCollectio
     public function remove(string $key): KeyValueCollectionInterface
     {
         if ($this->has($key)) {
-            unset($this->collection[$key]);
+            unset($this->collection[$this->keyMap[strtolower($key)]], $this->keyMap[strtolower($key)]);
         }
 
         return $this;
