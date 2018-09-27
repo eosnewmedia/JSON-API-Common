@@ -1,4 +1,7 @@
 # Changelog
+## 3.0.1
+1. ignore case match for simple collection keys
+1. ad content type header as default for requests
 
 ## Version 3.0.0
 1. moved core logic from json api server library to this library
