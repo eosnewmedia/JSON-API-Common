@@ -15,7 +15,7 @@ composer require enm/json-api-common
 *****
 
 ## Documentation
-1. [JsonApiInterface](docs/01-entry.md)
+1. [JsonApiTrait](docs/01-trait.md)
 1. [Resources](docs/02-resources.md)
     1. [Relationships](docs/02-resources.md#relationships)
 1. [Attributes and Meta-Informations](docs/03-collections.md)

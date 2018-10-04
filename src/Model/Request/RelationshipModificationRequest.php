@@ -9,6 +9,7 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
+ * @deprecated will be removed in 4.0
  */
 class RelationshipModificationRequest extends Request
 {
