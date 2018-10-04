@@ -171,7 +171,7 @@ class Request implements RequestInterface
         if ($this->id) {
             // parse relationship/related request
             if ($segments[3]) {
-                if ($segments[2] !== 'relationship') {
+                if ($segments[2] !== 'relationships') {
                     throw new BadRequestException('Invalid relationship request!');
                 }
                 $this->requestsAttributes = false;
