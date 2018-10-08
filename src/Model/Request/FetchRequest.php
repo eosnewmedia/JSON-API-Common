@@ -127,4 +127,18 @@ class FetchRequest extends JsonApiRequest implements FetchRequestInterface
     {
         return $this->filter;
     }
+
+    /**
+     * Add filter parameter
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return FetchRequestInterface
+     */
+    public function addFilter(string $key, $value): FetchRequestInterface
+    {
+        $this->filter->set($key, $value);
+
+        return $this;
+    }
 }
