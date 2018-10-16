@@ -6,18 +6,18 @@ namespace Enm\JsonApi\Model\Common;
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
  */
-interface CollectionInterface
+interface CollectionInterface extends \Countable
 {
     /**
      * @return array
      */
     public function all(): array;
-    
+
     /**
      * @return bool
      */
     public function isEmpty(): bool;
-    
+
     /**
      * @return int
      */
