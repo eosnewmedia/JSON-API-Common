@@ -21,6 +21,7 @@ class KeyValueCollectionTest extends TestCase
     {
         $collection = new KeyValueCollection(['test' => 'test']);
         self::assertCount(1, $collection);
+        self::assertEquals(1, $collection->count());
     }
 
     public function testIsEmpty(): void
