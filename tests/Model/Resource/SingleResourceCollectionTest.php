@@ -17,13 +17,13 @@ class SingleResourceCollectionTest extends TestCase
     {
         $collection = new SingleResourceCollection();
 
-        self::assertEquals(0, $collection->count());
+        self::assertCount(0, $collection);
 
         /** @var ResourceInterface $resource */
         $resource = $this->createMock(ResourceInterface::class);
         $collection->set($resource);
 
-        self::assertEquals(1, $collection->count());
+        self::assertCount(1, $collection);
     }
 
     /**

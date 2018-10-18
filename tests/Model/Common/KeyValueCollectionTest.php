@@ -20,7 +20,7 @@ class KeyValueCollectionTest extends TestCase
     public function testCount(): void
     {
         $collection = new KeyValueCollection(['test' => 'test']);
-        self::assertEquals(1, $collection->count());
+        self::assertCount(1, $collection);
     }
 
     public function testIsEmpty(): void
