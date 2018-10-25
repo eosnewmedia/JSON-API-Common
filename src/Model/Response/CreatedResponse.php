@@ -13,13 +13,23 @@ use Enm\JsonApi\Model\Document\DocumentInterface;
 class CreatedResponse extends AbstractResponse
 {
     /**
+     * @var DocumentInterface|null
+     */
+    private $document;
+
+    /**
      * @param string $location
      * @param KeyValueCollectionInterface|null $headers
+     * @param DocumentInterface|null $document
      */
-    public function __construct(string $location, ?KeyValueCollectionInterface $headers = null)
-    {
+    public function __construct(
+        string $location,
+        ?KeyValueCollectionInterface $headers = null,
+        ?DocumentInterface $document = null
+    ) {
         parent::__construct(201, $headers ?? new KeyValueCollection());
         $this->headers()->set('Location', $location);
+        $this->document = $document;
     }
 
     /**
@@ -27,6 +37,6 @@ class CreatedResponse extends AbstractResponse
      */
     public function document(): ?DocumentInterface
     {
-        return null;
+        return $this->document;
     }
 }
