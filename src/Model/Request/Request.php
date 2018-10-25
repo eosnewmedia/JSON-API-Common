@@ -562,7 +562,7 @@ class Request implements RequestInterface
             $id = $resource ? $resource->id() : $this->id();
             $relationshipPart = '/' . $relationship;
             if (!$this->requestsInclude($relationship)) {
-                $relationshipPart = '/relationship' . $relationshipPart;
+                $relationshipPart = '/relationships' . $relationshipPart;
             }
 
             $subRequest = new self(
