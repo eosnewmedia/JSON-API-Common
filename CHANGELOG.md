@@ -1,4 +1,12 @@
 # Changelog
+## 3.1.1
+1. merged "Fix relationships URL"
+1. merged "Declare public constant for json api Content-Type"
+1. fixed #11 ("CreatedResponse does not return document")
+
+## 3.1.0
+1. merged "added \Countable interface to collections"
+
 ## 3.0.1
 1. ignore case match for simple collection keys
 1. ad content type header as default for requests
