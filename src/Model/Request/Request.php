@@ -8,6 +8,7 @@ use Enm\JsonApi\Exception\UnsupportedMediaTypeException;
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 use Enm\JsonApi\Model\Document\DocumentInterface;
+use Enm\JsonApi\Model\JsonApi;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -131,7 +132,7 @@ class Request implements RequestInterface
         $this->parseUriQuery($this->uri->getQuery());
 
         $this->headers = new KeyValueCollection();
-        $this->headers->set('Content-Type', 'application/vnd.api+json');
+        $this->headers->set('Content-Type', JsonApi::CONTENT_TYPE);
     }
 
     /**
@@ -300,7 +301,7 @@ class Request implements RequestInterface
             $apiRequest->headers()->set($header, \count($values) !== 1 ? $values : $values[0]);
         }
 
-        if ($apiRequest->headers()->getRequired('content-type') !== 'application/vnd.api+json') {
+        if ($apiRequest->headers()->getRequired('content-type') !== JsonApi::CONTENT_TYPE) {
             throw new UnsupportedMediaTypeException($apiRequest->headers()->getRequired('content-type'));
         }
 
