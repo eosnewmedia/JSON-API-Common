@@ -384,7 +384,7 @@ class Request implements RequestInterface
      */
     public function requestsRelationships(): bool
     {
-        return ($this->requestsAttributes() || $this->requestsMetaInformation()) && \count($this->includes) > 0;
+        return ($this->requestsAttributes() || $this->requestsMetaInformation()) || \count($this->includes) > 0;
     }
 
     /**
