@@ -45,6 +45,13 @@ interface ResourceCollectionInterface extends CollectionInterface
     public function set(ResourceInterface $resource): ResourceCollectionInterface;
 
     /**
+     * @param ResourceInterface $resource
+     * @param bool $replaceExistingValues
+     * @return ResourceCollectionInterface
+     */
+    public function merge(ResourceInterface $resource, bool $replaceExistingValues = false): ResourceCollectionInterface;
+
+    /**
      * @param string $type
      * @param string $id
      * @return ResourceCollectionInterface

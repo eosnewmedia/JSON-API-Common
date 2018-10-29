@@ -5,6 +5,8 @@ namespace Enm\JsonApi\Model\Resource;
 
 use Enm\JsonApi\Exception\ResourceNotFoundException;
 use Enm\JsonApi\Model\Common\AbstractCollection;
+use Enm\JsonApi\Model\Resource\Link\LinkInterface;
+use Enm\JsonApi\Model\Resource\Relationship\RelationshipInterface;
 
 /**
  * @author Philipp Marien <marien@eosnewmedia.de>
@@ -85,6 +87,36 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
     public function set(ResourceInterface $resource): ResourceCollectionInterface
     {
         $this->collection[$this->buildArrayKey($resource->type(), $resource->id())] = $resource;
+
+        return $this;
+    }
+
+    /**
+     * @param ResourceInterface $resource
+     * @param bool $replaceExistingValues
+     * @return ResourceCollectionInterface
+     */
+    public function merge(ResourceInterface $resource, bool $replaceExistingValues = false): ResourceCollectionInterface
+    {
+        try {
+            $existing = $this->get($resource->type(), $resource->id());
+        } catch (\Exception $e) {
+            $this->set($resource);
+            return $this;
+        }
+
+        $existing->metaInformation()->merge($resource->metaInformation()->all(), $replaceExistingValues);
+        $existing->attributes()->merge($resource->attributes()->all(), $replaceExistingValues);
+
+        /** @var LinkInterface $link */
+        foreach ($resource->links() as $link) {
+            $existing->links()->merge($link, $replaceExistingValues);
+        }
+
+        /** @var RelationshipInterface $relationship */
+        foreach ($resource->relationships() as $relationship) {
+            $existing->relationships()->merge($relationship, $replaceExistingValues);
+        }
 
         return $this;
     }

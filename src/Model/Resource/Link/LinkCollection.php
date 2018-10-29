@@ -67,6 +67,30 @@ class LinkCollection extends AbstractCollection implements LinkCollectionInterfa
     }
 
     /**
+     * @param LinkInterface $link
+     * @param bool $replaceExistingValues
+     * @return LinkCollectionInterface
+     */
+    public function merge(LinkInterface $link, bool $replaceExistingValues = false): LinkCollectionInterface
+    {
+        try {
+            $existing = $this->get($link->name());
+        } catch (\Exception $e) {
+            $this->set($link);
+            return $this;
+        }
+
+        if ($replaceExistingValues && $existing->href() !== $link->href()) {
+            $link->metaInformation()->merge($existing->metaInformation()->all(), false);
+            $this->set($link);
+        } else {
+            $existing->metaInformation()->merge($link->metaInformation()->all(), $replaceExistingValues);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @return LinkCollectionInterface
      */
