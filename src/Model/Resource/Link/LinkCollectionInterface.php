@@ -37,6 +37,13 @@ interface LinkCollectionInterface extends CollectionInterface
     public function set(LinkInterface $link): LinkCollectionInterface;
 
     /**
+     * @param LinkInterface $link
+     * @param bool $replaceExistingValues
+     * @return LinkCollectionInterface
+     */
+    public function merge(LinkInterface $link, bool $replaceExistingValues = false): LinkCollectionInterface;
+
+    /**
      * @param string $name
      * @return LinkCollectionInterface
      */

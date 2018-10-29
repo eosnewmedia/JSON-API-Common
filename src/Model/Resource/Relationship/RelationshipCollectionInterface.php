@@ -37,6 +37,16 @@ interface RelationshipCollectionInterface extends CollectionInterface
     public function set(RelationshipInterface $relationship): RelationshipCollectionInterface;
 
     /**
+     * @param RelationshipInterface $relationship
+     * @param bool $replaceExistingValues
+     * @return RelationshipCollectionInterface
+     */
+    public function merge(
+        RelationshipInterface $relationship,
+        bool $replaceExistingValues = false
+    ): RelationshipCollectionInterface;
+
+    /**
      * @param string $name
      * @return RelationshipCollectionInterface
      */
