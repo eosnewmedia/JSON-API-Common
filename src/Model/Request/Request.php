@@ -70,32 +70,32 @@ class Request implements RequestInterface
     /**
      * @var array
      */
-    private $fields;
+    private $fields = [];
 
     /**
      * @var array
      */
-    private $includes;
+    private $includes = [];
 
     /**
      * @var array
      */
-    private $currentLevelIncludes;
+    private $currentLevelIncludes = [];
 
     /**
      * @var array
      */
-    private $filter;
+    private $filter = [];
 
     /**
      * @var array
      */
-    private $order;
+    private $order = [];
 
     /**
      * @var array
      */
-    private $pagination;
+    private $pagination = [];
 
     /**
      * @var DocumentInterface|null
