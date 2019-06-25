@@ -280,6 +280,9 @@ class Request implements RequestInterface
             'fields' => $fields
         ];
 
+        // Remove empty query params.
+        $query = array_filter($query);
+
         $this->uri = $this->uri()->withQuery(http_build_query($query));
     }
 
