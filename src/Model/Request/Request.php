@@ -274,7 +274,7 @@ class Request implements RequestInterface
 
         $query = [
             'sort' => implode(',', $sort),
-            'pagination' => $this->pagination,
+            'page' => $this->pagination,
             'filter' => $this->filter,
             'include' => implode(',', $this->includes),
             'fields' => $fields
