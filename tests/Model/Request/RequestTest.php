@@ -43,13 +43,6 @@ class RequestTest extends TestCase
         self::assertEquals(['createdAt' => 'desc'], $request->order());
         self::assertEquals('0', $request->paginationValue('offset'));
         self::assertEquals('10', $request->paginationValue('limit'));
-
-
-        $request->addFilter('id', 'test');
-        self::assertEquals(
-            '/index.php/api/examples/example-1?sort=-createdAt&pagination%5Boffset%5D=0&pagination%5Blimit%5D=10&filter%5Btest%5D=test&filter%5Bid%5D=test&include=tests%2Ctests.user&fields%5B0%5D=username&fields%5B1%5D=birthday&fields%5Buser%5D=username%2Cbirthday',
-            $request->uri()->__toString()
-        );
     }
 
     /**
