@@ -138,6 +138,10 @@ class Deserializer implements DocumentDeserializerInterface
             throw new \InvalidArgumentException('Invalid link given!');
         }
 
+        if (!$data['href']) {
+            return;
+        }
+
         $collection->createLink($name, (string)$data['href']);
         if (array_key_exists('meta', $data)) {
             $collection->get($name)->metaInformation()->merge((array)$data['meta']);
