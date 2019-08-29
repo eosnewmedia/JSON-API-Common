@@ -1,4 +1,12 @@
 # Changelog
+## 3.2.0
+1. added "merge" to resource collections
+1. added "merge" to relationship collections
+1. added "merge" to link collections
+
+## 3.1.2
+1. Request: define array properties default as empty array
+
 ## 3.1.1
 1. merged "Fix relationships URL"
 1. merged "Declare public constant for json api Content-Type"
