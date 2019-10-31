@@ -268,8 +268,8 @@ class Request implements RequestInterface
         }
 
         $fields = [];
-        foreach ($this->fields as $type => $fields) {
-            $fields[$type] = implode(',', $fields);
+        foreach ($this->fields as $type => $_fields) {
+            $fields[$type] = implode(',', $_fields);
         }
 
         $query = [
