@@ -17,10 +17,10 @@ trait JsonApiTrait
 {
     /**
      * @param string $type
-     * @param string $id
+     * @param string|null $id
      * @return ResourceInterface
      */
-    protected function resource(string $type, string $id): ResourceInterface
+    protected function resource(string $type, ?string $id = null): ResourceInterface
     {
         return new JsonResource($type, $id);
     }
