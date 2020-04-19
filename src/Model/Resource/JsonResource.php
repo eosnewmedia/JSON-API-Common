@@ -22,41 +22,41 @@ class JsonResource implements ResourceInterface, RelatedMetaInformationInterface
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $id;
+    protected $id;
 
     /**
      * @var KeyValueCollection
      */
-    private $attributeCollection;
+    protected $attributeCollection;
 
     /**
      * @var RelationshipCollection
      */
-    private $relationshipCollection;
+    protected $relationshipCollection;
 
     /**
      * @var LinkCollection
      */
-    private $linkCollection;
+    protected $linkCollection;
 
     /**
      * @var KeyValueCollection
      */
-    private $metaCollection;
+    protected $metaCollection;
 
     /**
      * @param string $type
-     * @param string $id
+     * @param string|null $id
      * @param array $attributes
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $type, string $id = '', array $attributes = [])
+    public function __construct(string $type, ?string $id = null, array $attributes = [])
     {
         if ($type === '') {
             throw new \InvalidArgumentException('Invalid resource type!');
@@ -80,9 +80,9 @@ class JsonResource implements ResourceInterface, RelatedMetaInformationInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function id(): string
+    public function id(): ?string
     {
         return $this->id;
     }

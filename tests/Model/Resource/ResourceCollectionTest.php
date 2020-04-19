@@ -7,6 +7,7 @@ namespace Enm\JsonApi\Tests\Model\Resource;
 use Enm\JsonApi\Exception\ResourceNotFoundException;
 use Enm\JsonApi\Model\Resource\ResourceCollection;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -116,6 +117,32 @@ class ResourceCollectionTest extends TestCase
         $collection->removeElement($resource);
 
         self::assertFalse($collection->has('test', '2'));
+    }
+
+    public function testResourcesWithoutId(): void
+    {
+        /** @var ResourceInterface|MockObject $resource */
+        $resource = $this->createConfiguredMock(
+            ResourceInterface::class,
+            ['type' => 'test']
+        );
+
+        $collection = new ResourceCollection();
+        $collection->set($resource);
+
+        $resourcesWithId = $this->getResources();
+        foreach ($resourcesWithId as $resourceWithId) {
+            $collection->set($resourceWithId);
+        }
+        self::assertEquals($resource, $collection->first());
+        self::assertNull($collection->first()->id());
+
+        $collection->merge($resource);
+        self::assertEquals(count($resourcesWithId) + 1, $collection->count());
+
+        $collection->removeElement($resource);
+        self::assertEquals(count($resourcesWithId), $collection->count());
+        self::assertNotNull($collection->first()->id());
     }
 
     /**

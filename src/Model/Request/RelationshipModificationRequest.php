@@ -51,7 +51,7 @@ class RelationshipModificationRequest extends Request
                 throw new BadRequestException('Invalid resource type given!');
             }
 
-            if ($resource->id() === '') {
+            if ((string)$resource->id() === '') {
                 throw new BadRequestException('Invalid resource id given!');
             }
         }

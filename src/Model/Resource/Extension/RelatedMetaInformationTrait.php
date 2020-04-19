@@ -14,7 +14,7 @@ trait RelatedMetaInformationTrait
     /**
      * @var KeyValueCollectionInterface
      */
-    private $relatedMetaInformation;
+    protected $relatedMetaInformation;
 
     /**
      * This method provides additional meta information for a resource identifier object in the context of relationship data

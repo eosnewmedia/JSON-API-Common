@@ -18,9 +18,9 @@ interface ResourceInterface
     public function type(): string;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function id(): string;
+    public function id(): ?string;
 
     /**
      * @return KeyValueCollectionInterface

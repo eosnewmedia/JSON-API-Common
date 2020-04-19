@@ -342,6 +342,36 @@ class SerializerTest extends TestCase
         self::assertEquals('test', $serialized['data']['relationships']['test']['data']['meta']['test']);
     }
 
+    public function testResourtceWithoutId(): void
+    {
+        $serializer = new Serializer();
+
+        $jsonResource = new JsonResource('test');
+
+        /** @var DocumentInterface $document */
+        $document = $this->createConfiguredMock(
+            DocumentInterface::class,
+            [
+                'data' => $this->createConfiguredMock(
+                    ResourceCollectionInterface::class,
+                    [
+                        'isEmpty' => false,
+                        'first' => $jsonResource
+                    ]
+                ),
+            ]
+        );
+
+        try {
+            $serialized = $serializer->serializeDocument($document);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+            return;
+        }
+        self::assertEquals('test', $serialized['data']['type']);
+        self::assertArrayNotHasKey('id', $serialized['data']);
+    }
+
     /**
      * @param string $type
      * @param string $id

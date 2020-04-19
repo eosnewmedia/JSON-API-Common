@@ -86,7 +86,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      */
     public function set(ResourceInterface $resource): ResourceCollectionInterface
     {
-        $this->collection[$this->buildArrayKey($resource->type(), $resource->id())] = $resource;
+        $this->collection[$this->buildArrayKey($resource->type(), $resource->id() ?? spl_object_hash($resource))] = $resource;
 
         return $this;
     }
@@ -99,7 +99,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
     public function merge(ResourceInterface $resource, bool $replaceExistingValues = false): ResourceCollectionInterface
     {
         try {
-            $existing = $this->get($resource->type(), $resource->id());
+            $existing = $this->get($resource->type(), $resource->id() ?? spl_object_hash($resource));
         } catch (\Exception $e) {
             $this->set($resource);
             return $this;
@@ -142,7 +142,7 @@ class ResourceCollection extends AbstractCollection implements ResourceCollectio
      */
     public function removeElement(ResourceInterface $resource): ResourceCollectionInterface
     {
-        $this->remove($resource->type(), $resource->id());
+        $this->remove($resource->type(), $resource->id() ?? spl_object_hash($resource));
 
         return $this;
     }

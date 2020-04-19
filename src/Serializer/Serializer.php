@@ -97,8 +97,11 @@ class Serializer implements DocumentSerializerInterface
     {
         $data = [
             'type' => $resource->type(),
-            'id' => $resource->id(),
         ];
+
+        if ($resource->id() !== null) {
+            $data['id'] = $resource->id();
+        }
 
         if (!$resource->metaInformation()->isEmpty()) {
             $data['meta'] = $resource->metaInformation()->all();

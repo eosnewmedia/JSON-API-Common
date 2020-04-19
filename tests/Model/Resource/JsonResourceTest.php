@@ -25,6 +25,14 @@ class JsonResourceTest extends TestCase
         self::assertEquals(0, $resource->relatedMetaInformation()->count());
     }
 
+    public function testJsonResourceWithoutId(): void
+    {
+        $resource = new JsonResource('test', null, ['attrNull' => 'testNull']);
+        self::assertNull($resource->id());
+        self::assertEquals('testNull', $resource->attributes()->getRequired('attrNull'));
+        self::assertEquals('test', $resource->type());
+    }
+
     public function testDuplicateJsonResource(): void
     {
         $resource = new JsonResource('test', '1', ['attr' => 'test']);
