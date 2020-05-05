@@ -21,4 +21,9 @@ class ErrorCollection extends AbstractCollection implements ErrorCollectionInter
 
         return $this;
     }
+
+    public function first(): ?ErrorInterface
+    {
+        return reset($this->collection) ?: null;
+    }
 }
