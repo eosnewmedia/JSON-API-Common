@@ -142,7 +142,7 @@ class Request implements RequestInterface
     private function parseUriPath(string $path): void
     {
         preg_match(
-            '/^(([a-zA-Z0-9\_\-\.\/]+.php)(\/)|)(' . $this->apiPrefix . ')([\/a-zA-Z0-9\_\-\.]+)$/',
+            '/^(([a-zA-Z0-9\_\-\.\/]+.php)(\/)|)(' . str_replace('/','\\/',$this->apiPrefix) . ')([\/a-zA-Z0-9\_\-\.]+)$/',
             trim($path, '/'),
             $matches
         );
