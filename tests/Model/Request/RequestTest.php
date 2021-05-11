@@ -57,4 +57,18 @@ class RequestTest extends TestCase
             'api'
         );
     }
+
+    public function testLongUri(): void
+    {
+        try {
+            new Request(
+                'GET',
+                new Uri('http://my-service.foo.bar.com/api/type/v1/resource/6004c2db-8ba3-495c-8ee2-b4d0c3deebbe/relationships/myrelation'),
+                null,
+                '/api/type/v1'
+            );
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage() . ' (' . $e->getFile() . ', ' . $e->getLine() . ')');
+        }
+    }
 }
